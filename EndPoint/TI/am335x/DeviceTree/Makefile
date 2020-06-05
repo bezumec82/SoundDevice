@@ -1,12 +1,14 @@
 # Makefile to compile a single device-tree
 
-TI_PTH			:= /media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+TI_PTH			:= /media/constantine/Work/LEMZ/SoundDevice/EndPoint/TI
 AM335_PTH		:= ${TI_PTH}/am335x
 TCH_PTH			:= ${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf/bin
 KRNL_PTH		:= ${TI_PTH}/processor-sdk-linux
 CC				:= ${TCH_PTH}/arm-linux-gnueabihf-
 DTC_PTH 		:= ${KRNL_PTH}/scripts/dtc
 DTS_PTH			:= ${TI_PTH}/DeviceTree
+TFTP_PATH		:= /tftpboot/BBB
+
 # Main .dts file without extension
 MAIN_DTS_FILE	:= am335x-bone
 
@@ -15,7 +17,7 @@ DTS_CPP_FLAGS := -nostdinc -I include -undef -D__DTS__ -x assembler-with-cpp
 
 # Targets
 all: 	${MAIN_DTS_FILE}.dtb
-		cp ${MAIN_DTS_FILE}.dtb /tftpboot/BBB/am335x-boneblack.dtb
+		cp ${MAIN_DTS_FILE}.dtb ${TFTP_PATH}/am335x-boneblack.dtb
 
 # Device tree sources in the kernel deviate from the regular syntax, 
 # by using the cpp preprocessor for includes and substitution.

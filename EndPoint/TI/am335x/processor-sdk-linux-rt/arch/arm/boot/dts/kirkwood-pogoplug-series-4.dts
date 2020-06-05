@@ -10,7 +10,7 @@
 
 #include "kirkwood.dtsi"
 #include "kirkwood-6192.dtsi"
-#include <dt-bindings/input/linux-event-codes.h>
+#include <dt-bindings/input/input-event-codes.h>
 
 / {
 	model = "Cloud Engines PogoPlug Series 4";

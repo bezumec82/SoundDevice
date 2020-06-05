@@ -1,3 +1,5 @@
+cd ${U_BOOT_PTH}
+
 #################
 ### Get toolchain
 #################
@@ -54,15 +56,15 @@ geany ${U_BOOT_PTH}/common/spl/spl.c &
 ### BUILD
 #########
 reset
-cd ${AM335_PTH}/ti-u-boot
+cd ${U_BOOT_PTH}
 make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- mrproper
 make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- am335x_boneblack_defconfig
 make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf-
-cp ${AM335_PTH}/ti-u-boot/spl/u-boot-spl.bin    ${TFTPBOOT_PTH}/u-boot-spl.bin
-cp ${AM335_PTH}/ti-u-boot/u-boot.img            ${TFTPBOOT_PTH}/u-boot.img
-cp ${AM335_PTH}/ti-u-boot/u-boot.bin            ${TFTPBOOT_PTH}/u-boot.bin
-ls -ls ${TFTPBOOT_PTH}
+cp ${U_BOOT_PTH}/spl/u-boot-spl.bin    ${TFTPBOOT_PTH}/u-boot-spl.bin
+cp ${U_BOOT_PTH}/u-boot.img            ${TFTPBOOT_PTH}/u-boot.img
+cp ${U_BOOT_PTH}/u-boot.bin            ${TFTPBOOT_PTH}/u-boot.bin
 sudo chmod -R 777 /tftpboot
+ls -ls ${TFTPBOOT_PTH}
 
 ### Show variables
 ${U_BOOT_PTH}/scripts/get_default_envs.sh \

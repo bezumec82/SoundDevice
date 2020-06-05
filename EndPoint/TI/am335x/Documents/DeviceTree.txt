@@ -1,0 +1,17 @@
+cd ${DTS_PTH}
+
+# Check pathes
+geany ${DTS_PTH}/Makefile &
+
+make clean
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+date -r ${TFTPBOOT_PTH}/am335x-boneblack.dtb
+
+### Restore device tree
+cp ${SDK_PTH}/board-support/prebuilt-images/am335x-bone.dtb \
+${TFTPBOOT_PTH}/am335x-boneblack.dtb
+
+### Disassemble
+dtc -I dtb -O dts ${TFTPBOOT_PTH}/am335x-boneblack.dtb \
+-o ${TFTPBOOT_PTH}/am335x-boneblack-dis.dts
+gedit ${TFTPBOOT_PTH}/am335x-boneblack-dis.dts &

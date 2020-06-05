@@ -115,17 +115,27 @@
     #define INITRD_RAM_ADDR     0x83000000 /* DDR start + 3x16MiB */
 
     #define CONFIG_BOOTCOMMAND  "run tftp_boot"
-    #define NFS_BOOT            0
+    
+    #define NFS_BOOT            1
     #define INIT_RAM_FS         0
     #define FIT_LOAD            0
-    #define FIT_XIP             1
+    #define FIT_XIP             0
+    
+    /*------------------------*/
+    /* Choose ethernet to use */
+    /*------------------------*/
+#if(1)
+    #define ETH_TO_USE          "cpsw"
+#else
+    #define ETH_TO_USE          "usb_ether"
+#endif
+
     #if (NFS_BOOT)
-        # define ETH_TO_USE     "cpsw"
-        # define ROOT_PATH      "/media/constantine/Work/SoundDevice/SoundDevice_endPoint"        \
+        # define ROOT_PATH      "/media/constantine/Work/LEMZ/SoundDevice/EndPoint" \
                                 "/TI/am335x/nfsroot"
-        # define BOOT_ARGS      "console=ttyS0,115200n8"                                          \
+        # define BOOT_ARGS      "console=ttyS0,115200n8" \
                                 "root=/dev/nfs rw rootfstype=nfs nfsroot=${serverip}:"ROOT_PATH" "\
-                                "ip=dhcp;"
+                                "ip=dhcp"
         # define BOOT_CMD \
                 "echo Booting NFS;"                               \
                 "setenv ethact " ETH_TO_USE ";"                   \
@@ -134,9 +144,9 @@
                 "setenv bootargs " BOOT_ARGS ";"                  \
                 "echo Loading FDT from tftp server: ${serverip};" \
                 "tftpboot ${fdt_addr_r} ${fdt_blob};"             \
+                "echo Booting kernel with arguments : ${bootargs};"  \
                 "bootz ${kernel_addr_r} - ${fdt_addr_r};"
     #elif (INIT_RD)
-        # define ETH_TO_USE     "usb_ether"
         # define ROOT_PATH      " "
         # define BOOT_ARGS      "console=ttyS0,115200n8 root=/dev/ram rw earlyprintk"
         # define BOOT_CMD \
@@ -151,7 +161,6 @@
                 "tftpboot ${initrd_addr_r} ${initrd_image};"            \
                 "bootz ${kernel_addr_r} ${initrd_addr_r} ${fdt_addr_r};"
     #elif (INIT_RAM_FS)
-        # define ETH_TO_USE     "usb_ether"
         # define ROOT_PATH      " "
         # define BOOT_ARGS      "console=ttyS0,115200n8 root=/dev/ram rw earlyprintk"
         # define BOOT_CMD \
@@ -164,7 +173,6 @@
                 "tftpboot ${fdt_addr_r} ${fdt_blob};"                   \
                 "bootz ${kernel_addr_r} - ${fdt_addr_r};"
     #elif (FIT_XIP)
-        # define ETH_TO_USE     "usb_ether"
         # define ROOT_PATH      " "
         # define BOOT_ARGS      "console=ttyS0,115200n8 root=/dev/ram rw earlyprintk"
         # define FIT_RAM_ADDR   0x82000000 /* DDR start + 2x16MiB */
@@ -195,15 +203,15 @@
 
     #define CONFIG_EXTRA_ENV_SETTINGS \
         "boot_os=y\0"                                    \
-        "rootpath="                 ROOT_PATH        "\0"\
-        "hostname="                 HOST_NAME        "\0"\
-        "fdt_blob="                 FDT_BLOB         "\0"\
-        "fdt_addr_r="   __stringify(FDT_RAM_ADDR)    "\0"\
-        "kernel_image="             KNL_IMAGE        "\0"\
-        "kernel_addr_r="__stringify(KNL_RAM_ADDR)    "\0"\
-        "initrd_image="             INITRD_IMAGE     "\0"\
-        "initrd_addr_r="__stringify(INITRD_RAM_ADDR) "\0"\
-        "tftp_boot="                BOOT_CMD         "\0"
+        "rootpath="                 ROOT_PATH         "\0"\
+        "hostname="                 HOST_NAME         "\0"\
+        "fdt_blob="                 FDT_BLOB          "\0"\
+        "fdt_addr_r="    __stringify(FDT_RAM_ADDR)    "\0"\
+        "kernel_image="              KNL_IMAGE        "\0"\
+        "kernel_addr_r=" __stringify(KNL_RAM_ADDR)    "\0"\
+        "initrd_image="             INITRD_IMAGE      "\0"\
+        "initrd_addr_r=" __stringify(INITRD_RAM_ADDR) "\0"\
+        "tftp_boot="                BOOT_CMD          "\0"
 #else
     #define CONFIG_EXTRA_ENV_SETTINGS \
         "netretry=yes\0"

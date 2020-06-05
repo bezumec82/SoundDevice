@@ -1,4 +1,3 @@
-
 sudo gedit /etc/default/isc-dhcp-server &
 sudo gedit /etc/dhcp/dhcpd.conf &
 
@@ -6,13 +5,13 @@ reset
 sudo su
 echo "#
 DHCPD_CONF=/etc/dhcp/dhcpd.conf
-INTERFACES=\"eth1\"
+INTERFACES=\"eth0\"
 " > /etc/default/isc-dhcp-server
 
 echo "#
 subnet 192.168.2.0 netmask 255.255.255.0
 {
-  interface             \"eth1\";
+  interface             \"eth0\";
   next-server           192.168.2.200;
   server-identifier     192.168.2.200;
   option subnet-mask    255.255.255.0;
@@ -27,16 +26,17 @@ subnet 192.168.2.0 netmask 255.255.255.0
   }
   elsif substring (option vendor-class-identifier, 0, 17)   = \"AM335x U-Boot SPL\"
   {
-    #filename \"/tftpboot/BBB/u-boot.img\";
-    filename \"/tftpboot/BBB/fit.itb\";
+    filename \"/tftpboot/BBB/u-boot.img\";
+    #filename \"/tftpboot/BBB/fit.itb\";
   }
-  #elsif substring (option vendor-class-identifier, 0, 12)   = \"U-boot.armv7\"
-  #{
-  #  filename \"/tftpboot/BBB/zImage\";
-  #}
+  elsif substring (option vendor-class-identifier, 0, 12)   = \"U-boot.armv7\"
+  {
+    filename \"/tftpboot/BBB/zImage\";
+  }
 }" > /etc/dhcp/dhcpd.conf
 exit
 
+reset
 cat /etc/default/isc-dhcp-server
 cat /etc/dhcp/dhcpd.conf
 

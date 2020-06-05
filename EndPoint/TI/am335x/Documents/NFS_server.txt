@@ -1,8 +1,6 @@
 ###############
 ### After start
 ###############
-
-
 sudo service    nfs-kernel-server   stop
 sudo service    nfs-kernel-server   start
 sudo service    nfs-kernel-server   status
