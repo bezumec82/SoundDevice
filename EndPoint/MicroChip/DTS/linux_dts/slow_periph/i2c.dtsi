@@ -1,0 +1,48 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            i2c0: i2c@f8028000 {
+                compatible      = "atmel,sama5d2-i2c";
+                #address-cells  = <1>;
+                #size-cells     = <0>;
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_i2c0_default>;
+                clocks          = <&twi0_clk>;
+                atmel,fifo-size = <16>;
+                at24@50 {
+                    compatible  = "24c02";
+                    reg         = <0x50>;
+                    pagesize    = <8>;
+                }; /* at24@50 */
+            }; /* i2c0 */
+            i2c1: i2c@fc028000 {
+                compatible      = "atmel,sama5d2-i2c";
+                #address-cells  = <1>;
+                #size-cells     = <0>;
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_i2c1_default>;
+                clocks          = <&twi1_clk>;
+                atmel,fifo-size = <16>;
+            }; /* i2c1 */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /***********/
+                /*** I2C ***/
+                /***********/
+                pinctrl_i2c0_default: i2c0_default {
+                    pinmux =        <PIN_PD21__TWD0>,
+                                    <PIN_PD22__TWCK0>;
+                    bias-disable;
+                }; /* i2c0 */
+                pinctrl_i2c1_default: i2c1_default {
+                    pinmux =        <PIN_PD4__TWD1>,
+                                    <PIN_PD5__TWCK1>;
+                    bias-disable;
+                }; /* i2c1 */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

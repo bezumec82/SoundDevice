@@ -1,0 +1,38 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+
+            sha@f0028000 { /* Secure Hash Algorithm */
+                compatible      = "atmel,at91sam9g46-sha";
+                clocks          = <&sha_clk>;
+                clock-names     = "sha_clk";
+            }; /* sha */
+
+            aes@f002c000 { /* Advanced Encryption Standard  */
+                compatible      = "atmel,at91sam9g46-aes";
+                clocks          = <&aes_clk>;
+                clock-names     = "aes_clk";
+            }; /* aes */
+
+            securam: sram@f8044000 {
+                #address-cells  = <1>;
+                #size-cells     = <1>;
+                compatible      = "atmel,sama5d2-securam", "mmio-sram";
+                clocks          = <&securam_clk>;
+                ranges          = <0 0xf8044000 0x1420>;
+            }; /* securam */
+
+            tdes@fc044000 { /* Triple Data Encryption Standard */
+                compatible      = "atmel,at91sam9g46-tdes";
+                clocks          = <&tdes_clk>;
+                clock-names     = "tdes_clk";
+            }; /* tdes */
+
+            secumod@fc040000 { /* Security Module */
+                compatible = "atmel,sama5d2-secumod", "syscon";
+            }; /* secumod */
+
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

@@ -1,0 +1,12 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            pdmic: pdmic@f8018000 {
+                compatible  = "atmel,sama5d2-pdmic";
+                clocks      = <&pdmic_clk>, <&pdmic_gclk>;
+                clock-names = "pclk", "gclk";
+            }; /* pdmic */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

@@ -1,0 +1,25 @@
+/* microElk */
+/ {
+    sram0: sram@00200000 {
+        compatible = "mmio-sram";
+    }; /* sram0 */
+    ahb { /* Advanced high-speed bus */
+        l2cc: cache-controller@00a00000 { /* L2 Cache Controller */
+            /*
+            The L2 Cache Controller (L2CC)
+            is based on the L2CC-PL310 ARM
+            multiway cache macrocell, version r3p2.
+            */
+            compatible      = "arm,pl310-cache";
+            cache-unified;
+            cache-level     = <2>;
+        }; /* l2cc */
+        apb { /* Advanced peripheral bus */
+            mpddrc: mpddrc@f000c000 { /* Multiport DDR-SDRAM Controller */
+                compatible  = "atmel,sama5d3-ddramc";
+                clocks      = <&ddrck>, <&mpddr_clk>;
+                clock-names = "ddrck", "mpddr";
+            }; /* mpddrc */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

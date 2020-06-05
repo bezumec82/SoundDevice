@@ -1,0 +1,1 @@
+"./app.o" "./main.o" -Wl,-T"configPkg/linker.cmd" -Wl,--start-group -l:ti.board.aa8fg -lgcc -lm -lrdimon -lc -Wl,--end-group 

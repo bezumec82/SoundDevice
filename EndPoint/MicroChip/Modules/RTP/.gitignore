@@ -1,0 +1,8 @@
+*.html
+*.png
+*.o
+*.o.cmd
+*/.objs-.*
+*.symvers
+*.order
+*/.tmp_versions

@@ -1,0 +1,194 @@
+#################
+### Get toolchain
+#################
+cd ${TI_INSTALL}
+wget \
+https://releases.linaro.org/components/toolchain/binaries/\
+6.2-2016.11/arm-linux-gnueabihf/gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf.tar.xz
+wget \
+https://releases.linaro.org/components/toolchain/binaries/\
+7.2-2017.11/arm-linux-gnueabihf/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf.tar.xz
+
+tar -Jxvf \
+${TI_INSTALL}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf.tar.xz \
+-C ${TI_PTH}
+ls -ls ${TI_PTH}
+
+#####################
+### Get u-boot source
+#####################
+#http://processors.wiki.ti.com/index.php/Processor_SDK_Linux_U-Boot_Release_Notes
+reset
+cd ${TI_PTH}/am335x
+sudo rm -rf ${AM335_PTH}/ti-u-boot
+git clone git://git.ti.com/ti-u-boot/ti-u-boot.git
+cd ${AM335_PTH}/ti-u-boot
+git show
+git checkout 54707a942009fae083dd78b58ff057127ba0e900
+git log
+
+#############
+### key files
+#############
+geany ${U_BOOT_PTH}/configs/am335x_boneblack_defconfig &
+geany ${U_BOOT_PTH}/include/configs/am335x_evm.h &
+
+geany ${U_BOOT_PTH}/include/configs/ti_am335x_common.h &&\
+geany ${U_BOOT_PTH}/include/configs/ti_armv7_omap.h &&\
+geany ${U_BOOT_PTH}/include/configs/ti_armv7_common.h &&\
+geany ${U_BOOT_PTH}/include/environment/ti/boot.h &&\
+geany ${U_BOOT_PTH}/include/environment/ti/dfu.h &&\
+geany ${U_BOOT_PTH}/include/environment/ti/mmc.h &&\
+geany ${U_BOOT_PTH}/include/environment/ti/spi.h &&\
+geany ${AM335_PTH}/bootcmd &
+
+geany ${U_BOOT_PTH}/.config &
+
+#######
+### SPL
+#######
+geany ${U_BOOT_PTH}/common/spl/spl.c &
+# look function 'board_init_r'
+
+#########
+### BUILD
+#########
+reset
+cd ${AM335_PTH}/ti-u-boot
+make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- mrproper
+make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- am335x_boneblack_defconfig
+make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf-
+cp ${AM335_PTH}/ti-u-boot/spl/u-boot-spl.bin    ${TFTPBOOT_PTH}/u-boot-spl.bin
+cp ${AM335_PTH}/ti-u-boot/u-boot.img            ${TFTPBOOT_PTH}/u-boot.img
+cp ${AM335_PTH}/ti-u-boot/u-boot.bin            ${TFTPBOOT_PTH}/u-boot.bin
+ls -ls ${TFTPBOOT_PTH}
+sudo chmod -R 777 /tftpboot
+
+### Show variables
+${U_BOOT_PTH}/scripts/get_default_envs.sh \
+${U_BOOT_PTH} > ${U_BOOT_PTH}/u-boot-env-default.txt
+gedit ${U_BOOT_PTH}/u-boot-env-default.txt &
+
+####################
+### KCONFIG MOVEMENT
+####################
+Kconfig
+source "arch/Kconfig"
+    arch/Kconfig
+    CONFIG_ARM=y
+    config ARM
+    source "arch/arm/Kconfig"
+        arch/arm/Kconfig
+        CONFIG_ARCH_OMAP2PLUS=y
+        config ARCH_OMAP2PLUS           
+        source "arch/arm/mach-omap2/Kconfig"
+            arch/arm/mach-omap2/Kconfig
+            CONFIG_AM33XX=y
+            config AM33XX
+            source "arch/arm/mach-omap2/am33xx/Kconfig"
+            source "board/ti/am335x/Kconfig"
+            arch/arm/mach-omap2/am33xx/Kconfig
+            if AM33XX
+            config TARGET_AM335X_EVM
+                board/ti/am335x/Kconfig
+                if TARGET_AM335X_EVM
+                config SYS_CONFIG_NAME
+                default "am335x_evm"
+                config SYS_BOARD    
+                default "am335x"
+                source "board/ti/common/Kconfig"
+
+                board/ti/common/Kconfig
+                CONFIG_TI_COMMON_CMD_OPTIONS=y
+                config TI_COMMON_CMD_OPTIONS
+
+gedit ${U_BOOT_PTH}/Kconfig &
+gedit ${U_BOOT_PTH}/arch/Kconfig &
+gedit ${U_BOOT_PTH}/arch/arm/Kconfig &
+gedit ${U_BOOT_PTH}/arch/arm/mach-omap2/Kconfig &
+gedit ${U_BOOT_PTH}/arch/arm/mach-omap2/am33xx/Kconfig &
+gedit ${U_BOOT_PTH}/board/ti/am335x/Kconfig &
+gedit ${U_BOOT_PTH}/board/ti/common/Kconfig &
+
+###############
+### Device tree
+###############
+arch/arm/dts/Makefile
+        187:dtb-$(CONFIG_AM33XX) += am335x-boneblack.dtb am335x-bone.dtb ...
+configs/am335x_boneblack_defconfig
+        CONFIG_DEFAULT_DEVICE_TREE="am335x-boneblack"
+.config
+        CONFIG_DEFAULT_DEVICE_TREE="am335x-boneblack"
+
+gedit ${U_BOOT_PTH}/arch/arm/dts/am335x-boneblack.dts &
+gedit ${U_BOOT_PTH}/arch/arm/dts/am335x-bone-common.dtsi &
+gedit ${U_BOOT_PTH}/arch/arm/dts/am33xx.dtsi &
+
+#################
+### Boot from usb
+#################
+setenv ethact usb_ether
+dhcp ${kernel_addr_r} ${kernel_image};
+tftpboot ${fdt_addr_r} ${fdt_blob};
+tftpboot ${initrd_addr_r} ${initrd_image};
+
+#################
+### Boot from eth
+#################
+setenv ethact cpsw
+dhcp ${kernel_addr_r} ${kernel_image};
+tftpboot ${fdt_addr_r} ${fdt_blob};
+tftpboot ${initrd_addr_r} ${initrd_image};
+
+############
+### Load FIT
+############
+setenv fit_addr_r 0x82000000;
+setenv fit_file   /tftpboot/BBB/fit.itb;
+setenv ethact     usb_ether;
+setenv bootargs   console=ttyS0,115200n8 root=/dev/ram rw earlyprintk;
+
+dhcp ${fit_addr_r} ${fit_file};
+iminfo ${fit_addr_r}
+printenv bootargs
+bootm ${fit_addr_r}
+
+################
+### LOAD INIT RD
+################
+setenv fdt_addr_r    0x80f00000;
+setenv fdt_blob      /tftpboot/BBB/am335x-boneblack.dtb;
+setenv kernel_addr_r 0x81000000;
+setenv kernel_image  /tftpboot/BBB/uImage;
+setenv rd_addr_r     0x83000000;
+setenv ramdisk       /tftpboot/BBB/rootfs.cpio.gz.u-boot;
+setenv bootargs      console=ttyS0,115200n8 root=/dev/ram rw earlyprintk;
+setenv ethact        usb_ether;
+#setenv ethact cpsw
+#setenv serverip 192.168.12.200
+dhcp  ${kernel_addr_r}   ${kernel_image};
+dhcp  ${rd_addr_r}       ${ramdisk};
+dhcp  ${fdt_addr_r}      ${fdt_blob};
+iminfo ${kernel_addr_r};
+iminfo ${rd_addr_r};
+bootm ${kernel_addr_r} ${rd_addr_r} ${fdt_addr_r};
+
+###############
+### LOAD LEGACY
+###############
+setenv fdt_addr_r    0x80f00000;
+setenv fdt_blob      /tftpboot/BBB/am335x-boneblack.dtb;
+setenv kernel_addr_r 0x81000000;
+setenv kernel_image  /tftpboot/BBB/zImage;
+setenv rd_addr_r     0x83000000;
+setenv ramdisk       /tftpboot/BBB/rootfs.cpio.gz.u-boot;
+setenv bootargs      console=ttyS0,115200n8 root=/dev/ram rw earlyprintk;
+setenv ethact        usb_ether;
+#setenv ethact cpsw
+#setenv serverip 192.168.12.200
+dhcp  ${kernel_addr_r}   ${kernel_image};
+dhcp  ${rd_addr_r}       ${ramdisk};
+dhcp  ${fdt_addr_r}      ${fdt_blob};
+iminfo ${rd_addr_r};
+bootz ${kernel_addr_r} ${rd_addr_r} ${fdt_addr_r};
+

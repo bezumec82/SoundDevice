@@ -1,0 +1,16 @@
+setenv serverip                 192.168.12.200;
+setenv ipaddr                   192.168.12.108;
+setenv kernel_image             /tftpboot/BBB/zImage;
+setenv devicetree_image         /tftpboot/BBB/am335x-boneblack.dtb;
+setenv rootpath                 /media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/nfsroot;
+setenv gatewayip                192.168.12.200;
+setenv netmask                  255.255.255.0;
+setenv hostname                 BBB;
+setenv bootargs root=/dev/nfs rw rootfstype=nfs nfsroot=${serverip}:${rootpath} \
+ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}::eth0:off console=ttyS0,115200n8;
+printenv bootargs;
+echo Booting from tftp server:  ${serverip};
+tftpboot ${kernel_addr_r}       ${kernel_image};
+tftpboot ${fdt_addr_r}          ${devicetree_image};
+echo Loading LINUX;
+bootz ${kernel_addr_r} - ${fdt_addr_r};

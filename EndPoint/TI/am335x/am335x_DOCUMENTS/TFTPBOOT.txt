@@ -1,0 +1,27 @@
+#############
+### TFTP boot
+#############
+setenv subnet                   192.168.12
+setenv serverip                 ${subnet}.200;
+setenv ipaddr                   ${subnet}.108;
+setenv kernel_image             /tftpboot/BBB/zImage;
+setenv devicetree_image         /tftpboot/BBB/am335x-boneblack.dtb;
+setenv bootargs                 "console=ttyS0,115200n8 root=/dev/mmcblk0p2 rw rootwait"
+echo Booting from tftp server:  ${serverip};
+tftpboot ${kernel_addr_r}       ${kernel_image};
+tftpboot ${fdt_addr_r}          ${devicetree_image};
+echo Loading LINUX;
+bootz ${kernel_addr_r} - ${fdt_addr_r};
+
+### Restore environment
+env default -f -a
+saveenv
+
+### Restore images
+sudo cp /tftpboot/BeagleBoneBlack/zImage-am335x-evm.bin \
+        /tftpboot/BeagleBoneBlack/zImage
+sudo chmod 777 /tftpboot/BeagleBoneBlack/zImage
+sudo chown -R root:root /tftpboot/BeagleBoneBlack/*
+ls -ls /tftpboot/BeagleBoneBlack
+
+

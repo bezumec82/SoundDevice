@@ -1,0 +1,63 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+
+            rstc@f8048000 { /* Reset Controller */
+                compatible      = "atmel,sama5d3-rstc";
+                clocks          = <&slck>;
+            }; /* rstc */
+
+            shdwc@f8048010 { /* Shutdown Controller */
+                #address-cells          = <1>;
+                #size-cells             = <0>;
+                atmel,shdwc-debouncer   = <976>;
+                atmel,wakeup-rtc-timer;
+                compatible              = "atmel,sama5d2-shdwc";
+                clocks                  = <&slck>;
+                input@0 {
+                    reg                 = <0>;
+                    atmel,wakeup-type   = "low";
+                };
+            }; /* shdwc */
+
+            pit: timer@f8048030 { /* Periodic Interval Timer */
+                compatible      = "atmel,at91sam9260-pit";
+                clocks          = <&h32mxclk>;
+            }; /* pit */
+
+            watchdog@f8048040 {
+                compatible      = "atmel,sama5d4-wdt";
+                clocks          = <&slck>;
+            }; /* watchdog */
+
+            sckc@f8048050 { /* Slow Clock Controller */
+                compatible      = "atmel,at91sam9x5-sckc";
+                slow_rc_osc: slow_rc_osc {
+                    compatible                  = "atmel,at91sam9x5-clk-slow-rc-osc";
+                    #clock-cells                = <0>;
+                    clock-frequency             = <32768>;
+                    clock-accuracy              = <250000000>;
+                    atmel,startup-time-usec     = <75>;
+                };
+                slow_osc: slow_osc {
+                    compatible                  = "atmel,at91sam9x5-clk-slow-osc";
+                    #clock-cells                = <0>;
+                    clocks                      = <&slow_xtal>;
+                    atmel,startup-time-usec     = <1200000>;
+                };
+                slck: SLCK {
+                    compatible                  = "atmel,at91sam9x5-clk-slow";
+                    #clock-cells                = <0>;
+                    clocks                      = <&slow_rc_osc &slow_osc>;
+                };
+            }; /* sckc */
+
+            rtc@f80480b0 { /* Real-time Clock */
+                compatible  = "atmel,at91rm9200-rtc";
+                clocks      = <&slck>;
+            }; /* rtc */
+
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

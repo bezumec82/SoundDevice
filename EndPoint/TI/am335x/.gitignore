@@ -1,0 +1,14 @@
+/FIT
+!/FIT/fit.itb
+!/FIT/fit.its
+/IDE_SUPPORT
+/LIBRARIES
+/meta-openembedded
+/nfsroot/*
+/RTOS_SDK
+/SDK
+/tisdk
+*~
+
+
+

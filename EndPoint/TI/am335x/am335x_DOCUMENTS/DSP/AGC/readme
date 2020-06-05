@@ -1,0 +1,5 @@
+load('/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/am335x_DOCUMENTS/DSP/AGC/data.mat')
+x=0:1:255
+out=AGC(data,0,256)
+plot (x, data, x, out)
+lgd = legend({'input signal', 'gained signal'}, 'Location','northwest','Orientation','horizontal');

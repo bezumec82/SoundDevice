@@ -1,0 +1,85 @@
+export SAM_LNX_PATH=/media/constantine/RAID/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux
+export SAM_TCH_PATH=${SAM_LNX_PATH}/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi
+export CROSS_COMPILE=${SAM_TCH_PATH}/bin/arm-linux-gnueabi-
+export CC=${SAM_TCH_PATH}/bin/arm-linux-gnueabi-
+
+export BOOT_STR_PATH=${SAM_LNX_PATH}/at91bootstrap
+export BOOT_STR_BINS=${BOOT_STR_PATH}/binaries
+
+export SAM_BA_PATH=${SAM_LNX_PATH}/SAM-BA
+
+### CHECK PATHES ###
+stat ${SAM_LNX_PATH}
+stat ${SAM_TCH_PATH}
+stat ${CROSS_COMPILE}gcc
+stat ${BOOT_STR_PATH}
+stat ${BOOT_STR_BINS}
+
+### COMPILER ###
+sudo apt-get install gcc-arm-linux-gnueabi
+
+#################
+### BootStrap ###
+#################
+
+### BootStrap in Eclipse ###
+
+SAM_LNX_PATH
+/media/constantine/RAID/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux
+
+SAM_TCH_PATH
+${SAM_LNX_PATH}/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi
+
+PATH=
+/bin:/usr/local/sbin:/usr/lib:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:${SAM_TCH_PATH}/bin:${SAM_TCH_PATH}/libexec/gcc/arm-linux-gnueabi/4.9.4
+
+CROSS_COMPILE
+arm-linux-gnueabi-
+
+arch
+ARM
+
+make mrproper
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi- sama5d27_som1_ekqspi_uboot_defconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+
+
+### BootStrap in Bash ###
+cd ${BOOT_STR_PATH}
+export PATH=\
+${PATH}:/bin\
+:/usr/local/sbin\
+:/usr/lib\
+:/usr/local/bin\
+:/usr/sbin\
+:/usr/bin\
+:/sbin
+#:${SAM_TCH_PATH}/bin\
+#:${SAM_TCH_PATH}/libexec/gcc/arm-linux-gnueabi/4.9.4
+
+make ARCH=arm \
+CROSS_COMPILE=arm-linux-gnueabi- \
+mrproper
+#make ARCH=arm \
+#CROSS_COMPILE=arm-linux-gnueabi- \
+#distclean
+
+#make ARCH=arm \
+#CROSS_COMPILE=arm-linux-gnueabi- \
+#sama5d27_som1_eksd_uboot_defconfig
+
+#make ARCH=arm \
+#CROSS_COMPILE=arm-linux-gnueabi- \
+#sama5d27_som1_eksd1_uboot_defconfig
+
+make ARCH=arm \
+CROSS_COMPILE=arm-linux-gnueabi- \
+sama5d27_som1_ekqspi_uboot_defconfig
+
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+
+date -r ${BOOT_STR_BINS}/sama5d27_som1_ek-dataflashboot--3.8.10.bin
+
+cp ${BOOT_STR_BINS}/sama5d27_som1_ek-dataflashboot--3.8.10.bin \
+${SAM_BA_PATH}/boot.bin
+date -r ${SAM_BA_PATH}/boot.bin

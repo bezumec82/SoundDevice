@@ -1,0 +1,368 @@
+******************************************************************************
+                     PRU Linker Unix v2.3.1                    
+******************************************************************************
+>> Linked Tue Mar  5 15:33:48 2019
+
+OUTPUT FILE NAME:   <pru_gpio.out>
+ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 00000000
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+PAGE 0:
+  PRU_IMEM              00000000   00003000  000005b4  00002a4c  RWIX
+
+PAGE 1:
+  PRU_DMEM_0_1          00000000   00002000  00000228  00001dd8  RWIX
+  PRU_DMEM_1_0          00002000   00002000  00000000  00002000  RWIX
+
+PAGE 2:
+  PRU_SHAREDMEM         00010000   00008000  00000000  00008000  RWIX
+  PRU_INTC              00020000   00001504  00000000  00001504  RWIX
+  PRU_CFG               00026000   00000120  00000044  000000dc  RWIX
+  PRU_UART              00028000   00000038  00000000  00000038  RWIX
+  PRU_IEP               0002e000   0000031c  00000000  0000031c  RWIX
+  PRU_ECAP              00030000   00000060  00000000  00000060  RWIX
+  RSVD27                00032000   00000100  00000000  00000100  RWIX
+  RSVD21                00032400   00000100  00000000  00000100  RWIX
+  L3OCMC                40000000   00010000  00000000  00010000  RWIX
+  MCASP3_DMA            46000000   00000100  00000000  00000100  RWIX
+  RSVD11                48022000   00000088  00000000  00000088  RWIX
+  RSVD12                48024000   00000088  00000000  00000088  RWIX
+  RSVD2                 4802a000   000000d8  00000000  000000d8  RWIX
+  RSVD6                 48030000   000001a4  00000000  000001a4  RWIX
+  RSVD1                 48040000   0000005c  00000000  0000005c  RWIX
+  I2C3                  48060000   00000300  00000000  00000300  RWIX
+  RSVD22                480c8000   00000140  00000000  00000140  RWIX
+  RSVD23                480ca000   00000880  00000000  00000880  RWIX
+  RSVD17                4819c000   000000d8  00000000  000000d8  RWIX
+  RSVD16                481a0000   000001a4  00000000  000001a4  RWIX
+  RSVD14                481cc000   000001e8  00000000  000001e8  RWIX
+  RSVD15                481d0000   000001e8  00000000  000001e8  RWIX
+  RSVD18                48300000   000002c4  00000000  000002c4  RWIX
+  RSVD19                48302000   000002c4  00000000  000002c4  RWIX
+  RSVD20                48304000   000002c4  00000000  000002c4  RWIX
+  RSVD13                48310000   00000100  00000000  00000100  RWIX
+  RSVD10                48318000   00000100  00000000  00000100  RWIX
+  RSVD29                49000000   00001098  00000000  00001098  RWIX
+  RSVD9                 4a100000   0000128c  00000000  0000128c  RWIX
+  DDR                   80000000   00000100  00000000  00000100  RWIX
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.text:_c_int00* 
+*          0    00000000    0000001c     
+                  00000000    0000001c     rtspruv3_le.lib : boot.c.obj (.text:_c_int00_noinit_noargs)
+
+.text      0    0000001c    00000598     
+                  0000001c    00000588     main.obj (.text:main)
+                  000005a4    00000008     rtspruv3_le.lib : exit.c.obj (.text:abort)
+                  000005ac    00000008                     : exit.c.obj (.text:loader_exit)
+
+.stack     1    00000000    00000100     UNINITIALIZED
+                  00000000    00000004     rtspruv3_le.lib : boot.c.obj (.stack)
+                  00000004    000000fc     --HOLE--
+
+.data      1    00000100    000000ac     
+                  00000100    000000a8     main.obj (.data)
+                  000001a8    00000004     main.obj (.data:pru_intc_map)
+
+.cinit     1    00000000    00000000     UNINITIALIZED
+
+.resource_table 
+*          1    000001ac    0000007c     
+                  000001ac    0000007c     main.obj (.resource_table:retain)
+
+.creg.PRU_CFG.noload.near 
+*          2    00026000    00000044     NOLOAD SECTION
+                  00026000    00000044     main.obj (.creg.PRU_CFG.noload.near)
+
+.creg.PRU_CFG.near 
+*          2    00026044    00000000     UNINITIALIZED
+
+.creg.PRU_CFG.noload.far 
+*          2    00026044    00000000     NOLOAD SECTION
+
+.creg.PRU_CFG.far 
+*          2    00026044    00000000     UNINITIALIZED
+
+MODULE SUMMARY
+
+       Module         code   ro data   rw data
+       ------         ----   -------   -------
+    ./
+       main.obj       1416   0         364    
+    +--+--------------+------+---------+---------+
+       Total:         1416   0         364    
+                                              
+    /home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/lib/rtspruv3_le.lib
+       boot.c.obj     28     0         0      
+       exit.c.obj     16     0         0      
+    +--+--------------+------+---------+---------+
+       Total:         44     0         0      
+                                              
+       Stack:         0      0         256    
+    +--+--------------+------+---------+---------+
+       Grand Total:   1460   0         620    
+
+
+SEGMENT ATTRIBUTES
+
+    id tag      seg value
+    -- ---      --- -----
+     0 PHA_PAGE 1   1    
+     1 PHA_PAGE 2   1    
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+page  address   name                          
+----  -------   ----                          
+0     000005ac  C$$EXIT                       
+1     00000118  CTRL_CORE_PAD_MCASP2_AXR4_ptr 
+1     00000124  CTRL_CORE_PAD_MCASP2_AXR5_ptr 
+1     00000128  CTRL_CORE_PAD_MCASP2_AXR6_ptr 
+1     0000012c  CTRL_CORE_PAD_MCASP2_AXR7_ptr 
+1     00000138  CTRL_CORE_PAD_SPI1_CS0_ptr    
+1     00000144  CTRL_CORE_PAD_SPI1_CS1_ptr    
+1     00000134  CTRL_CORE_PAD_SPI1_D0_ptr     
+1     00000130  CTRL_CORE_PAD_SPI1_D1_ptr     
+1     00000110  CTRL_CORE_PAD_UART1_RXD_ptr   
+1     00000114  CTRL_CORE_PAD_UART1_TXD_ptr   
+1     0000013c  CTRL_CORE_PAD_VIN1A_D13_ptr   
+1     00000140  CTRL_CORE_PAD_VIN1A_D14_ptr   
+1     0000011c  CTRL_CORE_PAD_VIN1A_D5_ptr    
+1     0000010c  CTRL_CORE_PAD_VIN1A_D6_ptr    
+1     00000100  CTRL_CORE_PAD_VIN1A_D7_ptr    
+1     00000104  CTRL_CORE_PAD_VIN1A_D8_ptr    
+1     00000108  CTRL_CORE_PAD_VIN2A_VSYNC0_ptr
+1     00000120  CTRL_CORE_PAD_XREF_CLK2_ptr   
+2     00026000  CT_CFG                        
+1     00000188  GPIO1_DATAOUT_ptr             
+1     00000168  GPIO1_OE_ptr                  
+1     00000148  GPIO1_SYSCONFIG_ptr           
+1     0000018c  GPIO2_DATAOUT_ptr             
+1     0000016c  GPIO2_OE_ptr                  
+1     0000014c  GPIO2_SYSCONFIG_ptr           
+1     00000190  GPIO3_DATAOUT_ptr             
+1     00000170  GPIO3_OE_ptr                  
+1     00000150  GPIO3_SYSCONFIG_ptr           
+1     00000194  GPIO4_DATAOUT_ptr             
+1     00000174  GPIO4_OE_ptr                  
+1     00000154  GPIO4_SYSCONFIG_ptr           
+1     00000198  GPIO5_DATAOUT_ptr             
+1     00000178  GPIO5_OE_ptr                  
+1     00000158  GPIO5_SYSCONFIG_ptr           
+1     0000019c  GPIO6_DATAOUT_ptr             
+1     0000017c  GPIO6_OE_ptr                  
+1     0000015c  GPIO6_SYSCONFIG_ptr           
+1     000001a0  GPIO7_DATAOUT_ptr             
+1     00000180  GPIO7_OE_ptr                  
+1     00000160  GPIO7_SYSCONFIG_ptr           
+1     000001a4  GPIO8_DATAOUT_ptr             
+1     00000184  GPIO8_OE_ptr                  
+1     00000164  GPIO8_SYSCONFIG_ptr           
+abs   80000000  __PRU_CREG_BASE_DDR           
+abs   48060000  __PRU_CREG_BASE_I2C3          
+abs   40000000  __PRU_CREG_BASE_L3OCMC        
+abs   46000000  __PRU_CREG_BASE_MCASP3_DMA    
+abs   00026000  __PRU_CREG_BASE_PRU_CFG       
+abs   00000000  __PRU_CREG_BASE_PRU_DMEM_0_1  
+abs   00002000  __PRU_CREG_BASE_PRU_DMEM_1_0  
+abs   00030000  __PRU_CREG_BASE_PRU_ECAP      
+abs   0002e000  __PRU_CREG_BASE_PRU_IEP       
+abs   00020000  __PRU_CREG_BASE_PRU_INTC      
+abs   00010000  __PRU_CREG_BASE_PRU_SHAREDMEM 
+abs   00028000  __PRU_CREG_BASE_PRU_UART      
+abs   48040000  __PRU_CREG_BASE_RSVD1         
+abs   48318000  __PRU_CREG_BASE_RSVD10        
+abs   48022000  __PRU_CREG_BASE_RSVD11        
+abs   48024000  __PRU_CREG_BASE_RSVD12        
+abs   48310000  __PRU_CREG_BASE_RSVD13        
+abs   481cc000  __PRU_CREG_BASE_RSVD14        
+abs   481d0000  __PRU_CREG_BASE_RSVD15        
+abs   481a0000  __PRU_CREG_BASE_RSVD16        
+abs   4819c000  __PRU_CREG_BASE_RSVD17        
+abs   48300000  __PRU_CREG_BASE_RSVD18        
+abs   48302000  __PRU_CREG_BASE_RSVD19        
+abs   4802a000  __PRU_CREG_BASE_RSVD2         
+abs   48304000  __PRU_CREG_BASE_RSVD20        
+abs   00032400  __PRU_CREG_BASE_RSVD21        
+abs   480c8000  __PRU_CREG_BASE_RSVD22        
+abs   480ca000  __PRU_CREG_BASE_RSVD23        
+abs   00032000  __PRU_CREG_BASE_RSVD27        
+abs   49000000  __PRU_CREG_BASE_RSVD29        
+abs   48030000  __PRU_CREG_BASE_RSVD6         
+abs   4a100000  __PRU_CREG_BASE_RSVD9         
+abs   0000001f  __PRU_CREG_DDR                
+abs   00000005  __PRU_CREG_I2C3               
+abs   0000001e  __PRU_CREG_L3OCMC             
+abs   00000008  __PRU_CREG_MCASP3_DMA         
+abs   00000004  __PRU_CREG_PRU_CFG            
+abs   00000018  __PRU_CREG_PRU_DMEM_0_1       
+abs   00000019  __PRU_CREG_PRU_DMEM_1_0       
+abs   00000003  __PRU_CREG_PRU_ECAP           
+abs   0000001a  __PRU_CREG_PRU_IEP            
+abs   00000000  __PRU_CREG_PRU_INTC           
+abs   0000001c  __PRU_CREG_PRU_SHAREDMEM      
+abs   00000007  __PRU_CREG_PRU_UART           
+abs   00000001  __PRU_CREG_RSVD1              
+abs   0000000a  __PRU_CREG_RSVD10             
+abs   0000000b  __PRU_CREG_RSVD11             
+abs   0000000c  __PRU_CREG_RSVD12             
+abs   0000000d  __PRU_CREG_RSVD13             
+abs   0000000e  __PRU_CREG_RSVD14             
+abs   0000000f  __PRU_CREG_RSVD15             
+abs   00000010  __PRU_CREG_RSVD16             
+abs   00000011  __PRU_CREG_RSVD17             
+abs   00000012  __PRU_CREG_RSVD18             
+abs   00000013  __PRU_CREG_RSVD19             
+abs   00000002  __PRU_CREG_RSVD2              
+abs   00000014  __PRU_CREG_RSVD20             
+abs   00000015  __PRU_CREG_RSVD21             
+abs   00000016  __PRU_CREG_RSVD22             
+abs   00000017  __PRU_CREG_RSVD23             
+abs   0000001b  __PRU_CREG_RSVD27             
+abs   0000001d  __PRU_CREG_RSVD29             
+abs   00000006  __PRU_CREG_RSVD6              
+abs   00000009  __PRU_CREG_RSVD9              
+1     00000100  __TI_STACK_END                
+abs   00000100  __TI_STACK_SIZE               
+abs   ffffffff  __c_args__                    
+0     00000000  _c_int00_noinit_noargs        
+1     00000000  _stack                        
+0     000005a4  abort                         
+0     0000001c  main                          
+1     000001a8  pru_intc_map                  
+1     000001ac  resourceTable                 
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+page  address   name                          
+----  -------   ----                          
+0     00000000  _c_int00_noinit_noargs        
+0     0000001c  main                          
+0     000005a4  abort                         
+0     000005ac  C$$EXIT                       
+1     00000000  _stack                        
+1     00000100  CTRL_CORE_PAD_VIN1A_D7_ptr    
+1     00000100  __TI_STACK_END                
+1     00000104  CTRL_CORE_PAD_VIN1A_D8_ptr    
+1     00000108  CTRL_CORE_PAD_VIN2A_VSYNC0_ptr
+1     0000010c  CTRL_CORE_PAD_VIN1A_D6_ptr    
+1     00000110  CTRL_CORE_PAD_UART1_RXD_ptr   
+1     00000114  CTRL_CORE_PAD_UART1_TXD_ptr   
+1     00000118  CTRL_CORE_PAD_MCASP2_AXR4_ptr 
+1     0000011c  CTRL_CORE_PAD_VIN1A_D5_ptr    
+1     00000120  CTRL_CORE_PAD_XREF_CLK2_ptr   
+1     00000124  CTRL_CORE_PAD_MCASP2_AXR5_ptr 
+1     00000128  CTRL_CORE_PAD_MCASP2_AXR6_ptr 
+1     0000012c  CTRL_CORE_PAD_MCASP2_AXR7_ptr 
+1     00000130  CTRL_CORE_PAD_SPI1_D1_ptr     
+1     00000134  CTRL_CORE_PAD_SPI1_D0_ptr     
+1     00000138  CTRL_CORE_PAD_SPI1_CS0_ptr    
+1     0000013c  CTRL_CORE_PAD_VIN1A_D13_ptr   
+1     00000140  CTRL_CORE_PAD_VIN1A_D14_ptr   
+1     00000144  CTRL_CORE_PAD_SPI1_CS1_ptr    
+1     00000148  GPIO1_SYSCONFIG_ptr           
+1     0000014c  GPIO2_SYSCONFIG_ptr           
+1     00000150  GPIO3_SYSCONFIG_ptr           
+1     00000154  GPIO4_SYSCONFIG_ptr           
+1     00000158  GPIO5_SYSCONFIG_ptr           
+1     0000015c  GPIO6_SYSCONFIG_ptr           
+1     00000160  GPIO7_SYSCONFIG_ptr           
+1     00000164  GPIO8_SYSCONFIG_ptr           
+1     00000168  GPIO1_OE_ptr                  
+1     0000016c  GPIO2_OE_ptr                  
+1     00000170  GPIO3_OE_ptr                  
+1     00000174  GPIO4_OE_ptr                  
+1     00000178  GPIO5_OE_ptr                  
+1     0000017c  GPIO6_OE_ptr                  
+1     00000180  GPIO7_OE_ptr                  
+1     00000184  GPIO8_OE_ptr                  
+1     00000188  GPIO1_DATAOUT_ptr             
+1     0000018c  GPIO2_DATAOUT_ptr             
+1     00000190  GPIO3_DATAOUT_ptr             
+1     00000194  GPIO4_DATAOUT_ptr             
+1     00000198  GPIO5_DATAOUT_ptr             
+1     0000019c  GPIO6_DATAOUT_ptr             
+1     000001a0  GPIO7_DATAOUT_ptr             
+1     000001a4  GPIO8_DATAOUT_ptr             
+1     000001a8  pru_intc_map                  
+1     000001ac  resourceTable                 
+2     00026000  CT_CFG                        
+abs   00000000  __PRU_CREG_BASE_PRU_DMEM_0_1  
+abs   00000000  __PRU_CREG_PRU_INTC           
+abs   00000001  __PRU_CREG_RSVD1              
+abs   00000002  __PRU_CREG_RSVD2              
+abs   00000003  __PRU_CREG_PRU_ECAP           
+abs   00000004  __PRU_CREG_PRU_CFG            
+abs   00000005  __PRU_CREG_I2C3               
+abs   00000006  __PRU_CREG_RSVD6              
+abs   00000007  __PRU_CREG_PRU_UART           
+abs   00000008  __PRU_CREG_MCASP3_DMA         
+abs   00000009  __PRU_CREG_RSVD9              
+abs   0000000a  __PRU_CREG_RSVD10             
+abs   0000000b  __PRU_CREG_RSVD11             
+abs   0000000c  __PRU_CREG_RSVD12             
+abs   0000000d  __PRU_CREG_RSVD13             
+abs   0000000e  __PRU_CREG_RSVD14             
+abs   0000000f  __PRU_CREG_RSVD15             
+abs   00000010  __PRU_CREG_RSVD16             
+abs   00000011  __PRU_CREG_RSVD17             
+abs   00000012  __PRU_CREG_RSVD18             
+abs   00000013  __PRU_CREG_RSVD19             
+abs   00000014  __PRU_CREG_RSVD20             
+abs   00000015  __PRU_CREG_RSVD21             
+abs   00000016  __PRU_CREG_RSVD22             
+abs   00000017  __PRU_CREG_RSVD23             
+abs   00000018  __PRU_CREG_PRU_DMEM_0_1       
+abs   00000019  __PRU_CREG_PRU_DMEM_1_0       
+abs   0000001a  __PRU_CREG_PRU_IEP            
+abs   0000001b  __PRU_CREG_RSVD27             
+abs   0000001c  __PRU_CREG_PRU_SHAREDMEM      
+abs   0000001d  __PRU_CREG_RSVD29             
+abs   0000001e  __PRU_CREG_L3OCMC             
+abs   0000001f  __PRU_CREG_DDR                
+abs   00000100  __TI_STACK_SIZE               
+abs   00002000  __PRU_CREG_BASE_PRU_DMEM_1_0  
+abs   00010000  __PRU_CREG_BASE_PRU_SHAREDMEM 
+abs   00020000  __PRU_CREG_BASE_PRU_INTC      
+abs   00026000  __PRU_CREG_BASE_PRU_CFG       
+abs   00028000  __PRU_CREG_BASE_PRU_UART      
+abs   0002e000  __PRU_CREG_BASE_PRU_IEP       
+abs   00030000  __PRU_CREG_BASE_PRU_ECAP      
+abs   00032000  __PRU_CREG_BASE_RSVD27        
+abs   00032400  __PRU_CREG_BASE_RSVD21        
+abs   40000000  __PRU_CREG_BASE_L3OCMC        
+abs   46000000  __PRU_CREG_BASE_MCASP3_DMA    
+abs   48022000  __PRU_CREG_BASE_RSVD11        
+abs   48024000  __PRU_CREG_BASE_RSVD12        
+abs   4802a000  __PRU_CREG_BASE_RSVD2         
+abs   48030000  __PRU_CREG_BASE_RSVD6         
+abs   48040000  __PRU_CREG_BASE_RSVD1         
+abs   48060000  __PRU_CREG_BASE_I2C3          
+abs   480c8000  __PRU_CREG_BASE_RSVD22        
+abs   480ca000  __PRU_CREG_BASE_RSVD23        
+abs   4819c000  __PRU_CREG_BASE_RSVD17        
+abs   481a0000  __PRU_CREG_BASE_RSVD16        
+abs   481cc000  __PRU_CREG_BASE_RSVD14        
+abs   481d0000  __PRU_CREG_BASE_RSVD15        
+abs   48300000  __PRU_CREG_BASE_RSVD18        
+abs   48302000  __PRU_CREG_BASE_RSVD19        
+abs   48304000  __PRU_CREG_BASE_RSVD20        
+abs   48310000  __PRU_CREG_BASE_RSVD13        
+abs   48318000  __PRU_CREG_BASE_RSVD10        
+abs   49000000  __PRU_CREG_BASE_RSVD29        
+abs   4a100000  __PRU_CREG_BASE_RSVD9         
+abs   80000000  __PRU_CREG_BASE_DDR           
+abs   ffffffff  __c_args__                    
+
+[117 symbols]

@@ -1,0 +1,138 @@
+/* microElk */
+/ {
+    ahb {
+        apb {
+            /***************/
+            /*** FLEXCOM ***/
+            /***************/
+            flx0: flexcom@f8034000 {
+                compatible = "atmel,sama5d2-flexcom";
+                clocks = <&flx0_clk>;
+                #address-cells = <1>;
+                #size-cells = <1>;
+            }; /* flx0 */
+            flx1: flexcom@f8038000 {
+                atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_TWI>;
+                compatible = "atmel,sama5d2-flexcom";
+                clocks = <&flx1_clk>;
+                #address-cells = <1>;
+                #size-cells = <1>;
+                i2c2: i2c@600 {
+                    compatible          = "atmel,sama5d2-i2c";
+                    #address-cells      = <1>;
+                    #size-cells         = <0>;
+                    clocks              = <&flx1_clk>;
+                    pinctrl-names       = "default";
+                    pinctrl-0           = <&pinctrl_mikrobus_i2c>;
+                    atmel,fifo-size     = <16>;
+                }; /* i2c2 */
+            }; /* flx1 */
+            flx2: flexcom@fc010000 {
+                compatible      = "atmel,sama5d2-flexcom";
+                clocks          = <&flx2_clk>;
+                #address-cells  = <1>;
+                #size-cells     = <1>;
+            }; /* flx2 */
+            flx3: flexcom@fc014000 {
+                atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_SPI>;
+                compatible      = "atmel,sama5d2-flexcom";
+                clocks          = <&flx3_clk>;
+                #address-cells  = <1>;
+                #size-cells     = <1>;
+                uart7: serial@200 {
+                    compatible          = "atmel,at91sam9260-usart";
+                    clocks              = <&flx3_clk>;
+                    clock-names         = "usart";
+                    pinctrl-names       = "default";
+                    pinctrl-0           = <&pinctrl_flx3_default>;
+                    atmel,fifo-size     = <32>;
+                }; /* uart7 */
+                spi2: spi@400 {
+                    compatible          = "atmel,at91rm9200-spi";
+                    clocks              = <&flx3_clk>;
+                    clock-names         = "spi_clk";
+                    pinctrl-names       = "default";
+                    pinctrl-0           = <&pinctrl_flx3_default>;
+                    atmel,fifo-size     = <16>;
+                }; /* spi2 */
+            }; /* flx3 */
+            flx4: flexcom@fc018000 {
+                compatible      = "atmel,sama5d2-flexcom";
+                clocks          = <&flx4_clk>;
+                #address-cells  = <1>;
+                #size-cells     = <1>;
+                atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_SPI>;
+                uart6: serial@200 {
+                    compatible          = "atmel,at91sam9260-usart";
+                    clocks              = <&flx4_clk>;
+                    clock-names         = "usart";
+                    pinctrl-names       = "default";
+                    pinctrl-0           = <&pinctrl_flx4_default>;
+                    atmel,fifo-size     = <32>;
+                }; /* uart6 */
+                spi3: spi@400 {
+                    compatible          = "atmel,at91rm9200-spi";
+                    clocks              = <&flx4_clk>;
+                    clock-names         = "spi_clk";
+                    pinctrl-names       = "default";
+                    pinctrl-0           = < &pinctrl_mikrobus_spi
+                                            &pinctrl_mikrobus1_spi_cs
+                                            &pinctrl_mikrobus2_spi_cs>;
+                    atmel,fifo-size     = <16>;
+                }; /* spi3 */
+                i2c3: i2c@600 {
+                    compatible          = "atmel,sama5d2-i2c";
+                    #address-cells      = <1>;
+                    #size-cells         = <0>;
+                    clocks              = <&flx4_clk>;
+                    pinctrl-names       = "default";
+                    pinctrl-0           = <&pinctrl_flx4_default>;
+                    atmel,fifo-size     = <16>;
+                }; /* i2c3 */
+            };/* flx4 */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /************/
+                /*** FLEX ***/
+                /************/
+                pinctrl_flx3_default: flx3_default {
+                    pinmux =        <PIN_PC20__FLEXCOM3_IO0>,
+                                    <PIN_PC19__FLEXCOM3_IO1>,
+                                    <PIN_PC18__FLEXCOM3_IO2>,
+                                    <PIN_PC21__FLEXCOM3_IO3>,
+                                    <PIN_PC22__FLEXCOM3_IO4>;
+                    bias-disable;
+                }; /* flx3_default */
+                pinctrl_flx4_default: flx4_uart_default {
+                    pinmux =        <PIN_PC28__FLEXCOM4_IO0>,
+                                    <PIN_PC29__FLEXCOM4_IO1>,
+                                    <PIN_PC30__FLEXCOM4_IO2>,
+                                    <PIN_PC31__FLEXCOM4_IO3>,
+                                    <PIN_PD0__FLEXCOM4_IO4>;
+                    bias-disable;
+                }; /* flx4_default */
+                pinctrl_mikrobus_i2c: mikrobus1_i2c {
+                    pinmux =        <PIN_PA24__FLEXCOM1_IO0>,
+                                    <PIN_PA23__FLEXCOM1_IO1>;
+                    bias-disable;
+                }; /* mikrobus_i2c */
+                pinctrl_mikrobus1_spi_cs: mikrobus1_spi_cs {
+                    pinmux =        <PIN_PD0__FLEXCOM4_IO4>;
+                    bias-disable;
+                }; /* mikrobus1_spi_cs */
+                pinctrl_mikrobus2_spi_cs: mikrobus2_spi_cs {
+                    pinmux =        <PIN_PC31__FLEXCOM4_IO3>;
+                    bias-disable;
+                }; /* mikrobus2_spi_cs */
+                pinctrl_mikrobus_spi: mikrobus_spi {
+                    pinmux =        <PIN_PC28__FLEXCOM4_IO0>,
+                                    <PIN_PC29__FLEXCOM4_IO1>,
+                                    <PIN_PC30__FLEXCOM4_IO2>;
+                    bias-disable;
+                }; /* mikrobus_spi */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

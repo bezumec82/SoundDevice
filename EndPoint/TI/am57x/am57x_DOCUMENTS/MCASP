@@ -1,0 +1,65 @@
+aclkx   - Transmit bit clock
+ahclkx  - Transmit high-frequency master clock
+fsx     - Transmit frame synchronization
+aclkr   - Receive bit clock
+fsr     - Receive frame synchronization
+
+D15     AM57XX_INDETHER_LED0_YEL    Q5                                                                                                      mcasp8_axr0
+B16     AM57XX_INDETHER_LED1_RED    Q2                                                                                                      mcasp8_axr1
+B17     AM57XX_INDETHER_LED1_GRN    Q4                                                                                                      mcasp8_aclkx/mcasp8_aclkr
+A17     AM57XX_INDETHER_LED1_YEL    Q6                                                                                                      mcasp8_fsx  /mcasp8_fsr
+
+C23     AM57XX_CLKOUT3              R905                    mcasp1_axr7     mcasp2_axr11    mcasp4_ahclkx                                   mcasp8_ahclkx
+
+----------------------------------------------------------------------------------------------------
+A15     TP23                                                                mcasp2_axr1
+B15     TP22                                                                mcasp2_axr0
+----------------------------------------------------------------------------------------------------
+
+B12     AM57XX_PRU2ETH0_TXEN        J7.1                    mcasp1_axr8                                     mcasp6_axr0
+G14     AM57XX_PRU2ETH0_RXDV        J7.2                    mcasp1_axr14                                                    mcasp7_aclkx
+                                                                                                                            mcasp7_aclkr
+----------------------------------------------------------------------------------------------------                        
+C14     AM57XX_PRU2ETH_MDCLK        R179 R221               mcasp1_aclkx    DON'T TOUCH!
+D14     AM57XX_PRU2ETH_MDDATA       R181 R223               mcasp1_fsx      DON'T TOUCH!
+----------------------------------------------------------------------------------------------------
+A13     AM57XX_PRU2ETH0_MRCLK       R165                    mcasp1_axr13                                                    mcasp7_axr1
+B18     AM57XX_PRU2ETH0_CRS         R177                                    mcasp2_axr12    mcasp3_aclkx
+                                                                                            mcasp3_aclkr
+G12     AM57XX_PRU2ETH0_RXER        R170                    mcasp1_axr0
+
+
+Bottom side
+C15     AM57XX_PRU2ETH0_RXD0        R171                                    mcasp2_axr2     mcasp3_axr2
+A18     AM57XX_PRU2ETH0_RXD1        R173                                    mcasp2_fsx
+A19     AM57XX_PRU2ETH0_RXD2        R174                                    mcasp2_aclkx
+F14     AM57XX_PRU2ETH0_RXD3        R175                    mcasp1_axr15                                                    mcasp7_fsx
+                                                                                                                            mcasp7_fsr
+                                                                                                                            
+Other side of MCU                                                                                                           
+E14     AM57XX_PRU2ETH0_TXD0        R163                    mcasp1_axr12                                                    mcasp7_axr0
+A12     AM57XX_PRU2ETH0_TXD1        R164                    mcasp1_axr11                                    mcasp6_fsx
+                                                                                                            mcasp6_fsr
+B13     AM57XX_PRU2ETH0_TXD2        R168                    mcasp1_axr10                                    mcasp6_aclkx
+                                                                                                            mcasp6_aclkr
+A11     AM57XX_PRU2ETH0_TXD3        R169                    mcasp1_axr9                                     mcasp6_axr1
+F15     AM57XX_PRU2ETH0_COL         R178                                    mcasp2_axr13    mcasp3_fsx
+                                                                                            mcasp3_fsr
+                                                                                            
+To find:
+
+A21     AM57XX_SPI1_D1              R377                                                    mcasp4_fsx
+                                                                                            mcasp4_fsr
+D17     AM57XX_SPI1_CS0             R369                                                    mcasp4_axr1
+C18     AM57XX_SPI1_SCLK            R367                                                    mcasp4_aclkx
+                                                                                            mcasp4_aclkr
+                                                                                            
+PRU ETH RESETS
+----------------------------------------------------------------------------------------------------                                                                                            
+F13     AM57XX_MCASP1_AXR5          R674                    mcasp1_axr5                     mcasp4_axr3     DON'T TOUCH!
+E12     AM57XX_MCASP1_AXR4          R673                    mcasp1_axr4                     mcasp4_axr2     DON'T TOUCH!
+----------------------------------------------------------------------------------------------------                                                                                            
+C12     AM57XX_MCASP1_AXR6          R675                    mcasp1_axr6                                     mcasp5_axr2
+D12     AM57XX_MCASP1_AXR7          R676                    mcasp1_axr7                                     mcasp5_axr3
+
+

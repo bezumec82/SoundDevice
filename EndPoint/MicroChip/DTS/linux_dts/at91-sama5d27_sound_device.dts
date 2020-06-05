@@ -1,0 +1,252 @@
+/* microElk */
+/dts-v1/;
+#include "sama5d2.dtsi"
+/ {
+    model = "Atmel SAMA5D27 SOM1 EK";
+    compatible =    "atmel,sama5d27-som1-ek",
+                    "atmel,sama5d27-som1",
+                    "atmel,sama5d27",
+                    "atmel,sama5d2",
+                    "atmel,sama5"; /* compatible */
+    aliases {
+        eth0    = &gmac;
+        spi0    = &qspi1;
+        serial0 = &uart1;   /* DBGU */
+        serial1 = &uart4;   /* mikro BUS 1 */
+        serial2 = &uart2;   /* mikro BUS 2 */
+        i2c1    = &i2c1;
+        i2c2    = &i2c2;
+        i2s0    = &i2s0;
+        i2s1    = &i2s1;
+        ssc0    = &ssc0;
+        ssc1    = &ssc1;
+    }; /* aliases */
+    chosen {
+        bootargs = "console=ttyS0,115200n8 root=/dev/ram0 rw earlyprintk";
+        stdout-path = "serial0:115200n8";
+    }; /* chosen */
+    clocks {
+        slow_xtal {
+            clock-frequency = <32768>;
+        }; /* slow_xtal */
+        main_xtal {
+            clock-frequency = <24000000>;
+        }; /* main_xtal */
+    }; /* clocks */
+    
+    /****************/
+    /*** ON - OFF ***/
+    /****************/    
+    ahb { /* Advanced high-speed bus */    
+        usb0: gadget@00300000 {
+            status              = "okay";
+        }; /* usb0 */
+        usb1: ohci@00400000 {
+            status              = "okay";
+        }; /* usb1 */
+        usb2: ehci@00500000 {
+            status              = "okay";
+        }; /* usb2 */
+        sdmmc0: sdio-host@a0000000 {
+            status              = "okay";
+        }; /* sdmmc0 */
+        sdmmc1: sdio-host@b0000000 {
+            status              = "okay";
+        }; /* sdmmc1 */
+        nand0: nand@80000000 {
+            status              = "disabled";
+        }; /* nand0 */
+        apb { /* Advanced peripheral bus */
+            /***********/
+            /*** SYS ***/
+            /***********/
+            pmc: pmc@f0014000 {
+                status          = "okay";
+            }; /* pmc */
+            xdmac0: dma-controller@f0010000 {
+                status          = "okay";
+            }; /* xdmac0 */
+            xdmac1: dma-controller@f0004000 {
+                status          = "okay";
+            }; /* xdmac1 */
+            aic: interrupt-controller@fc020000 { 
+                status          = "okay";
+            }; /* aic */
+            mpddrc: mpddrc@f000c000 { /* Multiport DDR-SDRAM Controller */
+                status          = "okay";
+            }; /* mpddrc */         
+            pioA: pinctrl@fc038000 {
+                status          = "okay";
+            }; /* pioA */
+            rstc@f8048000 { /* Reset Controller */
+                status          = "okay";
+            }; /* rstc */
+            shdwc@f8048010 { /* Shutdown Controller */
+                status          = "okay";
+            }; /* shdwc */
+            pit: timer@f8048030 { /* Periodic Interval Timer */
+                status          = "okay";
+            }; /* pit */
+            watchdog@f8048040 {
+                status          = "okay";
+            }; /* watchdog */
+            sckc@f8048050 { /* Slow Clock Controller */
+                status          = "okay";
+            }; /* sckc */
+            rtc@f80480b0 { /* Real-time Clock */
+                status          = "okay";
+            }; /* rtc */
+            tc0: timer@f800c000 { /* Timer Counter */
+                status          = "okay";
+            }; /* tc0 */
+            tc1: timer@f8010000 { /* Timer Counter */
+                status          = "okay";
+            }; /* tc1 */
+            /*************/
+            /*** SOUND ***/
+            /*************/
+            i2s0: i2s@f8050000 {
+                status          = "okay";
+            }; /* i2s0 */
+            i2s1: i2s@fc04c000 {
+                status          = "okay";
+            }; /* i2s1 */
+            ssc0: ssc0@f8004000 {
+                status          = "disabled";
+            }; /* ssc0 */
+            ssc1: ssc1@fc004000 {
+                status          = "disabled";
+            }; /* ssc1 */
+            pdmic: pdmic@f8018000 {
+                status          = "okay";
+            }; /* pdmic */
+            classd: classd@fc048000 {
+                status          = "disabled";
+            }; /* classd */
+            /*******************/
+            /*** SLOW PERIPH ***/
+            /*******************/
+            can0: can@f8054000 {
+                status          = "disabled";
+            }; /* can0 */
+            can1: can@fc050000 {
+                status          = "disabled";
+            }; /* can1 */
+            flx0: flexcom@f8034000 {
+                status          = "disabled";
+            }; /* flx0 */
+            flx1: flexcom@f8038000 {
+                status          = "disabled";
+                i2c2: i2c@600 {
+                    status      = "disabled";
+                }; /* i2c2 */
+            }; /* flx1 */
+            flx2: flexcom@fc010000 {
+                status          = "disabled";
+            }; /* flx2 */
+            flx3: flexcom@fc014000 {
+                status = "disabled";
+                uart7: serial@200 {
+                    status      = "disabled"; /* Conflict with 'isc'. */
+                }; /* uart7 */
+                spi2: spi@400 {
+                    status      = "disabled"; /* Conflict with 'isc'. */
+                }; /* spi2 */
+            }; /* flx3 */
+            flx4: flexcom@fc018000 {
+                status = "okay"; /* ! */
+                uart6: serial@200 {
+                    status      = "disabled"; /* Conflict with 'spi3' and 'i2c3'. */
+                }; /* uart6 */
+                spi3: spi@400 {
+                    status      = "disabled";
+                }; /* spi3 */
+                i2c3: i2c@600 {
+                    status      = "disabled"; /* Conflict with 'uart6' and 'spi3'. */
+                }; /* i2c3 */
+            };/* flx4 */
+            i2c0: i2c@f8028000 {
+                status          = "disabled"; 
+            }; /* i2c0 */
+            i2c1: i2c@fc028000 {
+                status          = "okay";
+            }; /* i2c1 */
+            qspi0: spi@f0020000 {
+                status          = "disabled";
+            }; /* qspi0 */
+            qspi1: spi@f0024000 {
+                status          = "okay";
+            }; /* qspi1 */
+            spi0: spi@f8000000 {
+                status          = "okay";
+            }; /* spi0 */
+            spi1: spi@fc000000 {
+                status          = "disabled";
+            }; /* spi1 */
+            uart0: serial@f801c000 {
+                status          = "disabled";
+            }; /* uart0 */
+            uart1: serial@f8020000 {
+                status          = "okay";
+            }; /* uart1 */
+            uart2: serial@f8024000 {
+                status          = "okay";
+            }; /* uart2 */
+            uart3: serial@fc008000 {
+                status          = "disabled"; /* Conflict with 'isc' */
+            }; /* uart3 */
+            uart4: serial@fc00c000 {
+                status          = "okay";
+            }; /* uart4 */
+            /*******************/
+            /*** FAST PERIPH ***/
+            /*******************/
+            gmac: ethernet@f8008000 {
+                status          = "okay";
+            }; /* gmac */
+            /************/
+            /*** MISC ***/
+            /************/
+            adc: adc@fc030000 {
+                status          = "disabled";
+            }; /* adc */
+            sha@f0028000 { /* Secure Hash Algorithm */
+                status          = "okay";
+            }; /* sha */
+            aes@f002c000 { /* Advanced Encryption Standard  */
+                status          = "okay";
+            }; /* aes */
+            securam: sram@f8044000 {
+                status          = "disabled";
+            }; /* securam */
+            tdes@fc044000 { /* Triple Data Encryption Standard */
+                status          = "disabled";
+            }; /* tdes */
+            secumod@fc040000 { /* Security Module */
+                status          = "okay";
+            }; /* secumod */
+            isc: isc@f0008000 { /* Image Sensor Controller */
+                status          = "disabled";
+            }; /* isc */
+            lcdc: lcdc@f0000000 { /* LCD Controller */
+                status          = "disabled";
+                lcdc_pwm: hlcdc-pwm {
+                    status      = "disabled";
+                }; /* lcdc_pwm */
+            }; /* lcdc */
+            ptc@fc060000 { /* Peripheral Touch Controller */
+                status          = "disabled";
+            }; /* ptc */
+            pwm: pwm@f802c000 {
+                status          = "disabled"; /* Conflict with leds. */
+            }; /* pwm */
+        }; /* apb */
+    }; /* ahb */    
+    gpio_keys {
+        status                  = "okay";
+    }; /* gpio_keys */
+    leds {
+        status                  = "okay"; /* Conflict with pwm0. */
+    }; /* leds */
+    
+}; /* / */

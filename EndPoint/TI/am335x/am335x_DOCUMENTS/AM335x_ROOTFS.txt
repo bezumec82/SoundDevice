@@ -1,0 +1,197 @@
+#############
+### Configure
+#############
+sudo dpkg-reconfigure dash
+# Select "no" when prompted
+
+sudo update-alternatives --config gcc
+gcc --version
+# Should be 4.8, 5 or 6 max
+
+################
+### Check config
+################
+gedit ${TISDK_PTH}/build/conf/local.conf &
+gedit ${TISDK_PTH}/build/conf/bblayers.conf &
+
+###############
+### Save config
+###############
+cp ${TISDK_PTH}/build/conf/local.conf       ${AM335_PTH}/RESERVE/rootfs/local.conf
+cp ${TISDK_PTH}/build/conf/bblayers.conf    ${AM335_PTH}/RESERVE/rootfs/bblayers.conf
+ls -ls ${AM335_PTH}/RESERVE/rootfs
+
+##################
+### Restore config
+##################
+cp ${AM335_PTH}/RESERVE/rootfs/local.conf       ${TISDK_PTH}/build/conf/local.conf
+cp ${AM335_PTH}/RESERVE/rootfs/bblayers.conf    ${TISDK_PTH}/build/conf/bblayers.conf
+ls -ls ${TISDK_PTH}/build/conf
+
+#########
+### Build
+#########
+cd ${AM335_PTH}
+sudo rm -rf ${AM335_PTH}/tisdk
+mkdir ${AM335_PTH}/tisdk
+git clone git://arago-project.org/git/projects/oe-layersetup.git ${AM335_PTH}/tisdk
+
+### Cloning into sources
+cd ${AM335_PTH}/tisdk
+./oe-layertool-setup.sh \
+-f ${TISDK_PTH}/configs/poky-rocko-config.txt
+
+##############
+### Start here
+##############
+cd ${AM335_PTH}/tisdk/build
+. conf/setenv
+
+Common targets are:
+    core-image-minimal
+    core-image-sato
+    meta-toolchain
+    meta-toolchain-sdk
+    adt-installer
+    meta-ide-support
+
+#################
+### Minimal image
+#################
+reset
+cd ${AM335_PTH}/tisdk/build
+. conf/setenv
+TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
+MACHINE=am57xx-evm \
+bitbake core-image-minimal -c clean
+
+TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
+MACHINE=am57xx-evm \
+bitbake core-image-minimal
+
+ls -ls ${ARAGO_IMGS_PTH}
+
+######################
+### Wrap cpio in uboot
+######################
+reset
+ls -ls ${ARAGO_IMGS_PTH}
+${U_BOOT_PTH}/tools/mkimage \
+-A arm        \
+-T ramdisk    \
+-a 0x00000000 \
+-e 0x00000000 \
+-d ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio.gz \
+   ${ARAGO_IMGS_PTH}/rootfs.cpio.gz.u-boot
+
+cp ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio    ${FIT_PTH}/rootfs.cpio
+cp ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio.gz ${FIT_PTH}/rootfs.cpio.gz
+
+cp ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio    ${TFTPBOOT_PTH}/rootfs.cpio
+cp ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio.gz ${TFTPBOOT_PTH}/rootfs.cpio.gz
+sudo chmod -R 777 /tftpboot
+ls -ls ${TFTPBOOT_PTH}
+
+#######################
+### Move minimal to NFS
+#######################
+sudo rm -rf ${AM335_PTH}/nfsroot
+mkdir ${AM335_PTH}/nfsroot
+ls -ls ${ARAGO_IMGS_PTH}
+tar -Jxvf ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.tar.xz \
+-C ${AM335_PTH}/nfsroot
+ls -ls ${AM335_PTH}/nfsroot
+
+sudo chown -R root ${AM335_PTH}/nfsroot/*
+sudo chgrp -R root ${AM335_PTH}/nfsroot/*
+ls -ls ${AM335_PTH}/nfsroot
+
+#####################
+### Configure minimal
+#####################
+TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
+MACHINE=am57xx-evm \
+bitbake -c menuconfig busybox
+
+#############
+### On SBC210
+#############
+sudo rm -rf /nfsroot
+mkdir /nfsroot
+tar -Jxvf /home/user0/core-image-minimal-am57xx-evm.tar.xz \
+-C /nfsroot
+ls -ls /nfsroot
+
+sudo chown -R root /nfsroot
+sudo chgrp -R root /nfsroot
+ls -ls /nfsroot
+
+#############
+### Toolchain
+#############
+TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
+MACHINE=am57xx-evm \
+bitbake meta-toolchain -c clean
+
+TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
+MACHINE=am57xx-evm \
+bitbake meta-toolchain
+
+###############
+### IDE support
+###############
+TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
+MACHINE=am57xx-evm \
+bitbake meta-ide-support -c clean
+
+TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
+MACHINE=am57xx-evm \
+bitbake meta-ide-support
+
+##############
+### Deploy SDK
+##############
+cd ${TISDK_PTH}/build/arago-tmp/deploy/sdk
+rm -rf ${AM335_PTH}/IDE_SUPPORT
+mkdir ${AM335_PTH}/IDE_SUPPORT
+./poky-glibc-x86_64-meta-toolchain-armv7ahf-neon-toolchain-2.4.4.sh
+
+#Enter target directory for SDK (default: /opt/poky/2.4.4):
+/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/IDE_SUPPORT
+#!!!Copy gomp!!!
+
+########################
+### Move prebuilt to NFS
+########################
+sudo rm -rf ${AM335_PTH}/nfsroot
+mkdir ${AM335_PTH}/nfsroot
+tar -Jxvf ${SDK_PTH}/filesystem/arago-base-tisdk-image-am335x-evm.tar.xz \
+-C ${AM335_PTH}/nfsroot
+sudo chown -R root ${AM335_PTH}/nfsroot/*
+sudo chgrp -R root ${AM335_PTH}/nfsroot/*
+ls -ls ${AM335_PTH}/nfsroot
+
+############################
+### REMOVE AFTER DEVELOPMENT
+############################
+EXTRA_IMAGE_FEATURES  = " debug-tweaks "
+EXTRA_IMAGE_FEATURES += " tools-debug "
+EXTRA_IMAGE_FEATURES += " tools-profile "
+EXTRA_IMAGE_FEATURES += " eclipse-debug "
+EXTRA_IMAGE_FEATURES += " ssh-server-openssh "
+
+################
+### Save results
+################
+cp -R ${TISDK_PTH}/build/arago-tmp/deploy ${AM335_PTH}/RESERVE
+
+############
+### LinuxPTP
+############
+cd ${AM335_PTH}
+git clone git://git.openembedded.org/meta-openembedded
+
+mkdir ${AM335_PTH}/meta-user/recipes-connectivity
+rm -rf ${AM335_PTH}/meta-user/recipes-connectivity/linuxptp
+cp -r ${AM335_PTH}/meta-openembedded/meta-oe/recipes-connectivity/linuxptp \
+${AM335_PTH}/meta-user/recipes-connectivity

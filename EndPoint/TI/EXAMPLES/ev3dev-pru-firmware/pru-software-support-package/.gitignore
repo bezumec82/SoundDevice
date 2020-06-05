@@ -1,0 +1,8 @@
+AM18XX Debug/
+AM18XX Release/
+Debug/
+Release/
+gen/
+*.core.resources.prefs
+*~
+

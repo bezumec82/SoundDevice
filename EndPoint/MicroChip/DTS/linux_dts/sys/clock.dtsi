@@ -1,0 +1,292 @@
+/* microElk */
+/ {
+    clocks {
+        slow_xtal: slow_xtal {
+            compatible      = "fixed-clock";
+            #clock-cells    = <0>;
+            clock-frequency = <32768>;
+        };
+        main_xtal: main_xtal {
+            compatible      = "fixed-clock";
+            #clock-cells    = <0>;
+            clock-frequency = <24000000>;
+        };
+    }; /* clocks */
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            /* The Power Management Controller (PMC) optimizes power consumption
+             * by controlling all system and user peripheral clocks.
+             * The PMC enables/disables the clock inputs
+             * to many of the peripherals and the Core. */
+            pmc: pmc@f0014000 {
+                #address-cells      = <1>;
+                #size-cells         = <0>;
+                #interrupt-cells    = <1>;
+                compatible          = "atmel,sama5d2-pmc", "syscon";
+                interrupts          = <74 IRQ_TYPE_LEVEL_HIGH 7>;
+                interrupt-controller;
+
+                pmc_fast_restart {
+                    compatible      = "atmel,sama5d2-pmc-fast-startup";
+                    #address-cells  = <1>;
+                    #size-cells     = <0>;
+                    atmel,wakeup-rtc-timer;
+                    wkpin: input@0 {
+                        reg         = <0>;
+                    }; /* wkpin */
+                    gmac_wol: input@10 {
+                        reg         = <10>;
+                        atmel,wakeup-active-high;
+                    }; /* gmac_wol */
+                }; /* pmc_fast_restart */
+
+                main_rc_osc: main_rc_osc {      /* 12 MHz RC Oscillator. */
+                    compatible          = "atmel,at91sam9x5-clk-main-rc-osc";
+                    #clock-cells        = <0>;
+                    interrupt-parent    = <&pmc>;
+                    interrupts          = <AT91_PMC_MOSCRCS>;
+                    clock-frequency     = <12000000>;
+                    clock-accuracy      = <100000000>;
+                }; /* main_rc_osc */
+
+                main_osc: main_osc {    /* 8 to 24 MHz Crystal Oscillator */
+                    compatible          = "atmel,at91rm9200-clk-main-osc";
+                    #clock-cells        = <0>;
+                    interrupt-parent    = <&pmc>;
+                    interrupts          = <AT91_PMC_MOSCS>;
+                    clocks              = <&main_xtal>;
+                }; /* main_osc */
+
+                mainck: MAINCK {
+                    compatible          = "atmel,at91sam9x5-clk-main";
+                    #clock-cells        = <0>;
+                    interrupt-parent    = <&pmc>;
+                    interrupts          = <AT91_PMC_MOSCSELS>;
+                                            /* The Main clock has two sources:                                                              */
+                    clocks              =   <&main_rc_osc>,     /* - a 12 MHz RC oscillator with a fast startup time and used at startup    */
+                                            <&main_osc>;        /* - a 8 to 24 MHz crystal oscillator with Bypass mode                      */
+                }; /* MAINCK */
+
+                plla: PLLA {
+                    compatible          = "atmel,sama5d3-clk-pll";
+                    #clock-cells        = <0>;
+                    interrupt-parent    = <&pmc>;
+                    interrupts          = <AT91_PMC_LOCKA>;
+                    clocks              = <&mainck>;
+                    reg                 = <0>;
+                    atmel,clk-input-range               = <12000000 12000000>;
+                    #atmel,pll-clk-output-range-cells   = <4>;
+                    atmel,pll-clk-output-ranges         = <600000000 1200000000 0 0>;
+                }; /* plla */
+
+                pllack: PLLACK { /* Output of the divider and the 600..1200 MHz programmable PLL (PLLA). */
+                    compatible      = "atmel,at91sam9x5-clk-plldiv";
+                    #clock-cells    = <0>;
+                    clocks          = <&plla>;
+                }; /* pllack */
+
+
+
+                /* The Audio PLL is a high-resolution fractional-N digital PLL specifically designed for low jitter operation. */
+                audio_core_clk: AUDIOCORECLK {
+                    compatible      = "atmel,sama5d2-clk-audio-pll-frac";
+                    #clock-cells    = <0>;
+                    clocks          = <&mainck>; /* The reference clock of the Audio PLL is the fast crystal oscillator. */
+                    clock-output-names  = "acclk";
+                }; /* audio_core_clk */
+                /*
+                 * The PLL core features two post-dividers enabling
+                 * the generation of two output clock signals :
+                 *                                              - AUDIOPLLCLK
+                 *                                              - AUDIOPINCLK
+                 */
+                /* AUDIOPINCLK is dedicated to driving the external audio pin CLK_AUDIO. */
+                audio_pin_clk: AUDIOPINCLK {
+                    compatible          = "atmel,sama5d2-clk-audio-pll-pad";
+                    #clock-cells        = <0>;
+                    clocks              = <&audio_core_clk>;
+                    clock-output-names  = "apclk";
+                }; /* audio_pin_clk */
+
+                /*
+                 * AUDIOPLLCLK is dedicated to the PMC and can be sent :
+                 *                                                          -to the GCLK input of peripherals
+                 *                                                          -to the Programmable clock outputs PCKx.
+                 */
+                audio_pll_clk: AUDIOPLLCLK {
+                    compatible          = "atmel,sama5d2-clk-audio-pll-pmc";
+                    #clock-cells        = <0>;
+                    clocks              = <&audio_core_clk>;
+                    clock-output-names  = "aclk";
+                }; /* audio_pll_clk */
+
+
+                upllck: UPLLCK { /* Output of the 480 MHz upllck PLL (UPLL). */
+                    compatible          = "atmel,at91sam9x5-clk-utmi";
+                    #clock-cells        = <0>;
+                    interrupt-parent    = <&pmc>;
+                    interrupts          = <AT91_PMC_LOCKU>;
+                    clocks              = <&mainck>; /* The source of the upllck PLL (UPLL) is the Main clock (MAINCK). */
+                }; /* upllck */
+
+                mck: MCK { /* The Master Clock Controller provides selection and division of the Master clock (MCK). */
+                    compatible              =   "atmel,at91sam9x5-clk-master";
+                    #clock-cells            =   <0>;
+                    interrupt-parent        =   <&pmc>;
+                    interrupts              =   <AT91_PMC_MCKRDY>;
+
+                    clocks                  =   <&slck>,
+                                                <&mainck>,
+                                                <&pllack>,
+                                                <&upllck>;
+                    atmel,clk-output-range  = <124000000 166000000>;
+                    atmel,clk-divisors      = <1 2 4 3>;
+                }; /* mck */
+
+                /*
+                 *    ---div by 2---
+                 *    |            |
+                 * MCK------------MUX---H32MXCLK
+                 */
+                h32mxclk: H32MXCLK { /* H32MX Matrix Clock (MCK or MCK/2). */
+                    #clock-cells        =   <0>;
+                    compatible          =   "atmel,sama5d4-clk-h32mx";
+                    clocks              =   <&mck>;
+                }; /* h32mxclk */
+
+                uhp48m_uhp12m: UHP48M_UHP12M {
+                    compatible          =   "atmel,at91sam9x5-clk-usb";
+                    #clock-cells        =   <0>;
+                    clocks              =   <&pllack>,
+                                            <&upllck>;
+                }; /* usb */
+
+                prog: progck {
+                    compatible          =   "atmel,at91sam9x5-clk-programmable";
+                    #address-cells      =   <1>;
+                    #size-cells         =   <0>;
+                    interrupt-parent    =   <&pmc>;
+                    clocks =    <&slck>,          /* SLCK */
+                                <&mainck>,        /* MAINCK */
+                                <&pllack>,        /* PLLACK */
+                                <&upllck>,        /* UPLLCK */
+                                <&mck>,           /* MCK */
+                                <&audio_pll_clk>; /* AUDIOPLLCLK */
+                    prog0: prog0 { #clock-cells = <0>; reg = <0>; interrupts = <AT91_PMC_PCKRDY(0)>; clock-output-names = "prog0";}; /* prog0 */
+                    prog1: prog1 { #clock-cells = <0>; reg = <1>; interrupts = <AT91_PMC_PCKRDY(1)>; clock-output-names = "prog1";}; /* prog1 */
+                    prog2: prog2 { #clock-cells = <0>; reg = <2>; interrupts = <AT91_PMC_PCKRDY(2)>; clock-output-names = "prog2";}; /* prog2 */
+                }; /* progck */
+
+                systemck {
+                    compatible = "atmel,at91rm9200-clk-system";
+                    #address-cells      = <1>;
+                    #size-cells         = <0>;
+                    //reg is offset in PMC_SCER register.
+                    ddrck: ddrck    { #clock-cells = <0>;     reg = <2>;      clocks = <&mck>;             }; /* ddrck */
+                    lcdck: lcdck    { #clock-cells = <0>;     reg = <3>;      clocks = <&mck>;             }; /* lcdck */
+                    /* The PMC provides UHP48M and UHP12M clocks to the USB Host OHCI. */
+                    uhpck: uhpck    { #clock-cells = <0>;     reg = <6>;      clocks = <&uhp48m_uhp12m>;   }; /* uhpck */
+                    udpck: udpck    { #clock-cells = <0>;     reg = <7>;      clocks = <&uhp48m_uhp12m>;   }; /* udpck */
+                    
+                    pck0: pck0      { #clock-cells = <0>;     reg = <8>;      clocks = <&prog0>;           }; /* pck0 */
+                    pck1: pck1      { #clock-cells = <0>;     reg = <9>;      clocks = <&prog1>;           }; /* pck1 */
+                    pck2: pck2      { #clock-cells = <0>;     reg = <10>;     clocks = <&prog2>;           }; /* pck2 */
+                    iscck: iscck    { #clock-cells = <0>;     reg = <18>;     clocks = <&mck>;             }; /* iscck */
+                }; /* systemck */
+
+                PCLOCK_LS_HCLOCK_LS { /* Clock type suffixes HS and LS refer to Matrix (H64MX) and Matrix (H32MX), respectively. */
+                    compatible          = "atmel,at91sam9x5-clk-peripheral";
+                    #address-cells      = <1>;
+                    #size-cells         = <0>;
+                    clocks              = <&h32mxclk>;
+
+                    macb0_clk: macb0_clk     { #clock-cells = <0>; reg = <5>;  /* PID 5 : GMAC */      atmel,clk-output-range = <0 83000000>;}; /* macb0_clk */
+                    tdes_clk: tdes_clk       { #clock-cells = <0>; reg = <11>; /* PID 11 : TDES */     atmel,clk-output-range = <0 83000000>;}; /* tdes_clk */
+                    matrix1_clk: matrix1_clk { #clock-cells = <0>; reg = <14>; /* PID 14 : H32MX */                                          }; /* matrix1_clk */
+                    hsmc_clk: hsmc_clk       { #clock-cells = <0>; reg = <17>; /* PID 17 : HSMC */                                           }; /* hsmc_clk */
+                    pioA_clk: pioA_clk       { #clock-cells = <0>; reg = <18>; /* PID 18 : PIOA */     atmel,clk-output-range = <0 83000000>;}; /* pioA_clk */
+                    flx0_clk: flx0_clk       { #clock-cells = <0>; reg = <19>; /* PID 19 : FLEXCOM0 */ atmel,clk-output-range = <0 83000000>;}; /* flx0_clk */
+                    flx1_clk: flx1_clk       { #clock-cells = <0>; reg = <20>; /* PID 20 : FLEXCOM1 */ atmel,clk-output-range = <0 83000000>;}; /* flx1_clk */
+                    flx2_clk: flx2_clk       { #clock-cells = <0>; reg = <21>; /* PID 21 : FLEXCOM2 */ atmel,clk-output-range = <0 83000000>;}; /* flx2_clk */
+                    flx3_clk: flx3_clk       { #clock-cells = <0>; reg = <22>; /* PID 22 : FLEXCOM3 */ atmel,clk-output-range = <0 83000000>;}; /* flx3_clk */
+                    flx4_clk: flx4_clk       { #clock-cells = <0>; reg = <23>; /* PID 23 : FLEXCOM4 */ atmel,clk-output-range = <0 83000000>;}; /* flx4_clk */
+                    uart0_clk: uart0_clk     { #clock-cells = <0>; reg = <24>; /* PID 24 : UART0 */    atmel,clk-output-range = <0 83000000>;}; /* uart0_clk */
+                    uart1_clk: uart1_clk     { #clock-cells = <0>; reg = <25>; /* PID 25 : UART0 */    atmel,clk-output-range = <0 83000000>;}; /* uart1_clk */
+                    uart2_clk: uart2_clk     { #clock-cells = <0>; reg = <26>; /* PID 26 : UART0 */    atmel,clk-output-range = <0 83000000>;}; /* uart2_clk */
+                    uart3_clk: uart3_clk     { #clock-cells = <0>; reg = <27>; /* PID 27 : UART0 */    atmel,clk-output-range = <0 83000000>;}; /* uart3_clk */
+                    uart4_clk: uart4_clk     { #clock-cells = <0>; reg = <28>; /* PID 28 : UART0 */    atmel,clk-output-range = <0 83000000>;}; /* uart4_clk */
+                    twi0_clk: twi0_clk       { #clock-cells = <0>; reg = <29>; /* PID 29 : TWIHS0 */   atmel,clk-output-range = <0 83000000>;}; /* twi0_clk */
+                    twi1_clk: twi1_clk       { #clock-cells = <0>; reg = <30>; /* PID 30 : TWIHS1 */   atmel,clk-output-range = <0 83000000>;}; /* twi1_clk */
+                    spi0_clk: spi0_clk       { #clock-cells = <0>; reg = <33>; /* PID 33 : SPI0 */     atmel,clk-output-range = <0 83000000>;}; /* spi0_clk */
+                    spi1_clk: spi1_clk       { #clock-cells = <0>; reg = <34>; /* PID 34 : SPI1 */     atmel,clk-output-range = <0 83000000>;}; /* spi1_clk */
+                    tcb0_clk: tcb0_clk       { #clock-cells = <0>; reg = <35>; /* PID 35 : TC0 */      atmel,clk-output-range = <0 83000000>;}; /* tcb0_clk */
+                    tcb1_clk: tcb1_clk       { #clock-cells = <0>; reg = <36>; /* PID 36 : TC1 */      atmel,clk-output-range = <0 83000000>;}; /* tcb1_clk */
+                    pwm_clk: pwm_clk         { #clock-cells = <0>; reg = <38>; /* PID 38 : PWM */      atmel,clk-output-range = <0 83000000>;}; /* pwm_clk */
+                    adc_clk: adc_clk         { #clock-cells = <0>; reg = <40>; /* PID 40 : ADC */      atmel,clk-output-range = <0 83000000>;}; /* adc_clk */
+                    uhphs_clk: uhphs_clk     { #clock-cells = <0>; reg = <41>; /* PID 41 : UHPHS */    atmel,clk-output-range = <0 83000000>;}; /* uhphs_clk */ /* USB Host High Speed Port (UHPHS) */
+                    udphs_clk: udphs_clk     { #clock-cells = <0>; reg = <42>; /* PID 42 : UDPHS */    atmel,clk-output-range = <0 83000000>;}; /* udphs_clk */ /* USB High Speed Device Port (UDPHS) */
+                    ssc0_clk: ssc0_clk       { #clock-cells = <0>; reg = <43>; /* PID 43 : SSC0 */     atmel,clk-output-range = <0 83000000>; clock-output-names = "ssc0_clk";}; /* ssc0_clk */
+                    ssc1_clk: ssc1_clk       { #clock-cells = <0>; reg = <44>; /* PID 44 : SSC1 */     atmel,clk-output-range = <0 83000000>; clock-output-names = "ssc1_clk";}; /* ssc1_clk */
+                    trng_clk: trng_clk       { #clock-cells = <0>; reg = <47>; /* PID 47 : TRNG */     atmel,clk-output-range = <0 83000000>;}; /* trng_clk */
+                    pdmic_clk: pdmic_clk     { #clock-cells = <0>; reg = <48>; /* PID 48 : PDMIC */    atmel,clk-output-range = <0 83000000>;}; /* pdmic_clk */
+                    securam_clk: securam_clk { #clock-cells = <0>; reg = <51>; /* PID 51 : SECURAM */                                        }; /* securam_clk */
+                    i2s0_clk: i2s0_clk       { #clock-cells = <0>; reg = <54>; /* PID 54 : I2SC0 */    atmel,clk-output-range = <0 83000000>; clock-output-names = "i2s0_pclk";}; /* i2s0_clk */
+                    i2s1_clk: i2s1_clk       { #clock-cells = <0>; reg = <55>; /* PID 55 : I2SC1 */    atmel,clk-output-range = <0 83000000>; clock-output-names = "i2s1_pclk";}; /* i2s0_clk */
+                    can0_clk: can0_clk       { #clock-cells = <0>; reg = <56>; /* PID 56 : MCAN0 */    atmel,clk-output-range = <0 83000000>;}; /* can0_clk */
+                    can1_clk: can1_clk       { #clock-cells = <0>; reg = <57>; /* PID 57 : MCAN1 */    atmel,clk-output-range = <0 83000000>;}; /* can1_clk */
+                    ptc_clk: ptc_clk         { #clock-cells = <0>; reg = <58>; /* PID 58 : PTC */      atmel,clk-output-range = <0 83000000>;}; /* ptc_clk */
+                    classd_clk: classd_clk   { #clock-cells = <0>; reg = <59>; /* PID 59 : CLASSD */   atmel,clk-output-range = <0 83000000>;}; /* classd_clk */
+
+                }; /* PCLOCK_LS_HCLOCK_LS */
+
+                PCLOCK_HS_HSLOCK_HS {
+                    compatible = "atmel,at91sam9x5-clk-peripheral";
+                    #address-cells      = <1>;
+                    #size-cells         = <0>;
+                    clocks              = <&mck>;
+
+                    xdmac0_clk: xdmac0_clk   { #clock-cells = <0>; reg = <6>;  /* PID 6 : XDMAC0 */  }; /* xdmac0_clk */
+                    xdmac1_clk: xdmac1_clk   { #clock-cells = <0>; reg = <7>;  /* PID 7 : XDMAC1 */  }; /* xdmac1_clk */
+                    aes_clk: aes_clk         { #clock-cells = <0>; reg = <9>;  /* PID 9 : AES */     }; /* aes_clk */
+                    aesb_clk: aesb_clk       { #clock-cells = <0>; reg = <10>; /* PID 10 : AESB */   }; /* aesb_clk */
+                    sha_clk: sha_clk         { #clock-cells = <0>; reg = <12>; /* PID 12 : SHA */    }; /* sha_clk */
+                    mpddr_clk: mpddr_clk     { #clock-cells = <0>; reg = <13>; /* PID 13 : MPDDRC */ }; /* mpddr_clk */
+                    matrix0_clk: matrix0_clk { #clock-cells = <0>; reg = <15>; /* PID 15 : H64MX */  }; /* matrix0_clk */
+                    sdmmc0_hclk: sdmmc0_hclk { #clock-cells = <0>; reg = <31>; /* PID 31 : SDMMC0 */ }; /* sdmmc0_hclk */
+                    sdmmc1_hclk: sdmmc1_hclk { #clock-cells = <0>; reg = <32>; /* PID 32 : SDMMC1 */ }; /* sdmmc1_hclk */
+                    lcdc_clk: lcdc_clk       { #clock-cells = <0>; reg = <45>; /* PID 45 : LCDC */   }; /* lcdc_clk */
+                    isc_clk: isc_clk         { #clock-cells = <0>; reg = <46>; /* PID 46 : ISC */    }; /* isc_clk */
+                    qspi0_clk: qspi0_clk     { #clock-cells = <0>; reg = <52>; /* PID 52 : QSPI0 */  }; /* qspi0_clk */
+                    qspi1_clk: qspi1_clk     { #clock-cells = <0>; reg = <53>; /* PID 53 : QSPI1 */  }; /* qspi1_clk */
+                }; /* PCLOCK_HS_HSLOCK_HS */
+
+                GCLK { /* Generic clocks (GCLK[PID]), routed to selected peripherals only. */
+                    compatible          =   "atmel,sama5d2-clk-generated";
+                    #address-cells      =   <1>;
+                    #size-cells         =   <0>;
+                    interrupt-parent    =   <&pmc>;
+
+                    /* This clock is generated by selection and division of the following sources: */
+                    clocks =    <&slck>,          /* SLCK */
+                                <&mainck>,        /* MAINCK */
+                                <&pllack>,        /* PLLACK */
+                                <&upllck>,        /* UPLLCK */
+                                <&mck>,           /* MCK */
+                                <&audio_pll_clk>; /* AUDIOPLLCLK */
+                    sdmmc0_gclk: sdmmc0_gclk { #clock-cells = <0>; reg = <31>; /* PID 31 : SDMMC0 */  }; /* sdmmc0_gclk */
+                    sdmmc1_gclk: sdmmc1_gclk { #clock-cells = <0>; reg = <32>; /* PID 32 : SDMMC1 */  }; /* sdmmc1_gclk */
+                    tcb0_gclk: tcb0_gclk     { #clock-cells = <0>; reg = <35>; /*PID 35:TC0   */ atmel,clk-output-range = <0 83000000>;      }; /* tcb0_gclk */
+                    tcb1_gclk: tcb1_gclk     { #clock-cells = <0>; reg = <36>; /*PID 36:TC1   */ atmel,clk-output-range = <0 83000000>;      }; /* tcb1_gclk */
+                    pwm_gclk: pwm_gclk       { #clock-cells = <0>; reg = <38>; /*PID 38:PWM   */ atmel,clk-output-range = <0 83000000>;      }; /* pwm_gclk */
+                    isc_gclk: isc_gclk       { #clock-cells = <0>; reg = <46>; /*PID 46:ISC   */                                             }; /* isc_gclk */
+                    pdmic_gclk: pdmic_gclk   { #clock-cells = <0>; reg = <48>; /*PID 48:PDMIC */                                             }; /* pdmic_gclk */
+                    i2s0_gclk: i2s0_gclk     { #clock-cells = <0>; reg = <54>; /*PID 54:I2SC0 */ clock-output-names = "i2s0_gclk";           }; /* i2s0_gclk */
+                    i2s1_gclk: i2s1_gclk     { #clock-cells = <0>; reg = <55>; /*PID 55:I2SC1 */ clock-output-names = "i2s1_gclk";           }; /* i2s1_gclk */
+                    can0_gclk: can0_gclk     { #clock-cells = <0>; reg = <56>; /*PID 56:MCAN0 */ atmel,clk-output-range = <0 80000000>;      }; /* can0_gclk */
+                    can1_gclk: can1_gclk     { #clock-cells = <0>; reg = <57>; /*PID 57:MCAN1 */ atmel,clk-output-range = <0 80000000>;      }; /* can1_gclk */
+                    classd_gclk: classd_gclk { #clock-cells = <0>; reg = <59>; /*PID 59:CLASSD*/ atmel,clk-output-range = <0 100000000>;     }; /* classd_gclk */
+                }; /* GCLK */
+            }; /* pmc */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

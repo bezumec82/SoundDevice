@@ -1,0 +1,91 @@
+export WORK_PTH=/media/constantine/Work
+export TI_PTH=${WORK_PTH}/SoundDevice/SoundDevice_endPoint/TI
+export TI_INSTALL=${WORK_PTH}/INSTALL/TI
+export AM57x_PTH=${TI_PTH}/am57x
+export TISDK_PTH=${AM57x_PTH}/tisdk
+
+export BSP_BIN=${AM57x_PTH}/board-support-bin
+export BSP_SRC=${AM57x_PTH}/board-support-src
+
+export PBLT_PTH=${BSP_BIN_PTH}/prebuilt-images
+export ROOT_BIN_PTH=${BSP_BIN_PTH}/filesystem
+
+export KRNL_PTH=${AM57x_PTH}/processor-sdk-linux-rt
+export TCH_PTH=${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf/bin
+export SDK_PTH=${AM57x_PTH}/SDK
+
+export CC=${TCH_PTH}/arm-linux-gnueabihf-
+export PATH=${TCH_PTH}:${PATH}
+export ARCH=arm
+export CROSS_COMPILE=${TCH_PTH}/arm-linux-gnueabihf-
+
+export DTS_PTH=${AM57x_PTH}/DeviceTree
+
+reset
+stat ${TI_PTH}
+stat ${TI_INSTALL}
+stat ${AM57x_PTH}
+stat ${TISDK_PTH}
+
+stat ${BSP_BIN}
+stat ${BSP_SRC}
+
+stat ${PBLT_PTH}
+stat ${ROOT_BIN}
+
+stat ${KRNL_PTH}
+stat ${TCH_PTH}
+stat ${SDK_PTH}
+
+
+#####################
+### Get kernel source
+#####################
+http://processors.wiki.ti.com/index.php/Processor_SDK_Linux_RT_Kernel_Release_Notes
+cd ${AM57x_PTH}
+git clone git://git.ti.com/processor-sdk/processor-sdk-linux.git \
+processor-sdk-linux-rt
+cd ${AM57x_PTH}/processor-sdk-linux-rt
+git checkout 273202a0d36d6cc2c0ca8bd2a9fd6333a7b69407
+git log
+
+##############
+### Get config
+##############
+cp ${BSP_SRC}/linux-rt-4.14.67+gitAUTOINC+cfb76a2032-gcfb76a2032/arch/arm/configs/tisdk_am57xx-evm-rt_defconfig \
+${KRNL_PTH}/arch/arm/configs/tisdk_am57xx-evm-rt_defconfig
+ls -ls ${KRNL_PTH}/arch/arm/configs/tisdk_am57xx-evm-rt_defconfig
+
+#########
+### Build
+#########
+cd ${KRNL_PTH}
+#make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- distclean
+#make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- tisdk_am57xx-evm-rt_defconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+
+### Replace kernel
+ls -ls ${KRNL_PTH}/arch/arm/boot
+sudo rm /tftpboot/am57x/zImage
+cp ${KRNL_PTH}/arch/arm/boot/zImage /tftpboot/am57x/zImage
+sudo chmod -R 777 /tftpboot/am57x/*
+ls -ls /tftpboot/am57x
+
+### Restore kernel
+cp ${BSP_BIN}/prebuilt-images/zImage-am57xx-evm.bin \
+/tftpboot/am57x/zImage
+
+###############
+### Device tree
+###############
+cd ${DTS_PTH}
+make clean
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+date -r /tftpboot/am57x/am572x-idk.dtb
+
+### Restore device tree
+cp ${SDK_PTH}/board-support/prebuilt-images/am572x-idk.dtb \
+/tftpboot/am57x/am574x-idk.dtb
+
+

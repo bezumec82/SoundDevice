@@ -1,0 +1,1 @@
+set sysroot /opt/poky-atmel/2.5.1/sysroots/cortexa5hf-neon-poky-linux-gnueabi

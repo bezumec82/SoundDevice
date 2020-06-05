@@ -1,0 +1,23 @@
+#
+#
+#
+
+SAM_LNX_PTH		:= /media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux
+SAM_TCH_PTH		:= $(SAM_LNX_PTH)/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi
+CROSS_COMPILE	:= $(SAM_TCH_PTH)/bin/arm-linux-gnueabi-
+
+UTILS_PTH		:= $(SAM_LNX_PTH)/Modules/RTP/utils
+VMAN_PTH		:= $(SAM_LNX_PTH)/Modules/RTP/vman
+VMAN2_PTH		:= $(SAM_LNX_PTH)/Modules/RTP/vman
+
+include $(UTILS_PTH)/root.mk
+
+target := vman.o vman2.o
+
+.PHONY: all clean
+
+all:
+	$(MAKE) ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+
+clean:
+	$(MAKE) -C $(LINUX_DIR) M=$(PWD) clean

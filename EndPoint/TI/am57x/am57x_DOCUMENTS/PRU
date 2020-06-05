@@ -1,0 +1,212 @@
+#######
+### PRU
+#######
+rm -rf /lib/firmware
+mkdir /lib/firmware
+
+cat /sys/class/remoteproc/remoteproc4/device/of_node/label
+cat /sys/class/remoteproc/remoteproc5/device/of_node/label
+cat /sys/class/remoteproc/remoteproc6/device/of_node/label
+cat /sys/class/remoteproc/remoteproc7/device/of_node/label
+
+cp ~/PRU_RPMsg_Echo_Interrupt1_0.out    /lib/firmware
+cp ~/PRU_RPMsg_Echo_Interrupt1_1.out    /lib/firmware
+cp ~/PRU_RPMsg_Echo_Interrupt2_0.out    /lib/firmware
+cp ~/PRU_RPMsg_Echo_Interrupt2_1.out    /lib/firmware
+
+ls -ls /lib/firmware
+
+rmmod   rpmsg_client_sample.ko
+insmod  rpmsg_client_sample.ko
+echo 'stop' > /sys/class/remoteproc/remoteproc4/state
+echo 'stop' > /sys/class/remoteproc/remoteproc5/state
+echo 'stop' > /sys/class/remoteproc/remoteproc6/state
+echo 'stop' > /sys/class/remoteproc/remoteproc7/state
+
+echo 'PRU_RPMsg_Echo_Interrupt1_0.out'  > /sys/class/remoteproc/remoteproc4/firmware
+echo 'PRU_RPMsg_Echo_Interrupt1_1.out'  > /sys/class/remoteproc/remoteproc5/firmware
+echo 'PRU_RPMsg_Echo_Interrupt2_0.out'  > /sys/class/remoteproc/remoteproc6/firmware
+echo 'PRU_RPMsg_Echo_Interrupt2_1.out'  > /sys/class/remoteproc/remoteproc7/firmware
+
+echo 'start' > /sys/class/remoteproc/remoteproc4/state
+echo 'start' > /sys/class/remoteproc/remoteproc5/state
+echo 'start' > /sys/class/remoteproc/remoteproc6/state
+echo 'start' > /sys/class/remoteproc/remoteproc7/state
+
+echo "Laskov" > /dev/rpmsg_pru30
+echo "Huylo" > /dev/rpmsg_pru30
+cat /dev/rpmsg_pru30
+
+echo "Tomilin" > /dev/rpmsg_pru31
+echo "Suka" > /dev/rpmsg_pru31
+cat /dev/rpmsg_pru31
+
+echo "Hello" > /dev/rpmsg_pru32
+echo "pru3" > /dev/rpmsg_pru32
+cat /dev/rpmsg_pru32
+
+echo "Hello" > /dev/rpmsg_pru33
+echo "pru4" > /dev/rpmsg_pru33
+cat /dev/rpmsg_pru33
+
+##########
+### Echo 0
+##########
+rmmod   rpmsg_client_sample.ko
+insmod  rpmsg_client_sample.ko
+rm -rf                                  /lib/firmware/PRU_RPMsg_Echo_Interrupt1_0.out
+cp ~/PRU_RPMsg_Echo_Interrupt1_0.out    /lib/firmware
+ls -ls                                  /lib/firmware
+cat                                       /sys/class/remoteproc/remoteproc2/device/of_node/label
+echo 'stop'                             > /sys/class/remoteproc/remoteproc2/state
+echo 'PRU_RPMsg_Echo_Interrupt1_0.out'  > /sys/class/remoteproc/remoteproc2/firmware
+echo 'start'                            > /sys/class/remoteproc/remoteproc2/state
+
+##########
+### Echo 1
+##########
+rmmod   rpmsg_client_sample.ko
+rm -rf                                  /lib/firmware/PRU_RPMsg_Echo_Interrupt1_1.out
+cp ~/PRU_RPMsg_Echo_Interrupt1_1.out    /lib/firmware
+ls -ls                                  /lib/firmware
+echo 'stop'                             > /sys/class/remoteproc/remoteproc3/state
+echo 'PRU_RPMsg_Echo_Interrupt1_1.out'  > /sys/class/remoteproc/remoteproc3/firmware
+echo 'start'                            > /sys/class/remoteproc/remoteproc3/state
+echo "Tomilin" > /dev/rpmsg_pru31
+echo "Suka" > /dev/rpmsg_pru31
+cat /dev/rpmsg_pru31
+
+#############
+### RPC MCASP
+#############
+#mkdir                      /lib/firmware
+echo 'stop'                 > /sys/class/remoteproc/remoteproc2/state
+rmmod   mcasp_rpmsg.ko
+insmod  mcasp_rpmsg.ko
+rm -rf                      /lib/firmware/pru_mcasp_rpcmsg.out
+cp ~/pru_mcasp_rpcmsg.out   /lib/firmware/pru_mcasp_rpcmsg.out
+ls -ls                      /lib/firmware
+cat                           /sys/class/remoteproc/remoteproc2/device/of_node/label
+cat                           /sys/class/remoteproc/remoteproc2/state
+echo 'stop'                 > /sys/class/remoteproc/remoteproc2/state
+echo 'pru_mcasp_rpcmsg.out' > /sys/class/remoteproc/remoteproc2/firmware
+echo 'start'                > /sys/class/remoteproc/remoteproc2/state &&\
+sleep 3 &&\
+echo 'stop'                 > /sys/class/remoteproc/remoteproc2/state
+
+echo "some data" > /dev/mcasp1_pru0_ts0
+
+echo "123456789 123456789 123456789 123456789 123456789 123456789 123" > /dev/mcasp1_pru0_ts0
+
+echo \
+"123456789 123456789 123456789 123456789 123456789 123456789 123"\
+"123456789 123456789 123456789 123456789 123456789 123456789 123"\
+"123456789 123456789 123456789 123456789 123456789 123456789 123"\
+"123456789 123456789 123456789 123456789 123456789 123456789 123"\
+"123456789 123456789 123456789 123456789 123456789 123456789 123"\
+ > /dev/mcasp1_pru0_ts0
+
+for i in `seq 1 10`;
+do
+    echo \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    \
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 1234"\
+    "123456789 123456789 123456789 123456789 123456789 123456789 123"\
+     > /dev/mcasp1_pru0_ts1
+done
+
+for i in `seq 1 10`;
+do
+    echo "==== TEST $i ==="
+    echo 'start'                > /sys/class/remoteproc/remoteproc2/state &&\
+    sleep 1 &&\
+    echo 'stop'                 > /sys/class/remoteproc/remoteproc2/state
+done
+
+cat /dev/mcasp1_pru0_ts0
+
+###############
+### DOUBLE TEST
+###############
+echo 'stop'                 > /sys/class/remoteproc/remoteproc2/state
+echo 'stop'                 > /sys/class/remoteproc/remoteproc3/state
+
+rm -rf                            /lib/firmware/pru0_mcasp8_rpcmsg.out
+rm -rf                            /lib/firmware/pru1_mcasp1_rpcmsg.out
+
+rmmod   mcasp_rpmsg.ko
+insmod  mcasp_rpmsg.ko
+
+cp ~/pru0_mcasp8_rpcmsg.out       /lib/firmware
+cp ~/pru1_mcasp1_rpcmsg.out       /lib/firmware
+ls -ls                            /lib/firmware
+
+cat                               /sys/class/remoteproc/remoteproc2/device/of_node/label
+cat                               /sys/class/remoteproc/remoteproc2/state
+cat                               /sys/class/remoteproc/remoteproc3/device/of_node/label
+cat                               /sys/class/remoteproc/remoteproc3/state
+
+echo 'stop'                     > /sys/class/remoteproc/remoteproc2/state
+echo 'pru0_mcasp8_rpcmsg.out'   > /sys/class/remoteproc/remoteproc2/firmware
+echo 'start'                    > /sys/class/remoteproc/remoteproc2/state
+sleep 2
+echo 'stop'                     > /sys/class/remoteproc/remoteproc3/state
+echo 'pru1_mcasp1_rpcmsg.out'   > /sys/class/remoteproc/remoteproc3/firmware
+echo 'start'                    > /sys/class/remoteproc/remoteproc3/state

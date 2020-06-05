@@ -1,0 +1,47 @@
+
+sudo gedit /etc/default/isc-dhcp-server &
+sudo gedit /etc/dhcp/dhcpd.conf &
+
+reset
+sudo su
+echo "#
+DHCPD_CONF=/etc/dhcp/dhcpd.conf
+INTERFACES=\"eth1\"
+" > /etc/default/isc-dhcp-server
+
+echo "#
+subnet 192.168.2.0 netmask 255.255.255.0
+{
+  interface             \"eth1\";
+  next-server           192.168.2.200;
+  server-identifier     192.168.2.200;
+  option subnet-mask    255.255.255.0;
+  pool
+  {
+    range dynamic-bootp 192.168.2.2 192.168.2.254;
+    allow unknown clients;
+  }#pool
+  if substring (option vendor-class-identifier, 0, 10)      = \"AM335x ROM\"
+  {
+    filename \"/tftpboot/BBB/u-boot-spl.bin\";
+  }
+  elsif substring (option vendor-class-identifier, 0, 17)   = \"AM335x U-Boot SPL\"
+  {
+    #filename \"/tftpboot/BBB/u-boot.img\";
+    filename \"/tftpboot/BBB/fit.itb\";
+  }
+  #elsif substring (option vendor-class-identifier, 0, 12)   = \"U-boot.armv7\"
+  #{
+  #  filename \"/tftpboot/BBB/zImage\";
+  #}
+}" > /etc/dhcp/dhcpd.conf
+exit
+
+cat /etc/default/isc-dhcp-server
+cat /etc/dhcp/dhcpd.conf
+
+
+sudo service    isc-dhcp-server     stop
+sudo service    isc-dhcp-server     start
+sudo service    isc-dhcp-server     status
+

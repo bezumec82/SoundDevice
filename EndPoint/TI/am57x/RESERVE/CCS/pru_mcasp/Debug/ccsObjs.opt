@@ -1,0 +1,1 @@
+"./clk_cfg.obj" "./main.obj" "./mcasp1_init.obj" "./mcasp8_init.obj" "./mcasp_init.obj" "./pads_cfg.obj" "../AM57xx_PRU.cmd" -llibc.a 

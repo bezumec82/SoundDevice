@@ -1,0 +1,37 @@
+#
+#
+#
+
+PWD     := $(shell pwd)
+BIN_DIR := $(SRC_DIR)/build-$(BOARD_VERSION).x-$(TARGET_CPU)
+
+target := kvoice.ko
+obj-m := kvoice.o
+
+kvoice-y := module.o
+kvoice-y += rtp.o \
+      rtp_ext.o \
+      rtp_common.o \
+      rtp_recv_skb.o \
+      rtp_send.o \
+      sequencer.o \
+      voice_ioctl.o \
+     ../version/version.o
+
+version_include := version.h
+extra_cflags := -I$(SRC_DIR)/include -I$(SRC_DIR)/hal -I$(SRC_DIR)/version -DDEBUG \
+ -DVERSION_INCLUDE=\"$(version_include)\" -DREVISION=${REVISION} -DBUILD_DATE="\"${BUILD_DATE}\"" -DCOPYRIGHT="\"${COPYRIGHT}\""
+
+.PHONY: all clean
+
+all:
+	$(MAKE) EXTRA_CFLAGS='$(extra_cflags)' \
+	KBUILD_EXTRA_SYMBOLS=$(SRC_DIR)/hal/Module.symvers \
+	-C $(LINUX_DIR) M=$(PWD) modules
+	
+clean:
+	$(MAKE) -C $(LINUX_DIR) M=$(PWD) clean
+
+install:
+	$(MAKE) EXTRA_CFLAGS='$(extra_cflags)' -C $(LINUX_DIR) M=$(PWD) INSTALL_MOD_PATH='$(DEST_DIR)/' modules_install
+	find $(PWD) -name $(target) -exec cp {} $(BIN_DIR) \;

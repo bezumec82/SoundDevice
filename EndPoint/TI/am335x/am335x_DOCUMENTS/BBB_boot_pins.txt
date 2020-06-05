@@ -1,0 +1,13 @@
+            SYSBOOT                     Boot Sequence          
+Pad #       4   3   2       1   0       1st     2nd     3rd     4th
+Curr. val.  1   1   1 /0    0   0       (11100)
+Resistor    66  67  68/S2   94  95      MMC1    MMC0    UART0   USB0
+                                        (11000)
+                                        SPI0    MMC0    USB0    UART0
+                                        (11001)
+                                        SPI0    MMC0    EMAC1   UART0
+                                        
+
+
+MMC0 == uSD connector   P10
+MMC1 == eMMC            U13

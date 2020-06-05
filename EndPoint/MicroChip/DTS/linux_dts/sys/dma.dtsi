@@ -1,0 +1,196 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            xdmac0: dma-controller@f0010000 {
+                compatible      = "atmel,sama5d4-dma";
+                #dma-cells      = <1>;
+                clocks          = <&xdmac0_clk>;
+                clock-names     = "dma_clk";
+            }; /* xdmac0 */
+            /* Place xdmac1 here despite its address */
+            xdmac1: dma-controller@f0004000 {
+                compatible      = "atmel,sama5d4-dma";
+                #dma-cells      = <1>;
+                clocks          = <&xdmac1_clk>;
+                clock-names     = "dma_clk";
+            }; /* xdmac1 */
+            /**********************************************************/
+            /********************/
+            /*** DMA CHANNELS ***/
+            /********************/            
+            i2c@f8028000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(0))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(1))>;
+                dma-names   = "tx", "rx";
+            }; /* i2c0 */
+            i2c1: i2c@fc028000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(2))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(3))>;
+                dma-names       = "tx", "rx";
+            }; /* i2c1 */
+            /**********************************************************/
+            spi@f0020000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(4))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(5))>;
+                dma-names       = "tx", "rx";
+            }; /* qspi0 */
+            spi@f8000000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(6))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(7))>;
+                dma-names       = "tx", "rx";
+            }; /* spi0 */
+            spi1: spi@fc000000 {
+                dmas        = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(8))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(9))>;
+                dma-names   = "tx", "rx";
+            }; /* spi1 */
+            /**********************************************************/
+            pwm@f802c000 {
+                dmas        = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(10))>;
+                dma-names       = "tx";
+            }; /* pwm */
+            /**********************************************************/
+            flexcom@f8034000 {
+                dmas        = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(11))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(12))>;
+                dma-names       = "tx", "rx";
+            }; /* flx0 */
+            flexcom@f8038000 {
+                i2c2: i2c@600 {
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(13))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(14))>;
+                    dma-names   = "tx", "rx";
+                }; /* i2c2 */
+            }; /* flx1 */
+            flexcom@fc010000 {
+                dmas        = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(15))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(16))>;
+                dma-names   = "tx", "rx";
+            }; /* flx2 */
+            flexcom@fc014000 {
+                uart7: serial@200 {
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(17))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(18))>;
+                    dma-names   = "tx", "rx";
+                }; /* uart7 */
+                spi2: spi@400 {
+                
+                }; /* spi2 */
+            }; /* flx3 */            
+            flexcom@fc018000 {
+                i2c3: i2c@600 {
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(19))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(20))>;
+                    dma-names   = "tx", "rx";
+                }; /* i2c3 */
+            };/* flx4 */
+            /***********/
+            /*** SSC ***/
+            /***********/
+            ssc0: ssc0@f8004000 {
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(21))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(22))>;
+                    dma-names   = "tx", "rx";
+            }; /* ssc0 */
+            ssc1: ssc1@fc004000 {
+//                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(23))>,
+//                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(24))>;
+//                    dma-names   = "tx", "rx";
+            }; /* ssc1 */
+            /**********************************************************/
+            adc: adc@fc030000 {
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(25))>;
+                    dma-names   = "rx";
+            }; /* adc */
+            /**********************************************************/
+            aes@f002c000 { /* Advanced Encryption Standard  */
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(26))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(27))>;
+                    dma-names   = "tx", "rx";
+            }; /* aes */
+            tdes@fc044000 { /* Triple Data Encryption Standard */
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(28))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(29))>;
+                    dma-names   = "tx", "rx";
+            }; /* tdes */
+            sha@f0028000 { /* Secure Hash Algorithm */
+                    dmas    = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(30))>;
+                    dma-names   = "tx";
+            }; /* sha */
+            /***********/
+            /*** I2S ***/
+            /***********/
+            i2s@f8050000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(31))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(32))>;
+                dma-names       = "tx", "rx";
+            }; /* i2s0 */
+            i2s@fc04c000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(33))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(34))>;
+                dma-names       = "tx", "rx";
+            }; /* i2s1 */
+            /**********************************************************/
+            serial@f801c000 {
+                atmel,use-dma-rx;
+                atmel,use-dma-tx;
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(35))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(36))>;
+                dma-names       = "tx", "rx";
+            }; /* uart0 */
+            serial@f8020000 {
+                atmel,use-dma-rx;
+                atmel,use-dma-tx;
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(37))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(38))>;
+                dma-names       = "tx", "rx";
+            }; /* uart1 */
+            serial@f8024000 {
+                atmel,use-dma-rx;
+                atmel,use-dma-tx;
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(39))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(40))>;
+                dma-names       = "tx", "rx";
+            }; /* uart2 */
+            serial@fc008000 {
+                atmel,use-dma-rx;
+                atmel,use-dma-tx;
+                dmas        = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(41))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(42))>;
+                dma-names   = "tx", "rx";
+            }; /* uart3 */
+            serial@fc00c000 {
+                atmel,use-dma-rx;
+                atmel,use-dma-tx;
+                dmas        = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(43))>,
+                              < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(44))>;
+                dma-names       = "tx", "rx";
+            }; /* uart4 */
+            /**********************************************************/
+            tc0: timer@f800c000 { /* Timer Counter */
+//              dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(45))>;
+//              dma-names       = "rx";
+            }; /* tc0 */
+            tc1: timer@f8010000 { /* Timer Counter */
+//              dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(46))>;
+//              dma-names       = rx";
+            }; /* tc1 */
+            /**********************************************************/
+            classd@fc048000 {
+                dmas        = < &xdmac1 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(47))>;
+                dma-names       = "tx";
+            }; /* classd */
+            /**********************************************************/
+            spi@f0024000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(48))>,
+                              < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(49))>;
+                dma-names       = "tx", "rx";
+            }; /* qspi1 */
+            pdmic: pdmic@f8018000 {
+                dmas        = < &xdmac0 (AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) | AT91_XDMAC_DT_PERID(50))>;
+                dma-names       = "rx";
+            }; /* pdmic */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

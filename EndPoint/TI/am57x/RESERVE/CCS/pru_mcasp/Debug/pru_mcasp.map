@@ -1,0 +1,618 @@
+******************************************************************************
+                     PRU Linker Unix v2.3.1                    
+******************************************************************************
+>> Linked Tue Feb  5 13:33:56 2019
+
+OUTPUT FILE NAME:   <pru_mcasp.out>
+ENTRY POINT SYMBOL: "_c_int00_noinit_noargs"  address: 00000000
+
+
+MEMORY CONFIGURATION
+
+         name            origin    length      used     unused   attr    fill
+----------------------  --------  ---------  --------  --------  ----  --------
+PAGE 0:
+  PRU_IMEM              00000000   00003000  00002a20  000005e0  RWIX
+
+PAGE 1:
+  PRU_DMEM_0_1          00000000   00002000  00000b74  0000148c  RWIX
+  PRU_DMEM_1_0          00002000   00002000  00000000  00002000  RWIX
+
+PAGE 2:
+  PRU_SHAREDMEM         00010000   00008000  00000000  00008000  RWIX
+  PRU_INTC              00020000   00001504  00000000  00001504  RWIX
+  PRU_CFG               00026000   00000120  00000044  000000dc  RWIX
+  PRU_UART              00028000   00000038  00000000  00000038  RWIX
+  PRU_IEP               0002e000   0000031c  00000000  0000031c  RWIX
+  PRU_ECAP              00030000   00000060  00000000  00000060  RWIX
+  RSVD27                00032000   00000100  00000000  00000100  RWIX
+  RSVD21                00032400   00000100  00000000  00000100  RWIX
+  L3OCMC                40000000   00010000  00000000  00010000  RWIX
+  RSVD11                48022000   00000088  00000000  00000088  RWIX
+  RSVD12                48024000   00000088  00000000  00000088  RWIX
+  RSVD2                 4802a000   000000d8  00000000  000000d8  RWIX
+  RSVD6                 48030000   000001a4  00000000  000001a4  RWIX
+  RSVD1                 48040000   0000005c  00000000  0000005c  RWIX
+  RSVD22                480c8000   00000140  00000000  00000140  RWIX
+  RSVD23                480ca000   00000880  00000000  00000880  RWIX
+  RSVD17                4819c000   000000d8  00000000  000000d8  RWIX
+  RSVD16                481a0000   000001a4  00000000  000001a4  RWIX
+  RSVD14                481cc000   000001e8  00000000  000001e8  RWIX
+  RSVD15                481d0000   000001e8  00000000  000001e8  RWIX
+  RSVD18                48300000   000002c4  00000000  000002c4  RWIX
+  RSVD19                48302000   000002c4  00000000  000002c4  RWIX
+  RSVD20                48304000   000002c4  00000000  000002c4  RWIX
+  RSVD13                48310000   00000100  00000000  00000100  RWIX
+  RSVD10                48318000   00000100  00000000  00000100  RWIX
+  RSVD29                49000000   00001098  00000000  00001098  RWIX
+  RSVD9                 4a100000   0000128c  00000000  0000128c  RWIX
+  DDR                   80000000   00010000  00000000  00010000  RWIX
+
+
+SECTION ALLOCATION MAP
+
+ output                                  attributes/
+section   page    origin      length       input sections
+--------  ----  ----------  ----------   ----------------
+.text:_c_int00* 
+*          0    00000000    0000001c     
+                  00000000    0000001c     rtspruv3_le.lib : boot.c.obj (.text:_c_int00_noinit_noargs)
+
+.text      0    0000001c    00002a04     
+                  0000001c    00000884     pads_cfg.obj (.text:setup_gpio_pads)
+                  000008a0    00000864     main.obj (.text:main)
+                  00001104    000002ac     mcasp1_init.obj (.text:setup_mcasp1_TX)
+                  000013b0    000002a8     mcasp8_init.obj (.text:setup_mcasp8_TX)
+                  00001658    0000028c     mcasp8_init.obj (.text:setup_mcasp8_RX)
+                  000018e4    00000230     mcasp8_init.obj (.text:start_mcasp8_RX)
+                  00001b14    00000224     mcasp1_init.obj (.text:start_mcasp1_TX)
+                  00001d38    00000224     mcasp8_init.obj (.text:start_mcasp8_TX)
+                  00001f5c    000001dc     clk_cfg.obj (.text:clk_cfg)
+                  00002138    000001a0     mcasp1_init.obj (.text:init_mcasp1)
+                  000022d8    00000130     pads_cfg.obj (.text:config_mcasp8_pads)
+                  00002408    00000110     mcasp8_init.obj (.text:init_mcasp8)
+                  00002518    00000100     pads_cfg.obj (.text:config_mcasp1_pads)
+                  00002618    000000a4     mcasp1_init.obj (.text:setup_mcasp1_pads)
+                  000026bc    000000a4     mcasp8_init.obj (.text:setup_mcasp8_pads)
+                  00002760    00000088     mcasp_init.obj (.text:service_buffs)
+                  000027e8    00000040     pads_cfg.obj (.text:set_industial_3_green)
+                  00002828    00000040     pads_cfg.obj (.text:set_industial_3_red)
+                  00002868    00000040     pads_cfg.obj (.text:set_status_0_green)
+                  000028a8    00000040     pads_cfg.obj (.text:set_status_0_red)
+                  000028e8    00000040     pads_cfg.obj (.text:set_status_1_green)
+                  00002928    00000040     pads_cfg.obj (.text:set_status_1_red)
+                  00002968    0000003c     pads_cfg.obj (.text:set_industial_2_green)
+                  000029a4    0000003c     pads_cfg.obj (.text:set_industial_2_red)
+                  000029e0    0000001c     mcasp_init.obj (.text:init_mcasp)
+                  000029fc    0000000c     mcasp1_init.obj (.text:start_mcasp1_RX)
+                  00002a08    00000008     rtspruv3_le.lib : exit.c.obj (.text:abort)
+                  00002a10    00000008                     : exit.c.obj (.text:loader_exit)
+                  00002a18    00000008     mcasp1_init.obj (.text:setup_mcasp1_RX)
+
+.bss       1    00000000    00000600     UNINITIALIZED
+                  00000000    00000200     (.common:rx8_bufs)
+                  00000200    00000200     (.common:tx1_bufs)
+                  00000400    00000200     (.common:tx8_bufs)
+
+.stack     1    00000600    00000300     UNINITIALIZED
+                  00000600    00000004     rtspruv3_le.lib : boot.c.obj (.stack)
+                  00000604    000002fc     --HOLE--
+
+.data      1    00000900    00000274     
+                  00000900    000000e4     mcasp1_init.obj (.data)
+                  000009e4    000000b8     pads_cfg.obj (.data)
+                  00000a9c    000000b4     mcasp8_init.obj (.data)
+                  00000b50    00000024     clk_cfg.obj (.data)
+
+.cinit     1    00000000    00000000     UNINITIALIZED
+
+.creg.PRU_CFG.noload.near 
+*          2    00026000    00000044     NOLOAD SECTION
+                  00026000    00000044     clk_cfg.obj (.creg.PRU_CFG.noload.near)
+
+.creg.PRU_CFG.near 
+*          2    00026044    00000000     UNINITIALIZED
+
+.creg.PRU_CFG.noload.far 
+*          2    00026044    00000000     NOLOAD SECTION
+
+.creg.PRU_CFG.far 
+*          2    00026044    00000000     UNINITIALIZED
+
+MODULE SUMMARY
+
+       Module            code    ro data   rw data
+       ------            ----    -------   -------
+    ./
+       main.obj          2148    0         1536   
+       pads_cfg.obj      3244    0         184    
+       mcasp8_init.obj   2876    0         180    
+       mcasp1_init.obj   1832    0         228    
+       clk_cfg.obj       476     0         104    
+       mcasp_init.obj    164     0         0      
+    +--+-----------------+-------+---------+---------+
+       Total:            10740   0         2232   
+                                                  
+    /home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/lib/rtspruv3_le.lib
+       boot.c.obj        28      0         0      
+       exit.c.obj        16      0         0      
+    +--+-----------------+-------+---------+---------+
+       Total:            44      0         0      
+                                                  
+       Stack:            0       0         768    
+    +--+-----------------+-------+---------+---------+
+       Grand Total:      10784   0         3000   
+
+
+SEGMENT ATTRIBUTES
+
+    id tag      seg value
+    -- ---      --- -----
+     0 PHA_PAGE 1   1    
+     1 PHA_PAGE 2   1    
+
+
+GLOBAL SYMBOLS: SORTED ALPHABETICALLY BY Name 
+
+page  address   name                                    
+----  -------   ----                                    
+0     00002a10  C$$EXIT                                 
+1     00000b60  CM_CLKMODE_DPLL_ABE_ptr                 
+1     00000b70  CM_CLKSEL_ABE_PLL_SYS_ptr               
+1     00000b54  CM_CLKSEL_CLKOUTMUX2_ptr                
+1     00000b64  CM_CLKSEL_DPLL_ABE_ptr                  
+1     00000b5c  CM_CLKSEL_PER_ABE_X1_GFCLK_MCASP_AUX_ptr
+1     00000b50  CM_COREAON_CLKOUTMUX2_CLKCTRL_ptr       
+1     00000b68  CM_DIV_M2_DPLL_ABE_ptr                  
+1     00000b6c  CM_DIV_M3_DPLL_ABE_ptr                  
+1     00000b58  CM_L4PER2_MCASP8_CLKCTRL_ptr            
+2     00026000  CT_CFG                                  
+1     00000a7c  GPIO1_DATAOUT_ptr                       
+1     00000a5c  GPIO1_OE_ptr                            
+1     00000a3c  GPIO1_SYSCONFIG_ptr                     
+1     00000a80  GPIO2_DATAOUT_ptr                       
+1     00000a60  GPIO2_OE_ptr                            
+1     00000a40  GPIO2_SYSCONFIG_ptr                     
+1     00000a84  GPIO3_DATAOUT_ptr                       
+1     00000a64  GPIO3_OE_ptr                            
+1     00000a44  GPIO3_SYSCONFIG_ptr                     
+1     00000a88  GPIO4_DATAOUT_ptr                       
+1     00000a68  GPIO4_OE_ptr                            
+1     00000a48  GPIO4_SYSCONFIG_ptr                     
+1     00000a8c  GPIO5_DATAOUT_ptr                       
+1     00000a6c  GPIO5_OE_ptr                            
+1     00000a4c  GPIO5_SYSCONFIG_ptr                     
+1     00000a90  GPIO6_DATAOUT_ptr                       
+1     00000a70  GPIO6_OE_ptr                            
+1     00000a50  GPIO6_SYSCONFIG_ptr                     
+1     00000a94  GPIO7_DATAOUT_ptr                       
+1     00000a74  GPIO7_OE_ptr                            
+1     00000a54  GPIO7_SYSCONFIG_ptr                     
+1     00000a98  GPIO8_DATAOUT_ptr                       
+1     00000a78  GPIO8_OE_ptr                            
+1     00000a58  GPIO8_SYSCONFIG_ptr                     
+1     00000958  MCASP1_ACLKRCTL_bits_ptr                
+1     00000954  MCASP1_ACLKXCTL_bits_ptr                
+1     00000950  MCASP1_AHCLKRCTL_bits_ptr               
+1     0000094c  MCASP1_AHCLKXCTL_bits_ptr               
+1     0000092c  MCASP1_DMACTLR_bits_ptr                 
+1     00000928  MCASP1_DMACTLX_bits_ptr                 
+1     00000910  MCASP1_GBLCTLR_bits_ptr                 
+1     00000914  MCASP1_GBLCTLR_ptr                      
+1     00000908  MCASP1_GBLCTLX_bits_ptr                 
+1     0000090c  MCASP1_GBLCTLX_ptr                      
+1     00000900  MCASP1_GBLCTL_bits_ptr                  
+1     00000904  MCASP1_GBLCTL_ptr                       
+1     00000924  MCASP1_IRQCTLR                          
+1     00000920  MCASP1_IRQCTLX                          
+1     00000918  MCASP1_LBCTL_ptr                        
+1     00000938  MCASP1_PDIR_bits_ptr                    
+1     00000930  MCASP1_PFUNC_bits_ptr                   
+1     00000934  MCASP1_PFUNC_ptr                        
+1     00000948  MCASP1_RXBUF_ptr                        
+1     00000960  MCASP1_RXCLKCHK_bits_ptr                
+1     00000968  MCASP1_RXFMCTL_bits_ptr                 
+1     00000970  MCASP1_RXFMT_bits_ptr                   
+1     00000940  MCASP1_RXMASK                           
+1     0000098c  MCASP1_RXSTAT_bits_ptr                  
+1     00000990  MCASP1_RXSTAT_ptr                       
+1     00000998  MCASP1_RXTDMSLOT_bits_ptr               
+1     0000097c  MCASP1_RXTDM_bits_ptr                   
+1     00000980  MCASP1_RXTDM_ptr                        
+1     000009a0  MCASP1_SRCTL_RX_bits_ptr                
+1     000009a8  MCASP1_SRCTL_RX_ptr                     
+1     0000099c  MCASP1_SRCTL_TX_bits_ptr                
+1     000009a4  MCASP1_SRCTL_TX_ptr                     
+1     00000944  MCASP1_TXBUF_ptr                        
+1     0000095c  MCASP1_TXCLKCHK_bits_ptr                
+1     0000091c  MCASP1_TXDITCTL_ptr                     
+1     00000964  MCASP1_TXFMCTL_bits_ptr                 
+1     0000096c  MCASP1_TXFMT_bits_ptr                   
+1     0000093c  MCASP1_TXMASK                           
+1     00000984  MCASP1_TXSTAT_bits_ptr                  
+1     00000988  MCASP1_TXSTAT_ptr                       
+1     00000994  MCASP1_TXTDMSLOT_bits_ptr               
+1     00000974  MCASP1_TXTDM_bits_ptr                   
+1     00000978  MCASP1_TXTDM_ptr                        
+1     000009ac  MCASP1_XRSRCTL_00_ptr                   
+1     000009b0  MCASP1_XRSRCTL_01_ptr                   
+1     000009b4  MCASP1_XRSRCTL_02_ptr                   
+1     000009b8  MCASP1_XRSRCTL_03_ptr                   
+1     000009bc  MCASP1_XRSRCTL_04_ptr                   
+1     000009c0  MCASP1_XRSRCTL_05_ptr                   
+1     000009c4  MCASP1_XRSRCTL_06_ptr                   
+1     000009c8  MCASP1_XRSRCTL_07_ptr                   
+1     000009cc  MCASP1_XRSRCTL_09_ptr                   
+1     000009d0  MCASP1_XRSRCTL_10_ptr                   
+1     000009d4  MCASP1_XRSRCTL_11_ptr                   
+1     000009d8  MCASP1_XRSRCTL_12_ptr                   
+1     000009dc  MCASP1_XRSRCTL_13_ptr                   
+1     000009e0  MCASP1_XRSRCTL_15_ptr                   
+1     00000af4  MCASP8_ACLKRCTL_bits_ptr                
+1     00000af0  MCASP8_ACLKXCTL_bits_ptr                
+1     00000aec  MCASP8_AHCLKRCTL_bits_ptr               
+1     00000ae8  MCASP8_AHCLKXCTL_bits_ptr               
+1     00000ac8  MCASP8_DMACTLR_bits_ptr                 
+1     00000ac4  MCASP8_DMACTLX_bits_ptr                 
+1     00000aac  MCASP8_GBLCTLR_bits_ptr                 
+1     00000ab0  MCASP8_GBLCTLR_ptr                      
+1     00000aa4  MCASP8_GBLCTLX_bits_ptr                 
+1     00000aa8  MCASP8_GBLCTLX_ptr                      
+1     00000a9c  MCASP8_GBLCTL_bits_ptr                  
+1     00000aa0  MCASP8_GBLCTL_ptr                       
+1     00000ac0  MCASP8_IRQCTLR                          
+1     00000abc  MCASP8_IRQCTLX                          
+1     00000ab4  MCASP8_LBCTL_ptr                        
+1     00000ad4  MCASP8_PDIR_bits_ptr                    
+1     00000acc  MCASP8_PFUNC_bits_ptr                   
+1     00000ad0  MCASP8_PFUNC_ptr                        
+1     00000ae4  MCASP8_RXBUF_ptr                        
+1     00000afc  MCASP8_RXCLKCHK_bits_ptr                
+1     00000b04  MCASP8_RXFMCTL_bits_ptr                 
+1     00000b0c  MCASP8_RXFMT_bits_ptr                   
+1     00000adc  MCASP8_RXMASK                           
+1     00000b28  MCASP8_RXSTAT_bits_ptr                  
+1     00000b2c  MCASP8_RXSTAT_ptr                       
+1     00000b34  MCASP8_RXTDMSLOT_bits_ptr               
+1     00000b18  MCASP8_RXTDM_bits_ptr                   
+1     00000b1c  MCASP8_RXTDM_ptr                        
+1     00000b3c  MCASP8_SRCTL_RX_bits_ptr                
+1     00000b44  MCASP8_SRCTL_RX_ptr                     
+1     00000b38  MCASP8_SRCTL_TX_bits_ptr                
+1     00000b40  MCASP8_SRCTL_TX_ptr                     
+1     00000ae0  MCASP8_TXBUF_ptr                        
+1     00000af8  MCASP8_TXCLKCHK_bits_ptr                
+1     00000ab8  MCASP8_TXDITCTL_ptr                     
+1     00000b00  MCASP8_TXFMCTL_bits_ptr                 
+1     00000b08  MCASP8_TXFMT_bits_ptr                   
+1     00000ad8  MCASP8_TXMASK                           
+1     00000b20  MCASP8_TXSTAT_bits_ptr                  
+1     00000b24  MCASP8_TXSTAT_ptr                       
+1     00000b30  MCASP8_TXTDMSLOT_bits_ptr               
+1     00000b10  MCASP8_TXTDM_bits_ptr                   
+1     00000b14  MCASP8_TXTDM_ptr                        
+1     00000b48  MCASP8_XRSRCTL_02_ptr                   
+1     00000b4c  MCASP8_XRSRCTL_03_ptr                   
+abs   80000000  __PRU_CREG_BASE_DDR                     
+abs   40000000  __PRU_CREG_BASE_L3OCMC                  
+abs   00026000  __PRU_CREG_BASE_PRU_CFG                 
+abs   00000000  __PRU_CREG_BASE_PRU_DMEM_0_1            
+abs   00002000  __PRU_CREG_BASE_PRU_DMEM_1_0            
+abs   00030000  __PRU_CREG_BASE_PRU_ECAP                
+abs   0002e000  __PRU_CREG_BASE_PRU_IEP                 
+abs   00020000  __PRU_CREG_BASE_PRU_INTC                
+abs   00010000  __PRU_CREG_BASE_PRU_SHAREDMEM           
+abs   00028000  __PRU_CREG_BASE_PRU_UART                
+abs   48040000  __PRU_CREG_BASE_RSVD1                   
+abs   48318000  __PRU_CREG_BASE_RSVD10                  
+abs   48022000  __PRU_CREG_BASE_RSVD11                  
+abs   48024000  __PRU_CREG_BASE_RSVD12                  
+abs   48310000  __PRU_CREG_BASE_RSVD13                  
+abs   481cc000  __PRU_CREG_BASE_RSVD14                  
+abs   481d0000  __PRU_CREG_BASE_RSVD15                  
+abs   481a0000  __PRU_CREG_BASE_RSVD16                  
+abs   4819c000  __PRU_CREG_BASE_RSVD17                  
+abs   48300000  __PRU_CREG_BASE_RSVD18                  
+abs   48302000  __PRU_CREG_BASE_RSVD19                  
+abs   4802a000  __PRU_CREG_BASE_RSVD2                   
+abs   48304000  __PRU_CREG_BASE_RSVD20                  
+abs   00032400  __PRU_CREG_BASE_RSVD21                  
+abs   480c8000  __PRU_CREG_BASE_RSVD22                  
+abs   480ca000  __PRU_CREG_BASE_RSVD23                  
+abs   00032000  __PRU_CREG_BASE_RSVD27                  
+abs   49000000  __PRU_CREG_BASE_RSVD29                  
+abs   48030000  __PRU_CREG_BASE_RSVD6                   
+abs   4a100000  __PRU_CREG_BASE_RSVD9                   
+abs   0000001f  __PRU_CREG_DDR                          
+abs   0000001e  __PRU_CREG_L3OCMC                       
+abs   00000004  __PRU_CREG_PRU_CFG                      
+abs   00000018  __PRU_CREG_PRU_DMEM_0_1                 
+abs   00000019  __PRU_CREG_PRU_DMEM_1_0                 
+abs   00000003  __PRU_CREG_PRU_ECAP                     
+abs   0000001a  __PRU_CREG_PRU_IEP                      
+abs   00000000  __PRU_CREG_PRU_INTC                     
+abs   0000001c  __PRU_CREG_PRU_SHAREDMEM                
+abs   00000007  __PRU_CREG_PRU_UART                     
+abs   00000001  __PRU_CREG_RSVD1                        
+abs   0000000a  __PRU_CREG_RSVD10                       
+abs   0000000b  __PRU_CREG_RSVD11                       
+abs   0000000c  __PRU_CREG_RSVD12                       
+abs   0000000d  __PRU_CREG_RSVD13                       
+abs   0000000e  __PRU_CREG_RSVD14                       
+abs   0000000f  __PRU_CREG_RSVD15                       
+abs   00000010  __PRU_CREG_RSVD16                       
+abs   00000011  __PRU_CREG_RSVD17                       
+abs   00000012  __PRU_CREG_RSVD18                       
+abs   00000013  __PRU_CREG_RSVD19                       
+abs   00000002  __PRU_CREG_RSVD2                        
+abs   00000014  __PRU_CREG_RSVD20                       
+abs   00000015  __PRU_CREG_RSVD21                       
+abs   00000016  __PRU_CREG_RSVD22                       
+abs   00000017  __PRU_CREG_RSVD23                       
+abs   0000001b  __PRU_CREG_RSVD27                       
+abs   0000001d  __PRU_CREG_RSVD29                       
+abs   00000006  __PRU_CREG_RSVD6                        
+abs   00000009  __PRU_CREG_RSVD9                        
+1     00000900  __TI_STACK_END                          
+abs   00000300  __TI_STACK_SIZE                         
+abs   ffffffff  __c_args__                              
+0     00000000  _c_int00_noinit_noargs                  
+1     00000600  _stack                                  
+0     00002a08  abort                                   
+0     00001f5c  clk_cfg                                 
+0     00002518  config_mcasp1_pads                      
+0     000022d8  config_mcasp8_pads                      
+0     000029e0  init_mcasp                              
+0     00002138  init_mcasp1                             
+0     00002408  init_mcasp8                             
+0     000008a0  main                                    
+1     00000000  rx8_bufs                                
+0     00002760  service_buffs                           
+0     00002968  set_industial_2_green                   
+0     000029a4  set_industial_2_red                     
+0     000027e8  set_industial_3_green                   
+0     00002828  set_industial_3_red                     
+0     00002868  set_status_0_green                      
+0     000028a8  set_status_0_red                        
+0     000028e8  set_status_1_green                      
+0     00002928  set_status_1_red                        
+0     0000001c  setup_gpio_pads                         
+0     00001104  setup_mcasp1_TX                         
+0     00002618  setup_mcasp1_pads                       
+0     00001b14  start_mcasp1_TX                         
+1     00000200  tx1_bufs                                
+1     00000400  tx8_bufs                                
+
+
+GLOBAL SYMBOLS: SORTED BY Symbol Address 
+
+page  address   name                                    
+----  -------   ----                                    
+0     00000000  _c_int00_noinit_noargs                  
+0     0000001c  setup_gpio_pads                         
+0     000008a0  main                                    
+0     00001104  setup_mcasp1_TX                         
+0     00001b14  start_mcasp1_TX                         
+0     00001f5c  clk_cfg                                 
+0     00002138  init_mcasp1                             
+0     000022d8  config_mcasp8_pads                      
+0     00002408  init_mcasp8                             
+0     00002518  config_mcasp1_pads                      
+0     00002618  setup_mcasp1_pads                       
+0     00002760  service_buffs                           
+0     000027e8  set_industial_3_green                   
+0     00002828  set_industial_3_red                     
+0     00002868  set_status_0_green                      
+0     000028a8  set_status_0_red                        
+0     000028e8  set_status_1_green                      
+0     00002928  set_status_1_red                        
+0     00002968  set_industial_2_green                   
+0     000029a4  set_industial_2_red                     
+0     000029e0  init_mcasp                              
+0     00002a08  abort                                   
+0     00002a10  C$$EXIT                                 
+1     00000000  rx8_bufs                                
+1     00000200  tx1_bufs                                
+1     00000400  tx8_bufs                                
+1     00000600  _stack                                  
+1     00000900  MCASP1_GBLCTL_bits_ptr                  
+1     00000900  __TI_STACK_END                          
+1     00000904  MCASP1_GBLCTL_ptr                       
+1     00000908  MCASP1_GBLCTLX_bits_ptr                 
+1     0000090c  MCASP1_GBLCTLX_ptr                      
+1     00000910  MCASP1_GBLCTLR_bits_ptr                 
+1     00000914  MCASP1_GBLCTLR_ptr                      
+1     00000918  MCASP1_LBCTL_ptr                        
+1     0000091c  MCASP1_TXDITCTL_ptr                     
+1     00000920  MCASP1_IRQCTLX                          
+1     00000924  MCASP1_IRQCTLR                          
+1     00000928  MCASP1_DMACTLX_bits_ptr                 
+1     0000092c  MCASP1_DMACTLR_bits_ptr                 
+1     00000930  MCASP1_PFUNC_bits_ptr                   
+1     00000934  MCASP1_PFUNC_ptr                        
+1     00000938  MCASP1_PDIR_bits_ptr                    
+1     0000093c  MCASP1_TXMASK                           
+1     00000940  MCASP1_RXMASK                           
+1     00000944  MCASP1_TXBUF_ptr                        
+1     00000948  MCASP1_RXBUF_ptr                        
+1     0000094c  MCASP1_AHCLKXCTL_bits_ptr               
+1     00000950  MCASP1_AHCLKRCTL_bits_ptr               
+1     00000954  MCASP1_ACLKXCTL_bits_ptr                
+1     00000958  MCASP1_ACLKRCTL_bits_ptr                
+1     0000095c  MCASP1_TXCLKCHK_bits_ptr                
+1     00000960  MCASP1_RXCLKCHK_bits_ptr                
+1     00000964  MCASP1_TXFMCTL_bits_ptr                 
+1     00000968  MCASP1_RXFMCTL_bits_ptr                 
+1     0000096c  MCASP1_TXFMT_bits_ptr                   
+1     00000970  MCASP1_RXFMT_bits_ptr                   
+1     00000974  MCASP1_TXTDM_bits_ptr                   
+1     00000978  MCASP1_TXTDM_ptr                        
+1     0000097c  MCASP1_RXTDM_bits_ptr                   
+1     00000980  MCASP1_RXTDM_ptr                        
+1     00000984  MCASP1_TXSTAT_bits_ptr                  
+1     00000988  MCASP1_TXSTAT_ptr                       
+1     0000098c  MCASP1_RXSTAT_bits_ptr                  
+1     00000990  MCASP1_RXSTAT_ptr                       
+1     00000994  MCASP1_TXTDMSLOT_bits_ptr               
+1     00000998  MCASP1_RXTDMSLOT_bits_ptr               
+1     0000099c  MCASP1_SRCTL_TX_bits_ptr                
+1     000009a0  MCASP1_SRCTL_RX_bits_ptr                
+1     000009a4  MCASP1_SRCTL_TX_ptr                     
+1     000009a8  MCASP1_SRCTL_RX_ptr                     
+1     000009ac  MCASP1_XRSRCTL_00_ptr                   
+1     000009b0  MCASP1_XRSRCTL_01_ptr                   
+1     000009b4  MCASP1_XRSRCTL_02_ptr                   
+1     000009b8  MCASP1_XRSRCTL_03_ptr                   
+1     000009bc  MCASP1_XRSRCTL_04_ptr                   
+1     000009c0  MCASP1_XRSRCTL_05_ptr                   
+1     000009c4  MCASP1_XRSRCTL_06_ptr                   
+1     000009c8  MCASP1_XRSRCTL_07_ptr                   
+1     000009cc  MCASP1_XRSRCTL_09_ptr                   
+1     000009d0  MCASP1_XRSRCTL_10_ptr                   
+1     000009d4  MCASP1_XRSRCTL_11_ptr                   
+1     000009d8  MCASP1_XRSRCTL_12_ptr                   
+1     000009dc  MCASP1_XRSRCTL_13_ptr                   
+1     000009e0  MCASP1_XRSRCTL_15_ptr                   
+1     00000a3c  GPIO1_SYSCONFIG_ptr                     
+1     00000a40  GPIO2_SYSCONFIG_ptr                     
+1     00000a44  GPIO3_SYSCONFIG_ptr                     
+1     00000a48  GPIO4_SYSCONFIG_ptr                     
+1     00000a4c  GPIO5_SYSCONFIG_ptr                     
+1     00000a50  GPIO6_SYSCONFIG_ptr                     
+1     00000a54  GPIO7_SYSCONFIG_ptr                     
+1     00000a58  GPIO8_SYSCONFIG_ptr                     
+1     00000a5c  GPIO1_OE_ptr                            
+1     00000a60  GPIO2_OE_ptr                            
+1     00000a64  GPIO3_OE_ptr                            
+1     00000a68  GPIO4_OE_ptr                            
+1     00000a6c  GPIO5_OE_ptr                            
+1     00000a70  GPIO6_OE_ptr                            
+1     00000a74  GPIO7_OE_ptr                            
+1     00000a78  GPIO8_OE_ptr                            
+1     00000a7c  GPIO1_DATAOUT_ptr                       
+1     00000a80  GPIO2_DATAOUT_ptr                       
+1     00000a84  GPIO3_DATAOUT_ptr                       
+1     00000a88  GPIO4_DATAOUT_ptr                       
+1     00000a8c  GPIO5_DATAOUT_ptr                       
+1     00000a90  GPIO6_DATAOUT_ptr                       
+1     00000a94  GPIO7_DATAOUT_ptr                       
+1     00000a98  GPIO8_DATAOUT_ptr                       
+1     00000a9c  MCASP8_GBLCTL_bits_ptr                  
+1     00000aa0  MCASP8_GBLCTL_ptr                       
+1     00000aa4  MCASP8_GBLCTLX_bits_ptr                 
+1     00000aa8  MCASP8_GBLCTLX_ptr                      
+1     00000aac  MCASP8_GBLCTLR_bits_ptr                 
+1     00000ab0  MCASP8_GBLCTLR_ptr                      
+1     00000ab4  MCASP8_LBCTL_ptr                        
+1     00000ab8  MCASP8_TXDITCTL_ptr                     
+1     00000abc  MCASP8_IRQCTLX                          
+1     00000ac0  MCASP8_IRQCTLR                          
+1     00000ac4  MCASP8_DMACTLX_bits_ptr                 
+1     00000ac8  MCASP8_DMACTLR_bits_ptr                 
+1     00000acc  MCASP8_PFUNC_bits_ptr                   
+1     00000ad0  MCASP8_PFUNC_ptr                        
+1     00000ad4  MCASP8_PDIR_bits_ptr                    
+1     00000ad8  MCASP8_TXMASK                           
+1     00000adc  MCASP8_RXMASK                           
+1     00000ae0  MCASP8_TXBUF_ptr                        
+1     00000ae4  MCASP8_RXBUF_ptr                        
+1     00000ae8  MCASP8_AHCLKXCTL_bits_ptr               
+1     00000aec  MCASP8_AHCLKRCTL_bits_ptr               
+1     00000af0  MCASP8_ACLKXCTL_bits_ptr                
+1     00000af4  MCASP8_ACLKRCTL_bits_ptr                
+1     00000af8  MCASP8_TXCLKCHK_bits_ptr                
+1     00000afc  MCASP8_RXCLKCHK_bits_ptr                
+1     00000b00  MCASP8_TXFMCTL_bits_ptr                 
+1     00000b04  MCASP8_RXFMCTL_bits_ptr                 
+1     00000b08  MCASP8_TXFMT_bits_ptr                   
+1     00000b0c  MCASP8_RXFMT_bits_ptr                   
+1     00000b10  MCASP8_TXTDM_bits_ptr                   
+1     00000b14  MCASP8_TXTDM_ptr                        
+1     00000b18  MCASP8_RXTDM_bits_ptr                   
+1     00000b1c  MCASP8_RXTDM_ptr                        
+1     00000b20  MCASP8_TXSTAT_bits_ptr                  
+1     00000b24  MCASP8_TXSTAT_ptr                       
+1     00000b28  MCASP8_RXSTAT_bits_ptr                  
+1     00000b2c  MCASP8_RXSTAT_ptr                       
+1     00000b30  MCASP8_TXTDMSLOT_bits_ptr               
+1     00000b34  MCASP8_RXTDMSLOT_bits_ptr               
+1     00000b38  MCASP8_SRCTL_TX_bits_ptr                
+1     00000b3c  MCASP8_SRCTL_RX_bits_ptr                
+1     00000b40  MCASP8_SRCTL_TX_ptr                     
+1     00000b44  MCASP8_SRCTL_RX_ptr                     
+1     00000b48  MCASP8_XRSRCTL_02_ptr                   
+1     00000b4c  MCASP8_XRSRCTL_03_ptr                   
+1     00000b50  CM_COREAON_CLKOUTMUX2_CLKCTRL_ptr       
+1     00000b54  CM_CLKSEL_CLKOUTMUX2_ptr                
+1     00000b58  CM_L4PER2_MCASP8_CLKCTRL_ptr            
+1     00000b5c  CM_CLKSEL_PER_ABE_X1_GFCLK_MCASP_AUX_ptr
+1     00000b60  CM_CLKMODE_DPLL_ABE_ptr                 
+1     00000b64  CM_CLKSEL_DPLL_ABE_ptr                  
+1     00000b68  CM_DIV_M2_DPLL_ABE_ptr                  
+1     00000b6c  CM_DIV_M3_DPLL_ABE_ptr                  
+1     00000b70  CM_CLKSEL_ABE_PLL_SYS_ptr               
+2     00026000  CT_CFG                                  
+abs   00000000  __PRU_CREG_BASE_PRU_DMEM_0_1            
+abs   00000000  __PRU_CREG_PRU_INTC                     
+abs   00000001  __PRU_CREG_RSVD1                        
+abs   00000002  __PRU_CREG_RSVD2                        
+abs   00000003  __PRU_CREG_PRU_ECAP                     
+abs   00000004  __PRU_CREG_PRU_CFG                      
+abs   00000006  __PRU_CREG_RSVD6                        
+abs   00000007  __PRU_CREG_PRU_UART                     
+abs   00000009  __PRU_CREG_RSVD9                        
+abs   0000000a  __PRU_CREG_RSVD10                       
+abs   0000000b  __PRU_CREG_RSVD11                       
+abs   0000000c  __PRU_CREG_RSVD12                       
+abs   0000000d  __PRU_CREG_RSVD13                       
+abs   0000000e  __PRU_CREG_RSVD14                       
+abs   0000000f  __PRU_CREG_RSVD15                       
+abs   00000010  __PRU_CREG_RSVD16                       
+abs   00000011  __PRU_CREG_RSVD17                       
+abs   00000012  __PRU_CREG_RSVD18                       
+abs   00000013  __PRU_CREG_RSVD19                       
+abs   00000014  __PRU_CREG_RSVD20                       
+abs   00000015  __PRU_CREG_RSVD21                       
+abs   00000016  __PRU_CREG_RSVD22                       
+abs   00000017  __PRU_CREG_RSVD23                       
+abs   00000018  __PRU_CREG_PRU_DMEM_0_1                 
+abs   00000019  __PRU_CREG_PRU_DMEM_1_0                 
+abs   0000001a  __PRU_CREG_PRU_IEP                      
+abs   0000001b  __PRU_CREG_RSVD27                       
+abs   0000001c  __PRU_CREG_PRU_SHAREDMEM                
+abs   0000001d  __PRU_CREG_RSVD29                       
+abs   0000001e  __PRU_CREG_L3OCMC                       
+abs   0000001f  __PRU_CREG_DDR                          
+abs   00000300  __TI_STACK_SIZE                         
+abs   00002000  __PRU_CREG_BASE_PRU_DMEM_1_0            
+abs   00010000  __PRU_CREG_BASE_PRU_SHAREDMEM           
+abs   00020000  __PRU_CREG_BASE_PRU_INTC                
+abs   00026000  __PRU_CREG_BASE_PRU_CFG                 
+abs   00028000  __PRU_CREG_BASE_PRU_UART                
+abs   0002e000  __PRU_CREG_BASE_PRU_IEP                 
+abs   00030000  __PRU_CREG_BASE_PRU_ECAP                
+abs   00032000  __PRU_CREG_BASE_RSVD27                  
+abs   00032400  __PRU_CREG_BASE_RSVD21                  
+abs   40000000  __PRU_CREG_BASE_L3OCMC                  
+abs   48022000  __PRU_CREG_BASE_RSVD11                  
+abs   48024000  __PRU_CREG_BASE_RSVD12                  
+abs   4802a000  __PRU_CREG_BASE_RSVD2                   
+abs   48030000  __PRU_CREG_BASE_RSVD6                   
+abs   48040000  __PRU_CREG_BASE_RSVD1                   
+abs   480c8000  __PRU_CREG_BASE_RSVD22                  
+abs   480ca000  __PRU_CREG_BASE_RSVD23                  
+abs   4819c000  __PRU_CREG_BASE_RSVD17                  
+abs   481a0000  __PRU_CREG_BASE_RSVD16                  
+abs   481cc000  __PRU_CREG_BASE_RSVD14                  
+abs   481d0000  __PRU_CREG_BASE_RSVD15                  
+abs   48300000  __PRU_CREG_BASE_RSVD18                  
+abs   48302000  __PRU_CREG_BASE_RSVD19                  
+abs   48304000  __PRU_CREG_BASE_RSVD20                  
+abs   48310000  __PRU_CREG_BASE_RSVD13                  
+abs   48318000  __PRU_CREG_BASE_RSVD10                  
+abs   49000000  __PRU_CREG_BASE_RSVD29                  
+abs   4a100000  __PRU_CREG_BASE_RSVD9                   
+abs   80000000  __PRU_CREG_BASE_DDR                     
+abs   ffffffff  __c_args__                              
+
+[226 symbols]

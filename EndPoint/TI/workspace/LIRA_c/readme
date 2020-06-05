@@ -1,0 +1,11 @@
+#initialize USB
+mkdir /dev/gadget
+mount -t gadgetfs gadgetfs /dev/gadget
+ls -ls /dev/gadget
+#restart agent
+/usr/sbin/tcf-agent -d -L- -l0
+
+tree /dev/lira
+
+
+umount /dev/gadget

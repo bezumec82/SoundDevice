@@ -1,0 +1,41 @@
+reset
+export               TI_PTH=/media/constantine/Work/LEMZ/SoundDevice/EndPoint/TI
+export            AM335_PTH=${TI_PTH}/am335x
+export              SDK_PTH=${AM335_PTH}/SDK
+export              BSP_PTH=${SDK_PTH}/board-support
+export             PBLT_PTH=${BSP_PTH}/prebuilt-images
+export             KRNL_PTH=${AM335_PTH}/processor-sdk-linux-rt
+export              DTS_PTH=${AM335_PTH}/am335x_DeviceTree
+export             ROOT_PTH=${AM335_PTH}/nfsroot
+export            TISDK_PTH=${AM335_PTH}/tisdk
+export       ARAGO_IMGS_PTH=${TISDK_PTH}/build/arago-tmp/deploy/images/am57xx-evm
+export           U_BOOT_PTH=${AM335_PTH}/ti-u-boot
+export         TFTPBOOT_PTH=/tftpboot/BBB
+export              TCH_PTH=${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf/bin
+export                   CC=${TCH_PTH}/arm-linux-gnueabihf-
+export                 PATH=${TCH_PTH}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export                 ARCH=arm
+export        CROSS_COMPILE=arm-linux-gnueabihf-
+export       TOOLCHAIN_PATH=${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf
+export TOOLCHAIN_PATH_ARMV7=${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf
+export          JRTPLIB_PTH=${AM335_PTH}/jrtplib-3.11.1
+export              FIT_PTH=${AM335_PTH}/FIT
+
+reset
+date -r ${TI_PTH}
+date -r ${AM335_PTH}
+date -r ${SDK_PTH}
+date -r ${BSP_PTH}
+date -r ${PBLT_PTH}
+date -r ${KRNL_PTH}
+date -r ${DTS_PTH}
+date -r ${ROOT_PTH}
+date -r ${TISDK_PTH}
+date -r ${ARAGO_IMGS_PTH}
+date -r ${U_BOOT_PTH}
+date -r ${TFTPBOOT_PTH}
+date -r ${TCH_PTH}
+date -r ${TOOLCHAIN_PATH}
+date -r ${TOOLCHAIN_PATH_ARMV7}
+date -r ${JRTPLIB_PTH}
+date -r ${FIT_PTH}

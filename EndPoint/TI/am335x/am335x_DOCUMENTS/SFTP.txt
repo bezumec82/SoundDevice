@@ -1,0 +1,14 @@
+export TI_PTH=/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+export AM335_PTH=${TI_PTH}/am335x
+
+stat ${TI_PTH}
+stat ${AM335_PTH}
+
+
+sudo rm -rf ~/.ssh/known_hosts
+
+sudo cp ${AM335_PTH}/nfsroot/etc/ssh/ssh_host_* \
+        ${AM335_PTH}/meta-user/recipes-apps/ssh/files
+sudo chmod -R 777 ${AM335_PTH}/meta-user/recipes-apps/ssh/files/*
+
+

@@ -1,0 +1,18 @@
+export TI_PTH=/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+export AM335_PTH=${TI_PTH}/am335x
+export USB_PTH=${AM335_PTH}/USB
+
+cd ${USB_PTH}
+
+### Module
+sudo insmod ${USB_PTH}/ft245-lira/ft245.ko
+ls /dev/lira
+
+### Capture
+sudo modprobe usbmon
+ls -ls /dev/usb*
+sudo adduser $USER wireshark
+sudo setfacl -m u:$USER:r /dev/usbmon*
+
+filter
+usb.bus_id==3 and usb.device_address==18

@@ -1,0 +1,22 @@
+#
+#
+#
+
+target	= version_mon.o
+target += version_app.o
+
+
+include root.mk
+
+src	:= version.c
+target_cflags += \
+-DREVISION=${REVISION} \
+-DBUILD_DATE="\"${BUILD_DATE}\"" \
+-DCOPYRIGHT="\"${COPYRIGHT}\""
+
+version_mon.o: $(src)
+	$(make_module)
+
+version_app.o: $(src)
+	$(make_app_obj)
+

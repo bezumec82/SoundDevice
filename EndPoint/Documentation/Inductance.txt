@@ -1,0 +1,11 @@
+Change                                                  Target
+74404020068         Wurth Elektronik    10  1,02    $   6.8uH/sat.560mA SNR2010E    - Все Wurth не шилдованные - не подходят
+LQH2MPZ220MGRL      MURATA              10  0,59    $   22uH/sat.310mA SNR2010E     - подходит
+74404024100         Wurth Elektronik    10  1,97    $   10uH SNR2512E               - Все Wurth не шилдованные - не подходят
+74404024220         Wurth Elektronik    10  1,97    $   22uH SNR2512E               - Все Wurth не шилдованные - не подходят
+
+SRP6540-470M        Bourns Gmbh         10  1,86    $   47uH/sat.1.6A SRP6540       - Собственно это и нужно
+SRP6060FA-220M      Bourns Gmbh         10  2,15    $   22uH/sat.5.6A SRP6060FA     - Собственно это и нужно
+SRN6045-220M        Bourns Gmbh         10  0,79    $   22uH/sat.1.6A 'SNR6045      - подходит
+74404054150         Wurth Elektronik    10  2,04    $   15uH/sat.2.3A SNR5040E      - этот не нужен если 
+

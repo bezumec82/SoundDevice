@@ -1,0 +1,37 @@
+#initialize USB
+mkdir /dev/gadget
+mount -t gadgetfs gadgetfs /dev/gadget
+ls -ls /dev/gadget
+#restart agent
+/usr/sbin/tcf-agent -d -L- -l0
+
+tree /dev/lira
+
+umount /dev/gadget
+
+Statistics files :
+
+/sys/devices/platform/ocp/\
+/4a326000.pruss-soc-bus\
+/4a300000.pruss\
+/4a334000.pru0\
+/remoteproc\
+/remoteproc1\
+/virtio0\
+/virtio0.mcasp0_pru0.-1.30
+/pru_mcasp
+
+/sys/devices/platform/ocp\
+/4a326000.pruss-soc-bus\
+/4a300000.pruss\
+/4a338000.pru1\
+/remoteproc\
+/remoteproc2
+/virtio1\
+/virtio1.mcasp1_pru1.-1.31
+/pru_mcasp
+
+
+#Wireshark filter
+usb.bus_id==2 and usb.device_address==18 and usb.data_len==178 
+usb.addr=="2.18.1"

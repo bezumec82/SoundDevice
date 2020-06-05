@@ -1,0 +1,22 @@
+
+git config --global user.name "Константин Ласьков"
+git config --global user.email "laskov.k.a@topaz-atcs.com"
+
+#######################
+### Existing folder ###
+#######################
+cd /media/constantine/Work/SoundDevice/SoundDevice_endPoint
+git init
+git remote add origin http://gitlab.topaz-atcs.com/Laskov.K.A/SoundDevice_endPoint.git
+
+git add .
+git commit -m "2018/09/21 Initial commit"
+git push -u origin master
+
+
+### COMMITS ###
+cd /media/constantine/RAID/SoundDevice/SoundDevice_endPoint
+git add --all
+git commit -m "2019/06/24 Load FIT from USB"
+git push --all
+

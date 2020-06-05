@@ -1,0 +1,16 @@
+#
+#
+#
+
+include root.mk
+
+subtargets = 
+
+ifeq ("$(TARGET_CPU)", "BF527")
+	subtargets = vman vman2
+endif
+
+ifeq ("$(TARGET_CPU)", "BF609")
+	subtargets = vman vman2
+endif
+

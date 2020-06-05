@@ -1,0 +1,16 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            classd: classd@fc048000 {
+                compatible  = "atmel,sama5d2-classd";
+                clocks      =   <&classd_clk>, 
+                                <&classd_gclk>, 
+                                <&audio_pll_clk>;
+                clock-names =   "pclk", 
+                                "gclk", 
+                                "aclk";
+            }; /* classd */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

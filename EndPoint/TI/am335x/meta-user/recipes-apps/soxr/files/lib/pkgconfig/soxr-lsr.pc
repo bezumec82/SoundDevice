@@ -1,0 +1,5 @@
+Name: soxr-lsr
+Description: High quality, one-dimensional sample-rate conversion library (with libsamplerate-like bindings)
+Version: 0.1.1
+Libs: -L/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/soxr/install/lib -lsoxr-lsr
+Cflags: -I/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/soxr/install/include

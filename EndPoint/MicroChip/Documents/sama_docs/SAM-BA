@@ -1,0 +1,46 @@
+export SAM_LNX_PATH=/media/constantine/RAID/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux
+export SAM_BA_PATH=${SAM_LNX_PATH}/SAM-BA
+
+##############
+### SAM-BA ###
+##############
+cd ${SAM_BA_PATH}
+
+sudo ./sam-ba -x SHOW_BOOT_JTAG.qml
+sudo ./sam-ba -x SAMA5D27_QSPI_USB.qml
+sudo ./sam-ba -x SAMA5D27_QSPI_JTAG.qml
+sudo ./sam-ba -x READ_FUSE_JTAG.qml
+
+sudo ./sam-ba -p jlink -b sama5d27-soundDev -a qspiflash -c erase
+
+### Write bootstrap
+sudo ./sam-ba -p jlink -b sama5d27-soundDev -a qspiflash \
+-c writeboot:boot.bin \
+-c verifyboot:boot.bin
+
+### Write u-boot
+sudo ./sam-ba -p jlink -b sama5d27-soundDev -a qspiflash \
+-c write:u-boot.bin:0x00010000 \
+-c verify:u-boot.bin:0x00010000
+
+### Write device tree
+#sudo ./sam-ba -p jlink -b sama5d27-soundDev -a qspiflash \
+-c write:sama5d27_sound_device.dtb:0x000c0000 \
+-c verify:sama5d27_sound_device.dtb:0x000c0000
+
+### Write kernel
+#sudo ./sam-ba -p jlink -b sama5d27-soundDev -a qspiflash \
+-c write:zImage:0x00100000 \
+-c verify:zImage:0x001000000
+
+### CHANGE BOOT SOURCE ###
+sudo ./sam-ba -p jlink -b sama5d27-soundDev -a bootconfig \
+-c writecfg:bureg0:\
+sdmmc1_disabled,sdmmc0_disabled,\
+nfc_disabled,\
+spi1_disabled,spi0_disabled,\
+qspi0_disabled,qspi1_ioset2,\
+jtag_ioset3,ext_mem_boot
+
+sudo ./sam-ba -p jlink -b sama5d27-soundDev -a bootconfig \
+-c writecfg:bscr:valid,bureg0

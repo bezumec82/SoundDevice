@@ -1,0 +1,37 @@
+export TI_PTH=/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+export AM335_PTH=${TI_PTH}/am335x
+export TCH_PTH=${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf/bin
+export CC=${TCH_PTH}/arm-linux-gnueabihf-
+export PATH=${TCH_PTH}:${PATH}
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabihf-
+export SOXR_PTH=${AM335_PTH}/soxr
+
+reset
+stat ${TI_PTH}
+stat ${AM335_PTH}
+stat ${TCH_PTH}
+stat ${SOXR_PTH}
+
+cd ${SOXR_PTH}
+mkdir ${SOXR_PTH}/install
+
+export CMAKE_SYSTEM_NAME=Linux
+export CMAKE_SYSTEM_PROCESSOR=arm
+export CMAKE_C_COMPILER=${TCH_PTH}/arm-linux-gnueabihf-gcc
+export CMAKE_CXX_COMPILER=${TCH_PTH}/arm-linux-gnueabihf-g++
+export CMAKE_INSTALL_PREFIX=${SOXR_PTH}/install
+
+export CMAKE_FIND_ROOT_PATH_MODE_PROGRAM=NEVER
+export CMAKE_FIND_ROOT_PATH_MODE_LIBRARY=ONLY
+export CMAKE_FIND_ROOT_PATH_MODE_INCLUDE=ONLY
+export CMAKE_FIND_ROOT_PATH_MODE_PACKAGE=ONLY
+
+cmake . \
+  -DCMAKE_SYSTEM_NAME=Linux \
+  -DCMAKE_SYSTEM_PROCESSOR=arm \
+  -DCMAKE_C_COMPILER=${TCH_PTH}/arm-linux-gnueabihf-gcc \
+  -DCMAKE_CXX_COMPILER=${TCH_PTH}/arm-linux-gnueabihf-g++ \
+  -DCMAKE_INSTALL_PREFIX=${SOXR_PTH}/install \
+  -DCMAKE_SYSROOT=${AM335_PTH}/IDE_SUPPORT/sysroots/armv7ahf-neon-poky-linux-gnueabi \
+  -DBUILD_TESTS=0

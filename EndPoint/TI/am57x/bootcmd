@@ -1,0 +1,16 @@
+setenv serverip                 192.168.2.200;
+setenv ipaddr                   192.168.2.108;
+setenv gatewayip                192.168.2.1;
+setenv netmask                  255.255.255.0;
+setenv hostname                 am57x;
+setenv kernel_image             /tftpboot/am57x/zImage;
+setenv devicetree_image         /tftpboot/am57x/am572x-idk.dtb;
+setenv rootpath                 /media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/nfsroot;
+setenv bootargs root=/dev/nfs rw rootfstype=nfs nfsroot=${serverip}:${rootpath} \
+ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}::eth0:off console=ttyS2,115200n8;
+printenv bootargs;
+echo Booting from tftp server:  ${serverip};
+tftpboot ${kernel_addr_r}       ${kernel_image};
+tftpboot ${fdt_addr_r}          ${devicetree_image};
+echo Loading LINUX;
+bootz ${kernel_addr_r} - ${fdt_addr_r};

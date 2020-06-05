@@ -1,0 +1,229 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        usb0: gadget@00300000 {
+            #address-cells      = <1>;
+            #size-cells         = <0>;
+            atmel,vbus-gpio     = <&pioA PIN_PD20 GPIO_ACTIVE_HIGH>;
+            pinctrl-names       = "default";
+            pinctrl-0           = <&pinctrl_usba_vbus>;
+            compatible          = "atmel,sama5d3-udc";
+            
+
+            clocks              =   <&udphs_clk>,
+/* The USB Host High Speed requires a 480 MHz clock 
+ * for the embedded High-speed transceivers. 
+ * This clock (UPLLCK) is provided by the UTMI PLL. */
+                                    <&upllck>; 
+            
+            clock-names         =   "pclk",
+                                    "hclk";
+            ep@0 {
+                reg             = <0>;
+                atmel,fifo-size = <64>;
+                atmel,nb-banks  = <1>;
+            };
+            ep@1 {
+                reg             = <1>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <3>;
+                atmel,can-dma;
+                atmel,can-isoc;
+            };
+            ep@2 {
+                reg             = <2>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <3>;
+                atmel,can-dma;
+                atmel,can-isoc;
+            };
+            ep@3 {
+                reg             = <3>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-dma;
+                atmel,can-isoc;
+            };
+            ep@4 {
+                reg             = <4>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-dma;
+                atmel,can-isoc;
+            };
+            ep@5 {
+                reg             = <5>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-dma;
+                atmel,can-isoc;
+            };
+            ep@6 {
+                reg             = <6>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-dma;
+                atmel,can-isoc;
+            };
+            ep@7 {
+                reg             = <7>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-dma;
+                atmel,can-isoc;
+            };
+            ep@8 {
+                reg             = <8>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+            ep@9 {
+                reg             = <9>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+            ep@10 {
+                reg             = <10>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+            ep@11 {
+                reg             = <11>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+            ep@12 {
+                reg             = <12>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+            ep@13 {
+                reg             = <13>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+            ep@14 {
+                reg             = <14>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+            ep@15 {
+                reg             = <15>;
+                atmel,fifo-size = <1024>;
+                atmel,nb-banks  = <2>;
+                atmel,can-isoc;
+            };
+        }; /* usb0 */
+        usb1: ohci@00400000 {
+            num-ports           = <3>;
+            atmel,vbus-gpio     = < 0
+                                 /* &pioA PIN_PD20 GPIO_ACTIVE_HIGH */
+                                    &pioA PIN_PA27 GPIO_ACTIVE_HIGH
+                                    0 >;
+            pinctrl-names   = "default";
+            pinctrl-0       = <&pinctrl_usb_default>;
+            compatible      = "atmel,at91rm9200-ohci", "usb-ohci";
+            clocks          =   <&uhphs_clk>,
+                                <&uhphs_clk>,
+                                <&uhpck>;
+            clock-names     =   "ohci_clk",
+                                "hclk",
+                                "uhpck";
+        }; /* usb1 */
+        usb2: ehci@00500000 {
+            compatible      = "atmel,at91sam9g45-ehci", "usb-ehci";
+            clocks          =   <&upllck>,
+                                <&uhphs_clk>;
+            clock-names     =   "usb_clk",
+                                "ehci_clk";
+        }; /* usb2 */
+        sdmmc0: sdio-host@a0000000 {
+            bus-width       = <8>;
+            pinctrl-names   = "default";
+            pinctrl-0       = <&pinctrl_sdmmc0_default>;
+            compatible      = "atmel,sama5d2-sdhci";
+            clocks          =   <&sdmmc0_hclk>,
+                                <&sdmmc0_gclk>,
+                                <&mainck>;
+            clock-names     =   "hclock",
+                                "multclk",
+                                "baseclk";
+        }; /* sdmmc0 */
+        sdmmc1: sdio-host@b0000000 {
+            bus-width       = <4>;
+            pinctrl-names   = "default";
+            pinctrl-0       = <&pinctrl_sdmmc1_default>;
+            compatible      = "atmel,sama5d2-sdhci";
+            clocks          =   <&sdmmc1_hclk>,
+                                <&sdmmc1_gclk>,
+                                <&mainck>;
+            clock-names     =   "hclock",
+                                "multclk",
+                                "baseclk";
+        }; /* sdmmc1 */
+        apb { /* Advanced peripheral bus */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /**********/
+                /*** SD ***/
+                /**********/
+                pinctrl_sdmmc0_default: sdmmc0_default {
+                    cmd_data {
+                        pinmux =    <PIN_PA1__SDMMC0_CMD>,
+                                    <PIN_PA2__SDMMC0_DAT0>,
+                                    <PIN_PA3__SDMMC0_DAT1>,
+                                    <PIN_PA4__SDMMC0_DAT2>,
+                                    <PIN_PA5__SDMMC0_DAT3>,
+                                    <PIN_PA6__SDMMC0_DAT4>,
+                                    <PIN_PA7__SDMMC0_DAT5>,
+                                    <PIN_PA8__SDMMC0_DAT6>,
+                                    <PIN_PA9__SDMMC0_DAT7>;
+                        bias-disable;
+                    };
+                    ck_cd_vddsel {
+                        pinmux =    <PIN_PA0__SDMMC0_CK>,
+                                    <PIN_PA11__SDMMC0_VDDSEL>,
+                                    <PIN_PA13__SDMMC0_CD>;
+                        bias-disable;
+                    };
+                }; /* sdmmc0 */
+                pinctrl_sdmmc1_default: sdmmc1_default {
+                    cmd_data {
+                        pinmux =    <PIN_PA28__SDMMC1_CMD>,
+                                    <PIN_PA18__SDMMC1_DAT0>,
+                                    <PIN_PA19__SDMMC1_DAT1>,
+                                    <PIN_PA20__SDMMC1_DAT2>,
+                                    <PIN_PA21__SDMMC1_DAT3>;
+                        bias-disable;
+                    };
+                    conf-ck_cd {
+                        pinmux =    <PIN_PA22__SDMMC1_CK>,
+                                    <PIN_PA30__SDMMC1_CD>;
+                        bias-disable;
+                    };
+                }; /* sdmmc1 */
+                /***********/
+                /*** USB ***/
+                /***********/
+                pinctrl_usb_default: usb_default {
+                    pinmux =        <PIN_PA27__GPIO>,
+                                    <PIN_PD19__GPIO>;
+                    bias-disable;
+                }; /* USB */
+                pinctrl_usba_vbus: usba_vbus {
+                    pinmux =        <PIN_PD20__GPIO>;
+                    bias-disable;
+                }; /* USBA */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

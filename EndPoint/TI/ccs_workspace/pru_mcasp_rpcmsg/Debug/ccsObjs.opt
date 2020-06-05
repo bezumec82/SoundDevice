@@ -1,0 +1,1 @@
+"./clk_cfg.obj" "./main.obj" "./mcasp_init.obj" "./pads_cfg_am335x.obj" "./pads_cfg_am5728.obj" "../AM335x_PRU.cmd" -llibc.a -lrpmsg_lib.lib 

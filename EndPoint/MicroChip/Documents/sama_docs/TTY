@@ -1,0 +1,10 @@
+###########
+### TTY ###
+###########
+ls /dev/ttyACM*
+sudo rm /run/lock/LCK..ttyACM0
+sudo gtkterm --port /dev/ttyACM0 --speed 115200 &
+sudo gtkterm --port /dev/ttyACM1 --speed 115200 &
+
+
+setenv bootargs console=ttyS0,115200 earlyprintk root=/dev/mmcblk0p1 rw rootwait

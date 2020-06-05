@@ -1,0 +1,75 @@
+### Description
+geany ${FIT_PTH}/fit.its &
+
+
+
+###############
+### Copy images
+###############
+reset
+cp ${KRNL_PTH}/arch/arm/boot/zImage ${FIT_PTH}
+date -r ${FIT_PTH}/zImage
+
+date -r ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio
+date -r ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio.gz
+
+rm ${FIT_PTH}/rootfs.cpio
+rm ${FIT_PTH}/rootfs.cpio.gz
+
+cp ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio    ${FIT_PTH}/rootfs.cpio
+cp ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.cpio.gz ${FIT_PTH}/rootfs.cpio.gz
+
+rm ${FIT_PTH}/u-boot.img
+rm ${FIT_PTH}/u-boot.bin
+rm ${FIT_PTH}/u-boot
+cp ${U_BOOT_PTH}/u-boot.img ${FIT_PTH}/u-boot.img
+cp ${U_BOOT_PTH}/u-boot.bin ${FIT_PTH}/u-boot.bin
+cp ${U_BOOT_PTH}/u-boot-nodtb.bin ${FIT_PTH}/u-boot-nodtb.bin
+cp ${U_BOOT_PTH}/u-boot     ${FIT_PTH}/u-boot
+cp ${U_BOOT_PTH}/arch/arm/dts/am335x-boneblack.dtb     ${FIT_PTH}/am335x-u-boot.dtb
+ls -ls ${FIT_PTH}
+
+##################
+### GET DeviceTree
+##################
+cp ${DTS_PTH}/am335x-bone.dtb ${FIT_PTH}
+date -r ${FIT_PTH}/am335x-bone.dtb
+
+### USE clear images to build FIT!!!
+### DO NOT WRAP IT!!!
+###############
+### WRAP IMAGES
+###############
+rm ${FIT_PTH}/uImage
+${U_BOOT_PTH}/tools/mkimage \
+-A arm        \
+-O linux      \
+-T kernel     \
+-C gzip       \
+-a 0x80008000 \
+-e 0x80008000 \
+-n "kernel"   \
+-d ${FIT_PTH}/zImage \
+${FIT_PTH}/uImage
+${U_BOOT_PTH}/tools/mkimage -l ${FIT_PTH}/uImage
+
+${U_BOOT_PTH}/tools/mkimage \
+-A arm        \
+-T ramdisk    \
+-C gzip       \
+-n "ramdisk"  \
+-d ${FIT_PTH}/rootfs.cpio.gz \
+   ${FIT_PTH}/rootfs.cpio.gz.u-boot
+${U_BOOT_PTH}/tools/mkimage -l ${FIT_PTH}/rootfs.cpio.gz.u-boot
+
+#########
+### Build
+#########
+reset
+cd ${FIT_PTH}
+${U_BOOT_PTH}/tools/mkimage -f ${FIT_PTH}/fit.its ${FIT_PTH}/fit.itb
+${U_BOOT_PTH}/tools/mkimage -l ${FIT_PTH}/fit.itb
+cp ./fit.itb /tftpboot/BBB
+ls -ls /tftpboot/BBB
+sudo chmod -R 777 /tftpboot/*
+

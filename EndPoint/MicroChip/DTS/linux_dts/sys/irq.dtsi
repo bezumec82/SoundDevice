@@ -1,0 +1,234 @@
+/* microElk */
+/ {
+    pmu { /* Performance Monitor Unit */
+        interrupts = <2 IRQ_TYPE_LEVEL_HIGH 0>;
+    };
+    ahb { /* Advanced high-speed bus */
+        cache-controller@00a00000 { /* L2 Cache Controller */
+            interrupts          =   <63 IRQ_TYPE_LEVEL_HIGH 4>;
+        }; /* l2cc */
+        sdmmc0: sdio-host@a0000000 {
+            interrupts          =   <31 IRQ_TYPE_LEVEL_HIGH 0>;
+        }; /* sdmmc0 */
+        sdmmc1: sdio-host@b0000000 {
+            interrupts          =   <32 IRQ_TYPE_LEVEL_HIGH 0>;
+        }; /* sdmmc1 */
+        ehci@00500000 {
+            interrupts          =   <41 IRQ_TYPE_LEVEL_HIGH 2>;
+        }; /* usb2 */
+        ohci@00400000 {
+            interrupts          =   <41 IRQ_TYPE_LEVEL_HIGH 2>;
+        }; /* usb1 */
+        gadget@00300000 {
+            interrupts          =   <42 IRQ_TYPE_LEVEL_HIGH 2>;
+        }; /* usb0 */
+        nand0: nand@80000000 {
+            interrupts          =   <17 IRQ_TYPE_LEVEL_HIGH 6>;
+        }; /* nand0 */       
+        apb { /* Advanced peripheral bus */
+            aic: interrupt-controller@fc020000 { /* Advanced Interrupt Controller */
+                #interrupt-cells    = <3>;
+                compatible          = "atmel,sama5d2-aic";
+                interrupt-controller;
+                atmel,external-irqs = <49>;
+            };
+            /* 
+            The peripheral identification (PID) 
+            defined at the product level 
+            corresponds to the interrupt source number 
+            (as well as the bit number 
+            controlling the clock of the peripheral). 
+            Consequently, to simplify the description 
+            of the functional operations and the user interface, 
+            the interrupt sources 
+            are named FIQ, SYS, and PID2 to PID73 and PID75 to PID127.
+            */
+            pit: timer@f8048030 { /* Periodic Interval Timer */
+                interrupts      =   <3 IRQ_TYPE_LEVEL_HIGH 5>;
+            }; /* pit */
+            watchdog@f8048040 {
+                interrupts      =   <4 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* watchdog */
+            gmac: ethernet@f8008000 {
+                interrupts      =   <5   IRQ_TYPE_LEVEL_HIGH 3   /* Queue 0 */
+                                     66  IRQ_TYPE_LEVEL_HIGH 3   /* Queue 1 */
+                                     67  IRQ_TYPE_LEVEL_HIGH 3>; /* Queue 2 */
+            }; /* gmac */
+            xdmac0: dma-controller@f0010000 {
+                interrupts      =   <6 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* xdmac0 */
+            xdmac1: dma-controller@f0004000 {
+                interrupts      =   <7 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* xdmac1 */
+            /* PID8     - ICM   (Integrity Check Monitor) */
+            aes@f002c000 { /* Advanced Encryption Standard  */
+                interrupts      =   <9 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* aes */
+            /* PID10    - AESB      (AES Bridge)    */
+            tdes@fc044000 { /* Triple Data Encryption Standard */
+                interrupts      =   <11 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* tdes */
+            sha@f0028000 { /* Secure Hash Algorithm */
+                interrupts      =   <12 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* sha */
+                                    /* PID13    - MPDDRC    (MPDDR Controller)          */
+                                    /* PID14    - H32MX     (32-bit AHB Matrix)         */
+                                    /* PID15    - H64MX     (64-bit AHB Matrix)         */
+                                    /* PID16    - SECUMOD   (Security Module)           */
+                                    /* PID17    - HSMC      (Multibit ECC Interrupt)    */
+            pinctrl@fc038000 {
+                #interrupt-cells    = <2>;
+                interrupt-controller;
+                interrupts      =   <18 IRQ_TYPE_LEVEL_HIGH 7>,
+                                    <68 IRQ_TYPE_LEVEL_HIGH 7>,
+                                    <69 IRQ_TYPE_LEVEL_HIGH 7>,
+                                    <70 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* pinctrl@fc038000 */
+            /* PID19    - FLEXCOM0 */
+            flexcom@f8038000 {
+                i2c2: i2c@600 {
+                    interrupts  =   <20 IRQ_TYPE_LEVEL_HIGH 7>;
+                }; /* i2c2 */
+            }; /* flx1 */
+            /* PID21    - FLEXCOM2 */
+            flexcom@fc014000 {
+                uart7: serial@200 {
+                    interrupts  =   <22 IRQ_TYPE_LEVEL_HIGH 7>;
+                }; /* uart7 */
+                spi2: spi@400 {
+                    interrupts  =   <22 IRQ_TYPE_LEVEL_HIGH 7>;
+                }; /* spi2 */
+            }; /* flx3 */            
+            flexcom@fc018000 {
+                uart6: serial@200 {
+                    interrupts  =   <23 IRQ_TYPE_LEVEL_HIGH 7>;
+                }; /* uart6 */
+                spi3: spi@400 {
+                    interrupts  =   <23 IRQ_TYPE_LEVEL_HIGH 7>;
+                }; /* spi3 */
+                i2c3: i2c@600 {
+                    interrupts  =   <23 IRQ_TYPE_LEVEL_HIGH 7>;
+                }; /* i2c3 */
+            };/* flx4 */
+            serial@f801c000 {
+                interrupts      =   <24 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* uart0 */
+            serial@f8020000 {
+                interrupts      =   <25 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* uart1 */
+            serial@f8024000 {
+                interrupts      =   <26 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* uart2 */
+            serial@fc008000 {
+                interrupts      =   <27 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* uart3 */
+            serial@fc00c000 {
+                interrupts      =   <28 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* uart4 */
+            i2c@f8028000 {
+                interrupts      =   <29 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* i2c0 */
+            i2c@fc028000 {
+                interrupts      =   <30 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* i2c1 */
+            spi@f8000000 {
+                interrupts      =   <33 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* spi0 */
+            spi@fc000000 {
+                interrupts      =   <34 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* spi1 */          
+            timer@f800c000 { /* Timer Counter */
+                interrupts      =   <35 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* tc0 */
+            timer@f8010000 { /* Timer Counter */
+                interrupts      =   <36 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* tc1 */
+                                    /* PID37 -- */
+            pwm@f802c000 {
+                interrupts      =   <38 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* pwm */
+                                    /* PID39 -- */
+            adc@fc030000 {
+                interrupts      =   <40 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* adc */
+                                    /* PID41 - UHPHS */
+                                    /* PID42 - UDPHS */
+            ssc0: ssc0@f8004000 {
+                interrupts      =   <43 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* ssc0 */
+                                    /* PID44 - SSC1 */
+            hlcdc@f0000000 {
+                interrupts      =   <45 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* hlcdc */
+            isc: isc@f0008000 { /* Image Sensor Controller */
+                interrupts      =   <46 IRQ_TYPE_LEVEL_HIGH 5>;
+            }; /* isc */
+            trng@fc01c000 { /* True Random Number Generator */
+                interrupts      =   <47 IRQ_TYPE_LEVEL_HIGH 0>;
+            }; /* trng */
+            pdmic@f8018000 {
+                interrupts      =   <48 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* pdmic */
+                                    /* PID49 - AIC */
+                                    /* PID50 - SFC (Secure Fuse Controller) */
+            sram@f8044000 {
+                                    /* PID51 */
+            }; /* securam */
+            spi@f0020000 {
+                interrupts      =   <52 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* qspi0 */
+            spi@f0024000 {
+                interrupts      =   <53 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* qspi1 */
+            i2s@f8050000 {
+                interrupts      =   <54 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* i2s0 */
+            i2s@fc04c000 {
+                interrupts      =   <55 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* i2s1 */
+            can0: can@f8054000 {
+                interrupts      =   <56 IRQ_TYPE_LEVEL_HIGH 7>,
+                                    <64 IRQ_TYPE_LEVEL_HIGH 7>;
+                interrupt-names =   "int0", "int1";
+            }; /* can0 */
+            can1: can@fc050000 {
+                interrupts      =   <57 IRQ_TYPE_LEVEL_HIGH 7>,
+                                    <65 IRQ_TYPE_LEVEL_HIGH 7>;
+                interrupt-names =   "int0", "int1";
+            }; /* can1 */
+            ptc@fc060000 { /* Peripheral Touch Controller */
+                interrupts      =   <58 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* ptc */
+            classd@fc048000 {
+                interrupts      =   <59 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* classd */
+            sfr@f8030000 { /* Special Function Registers */
+                                    /* PDI60 */
+            }; /* sfr */
+                                    /* PID61 - SAIC     (Secured Advanced Interrupt Controller) */
+                                    /* PID62 - AIC      (Advanced Interrupt Controller)         */
+                                    /* PID63 - L2CC     (L2 Cache Controller)                   */
+                                    /* PID64 - MCAN0    (MCAN 0 Interrupt1)                     */
+                                    /* PID65 - MCAN1    (MCAN 1 Interrupt1)                     */
+                                    /* PID66 - GMAC     (GMAC Queue 1 Interrupt)                */
+                                    /* PID67 - GMAC     (GMAC Queue 2 Interrupt)                */
+                                    /* PID68 - PIOB     */
+                                    /* PID69 - PIOC     */
+                                    /* PID70 - PIOD     */
+                                    /* PID71 - SDMMC0   */
+                                    /* PID72 - SDMMC0   */
+                                    /* PID73 -- */                                    
+            rtc@f80480b0 { /* Real-time Clock */
+                interrupts  = <74 IRQ_TYPE_LEVEL_HIGH 7>;
+            }; /* rtc */ 
+                                    /* PID75 - ACC      (Analog Comparator)                     */
+                                    /* PID76 - RXLP     (UART Low-Power)                        */
+            sfr@fc05c000 { /* Special Function Registers Backup         */
+                                    /* PID77 */
+            }; /* sfrbu */
+            chipid@fc069000 {
+                                    /* PID78 */
+            }; /* chipid */            
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

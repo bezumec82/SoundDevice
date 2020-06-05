@@ -1,0 +1,76 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            uart0: serial@f801c000 {
+                compatible      = "atmel,at91sam9260-usart";
+                clocks          = <&uart0_clk>;
+                clock-names     = "usart";
+            }; /* uart0 */
+            /**********************************************************/
+            uart1: serial@f8020000 {
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_uart1_default>;
+                compatible      = "atmel,at91sam9260-usart";
+                clocks          = <&uart1_clk>;
+                clock-names     = "usart";
+            }; /* uart1 */
+            /**********************************************************/
+            uart2: serial@f8024000 {
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_mikrobus2_uart>;
+                compatible      = "atmel,at91sam9260-usart";
+                clocks          = <&uart2_clk>;
+                clock-names     = "usart";
+            }; /* uart2 */
+            /**********************************************************/
+            uart3: serial@fc008000 {
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_uart3_default>;
+                compatible      = "atmel,at91sam9260-usart";
+                clocks          = <&uart3_clk>;
+                clock-names     = "usart";
+            }; /* uart3 */
+            /**********************************************************/
+            uart4: serial@fc00c000 {
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_mikrobus1_uart>;
+                compatible      = "atmel,at91sam9260-usart";
+                clocks          = <&uart4_clk>;
+                clock-names     = "usart";
+            }; /* uart4 */
+            /**********************************************************/
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /************/
+                /*** UART ***/
+                /************/
+                pinctrl_uart1_default: uart1_default {
+                    pinmux =        <PIN_PD2__URXD1>,
+                                    <PIN_PD3__UTXD1>;
+                    bias-disable;
+                }; /* uart1 */
+
+                pinctrl_uart3_default: uart3_default {
+                    pinmux =        <PIN_PC12__URXD3>,
+                                    <PIN_PC13__UTXD3>;
+                    bias-disable;
+                }; /* uart3 */
+
+                pinctrl_mikrobus1_uart: mikrobus1_uart {
+                    pinmux =        <PIN_PB3__URXD4>,
+                                    <PIN_PB4__UTXD4>;
+                    bias-disable;
+                }; /* mikrobus1_uart */
+
+                pinctrl_mikrobus2_uart: mikrobus2_uart {
+                    pinmux =        <PIN_PD23__URXD2>,
+                                    <PIN_PD24__UTXD2>;
+                    bias-disable;
+                }; /* mikrobus2_uart */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

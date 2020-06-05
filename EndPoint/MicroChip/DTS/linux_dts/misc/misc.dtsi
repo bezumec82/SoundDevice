@@ -1,0 +1,25 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+
+            sfr: sfr@f8030000 { /* Special Function Registers */
+                compatible  = "atmel,sama5d2-sfr", "syscon";
+            }; /* sfr */
+            
+            sfrbu: sfr@fc05c000 { /* Special Function Registers Backup */
+                compatible  = "atmel,sama5d2-sfrbu", "syscon";
+            }; /* sfrbu */
+
+            trng@fc01c000 { /* True Random Number Generator */
+                compatible  = "atmel,at91sam9g45-trng";
+                clocks      = <&trng_clk>;
+            }; /* trng */
+
+            chipid@fc069000 {
+                compatible  = "atmel,sama5d2-chipid";
+            }; /* chipid */
+
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

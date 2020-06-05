@@ -1,0 +1,59 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+        /*
+        The Image Sensor Controller (ISC) system manages
+        incoming data from a parallel sensor.
+        */
+            isc: isc@f0008000 { /* Image Sensor Controller */
+                compatible = "atmel,sama5d2-isc";
+                clocks = <&isc_clk>, <&iscck>, <&isc_gclk>;
+                clock-names = "hclock", "iscck", "gck";
+                #clock-cells = <0>;
+                clock-output-names = "isc-mck";
+                pinctrl-names = "default";
+                pinctrl-0 = <   &pinctrl_isc_base
+                                &pinctrl_isc_data_8bit
+                                &pinctrl_isc_data_9_10
+                                &pinctrl_isc_data_11_12>;
+            }; /* isc */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /***********/
+                /*** ISC ***/
+                /***********/
+                pinctrl_isc_base: isc_base {
+//                  pinmux =        <PIN_PC21__ISC_PCK>,
+//                                  <PIN_PC22__ISC_VSYNC>,
+//                                  <PIN_PC23__ISC_HSYNC>,
+//                                  <PIN_PC24__ISC_MCK>;
+//                  bias-disable;
+                }; /* pinctrl_isc_base */
+                pinctrl_isc_data_8bit: isc_data_8bit {
+//                  pinmux =        <PIN_PC20__ISC_D11>,
+//                                  <PIN_PC19__ISC_D10>,
+//                                  <PIN_PC18__ISC_D9>,
+//                                  <PIN_PC17__ISC_D8>,
+//                                  <PIN_PC16__ISC_D7>,
+//                                  <PIN_PC15__ISC_D6>,
+//                                  <PIN_PC14__ISC_D5>,
+//                                  <PIN_PC13__ISC_D4>;
+//                  bias-disable;
+                }; /* pinctrl_isc_data_8bit */
+                pinctrl_isc_data_9_10: isc_data_9_10 {
+//                  pinmux =        <PIN_PC12__ISC_D3>,
+//                                  <PIN_PC11__ISC_D2>;
+//                  bias-disable;
+                }; /* pinctrl_isc_data_9_10 */
+                pinctrl_isc_data_11_12: isc_data_11_12 {
+//                  pinmux =        <PIN_PC10__ISC_D1>,
+//                                  <PIN_PC9__ISC_D0>;
+//                  bias-disable;
+                }; /* pinctrl_isc_data_11_12 */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

@@ -1,0 +1,254 @@
+\hypertarget{mcasp__init_8c}{\section{mcasp\-\_\-init.\-c File Reference}
+\label{mcasp__init_8c}\index{mcasp\-\_\-init.\-c@{mcasp\-\_\-init.\-c}}
+}
+{\ttfamily \#include \char`\"{}mcasp\-\_\-init.\-h\char`\"{}}\\*
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{mcasp__init_8c_ad27cc17b25bb93134368d5eb21126eae}{\#define {\bfseries B\-I\-T}(x)~(uint32\-\_\-t)(1$<$$<$x)}\label{mcasp__init_8c_ad27cc17b25bb93134368d5eb21126eae}
+
+\item 
+\hypertarget{mcasp__init_8c_a8cfab729a57749f16de2677fe2e05cf6}{\#define {\bfseries A\-X\-R0\-\_\-\-B\-I\-T}~B\-I\-T(0)}\label{mcasp__init_8c_a8cfab729a57749f16de2677fe2e05cf6}
+
+\item 
+\hypertarget{mcasp__init_8c_a8a6f8aa68926c4ad28608bb3040ad092}{\#define {\bfseries A\-X\-R1\-\_\-\-B\-I\-T}~B\-I\-T(1)}\label{mcasp__init_8c_a8a6f8aa68926c4ad28608bb3040ad092}
+
+\item 
+\hypertarget{mcasp__init_8c_a738adb2f036c653539494ddd32689dec}{\#define {\bfseries A\-X\-R8\-\_\-\-B\-I\-T}~B\-I\-T(8)}\label{mcasp__init_8c_a738adb2f036c653539494ddd32689dec}
+
+\item 
+\hypertarget{mcasp__init_8c_a40075d11290d66b447a717d893f8496b}{\#define {\bfseries A\-X\-R14\-\_\-\-B\-I\-T}~B\-I\-T(14)}\label{mcasp__init_8c_a40075d11290d66b447a717d893f8496b}
+
+\item 
+\hypertarget{mcasp__init_8c_a3d77097fe046beb8aa45e448fe947740}{\#define {\bfseries A\-C\-L\-K\-X\-\_\-\-B\-I\-T}~B\-I\-T(26)}\label{mcasp__init_8c_a3d77097fe046beb8aa45e448fe947740}
+
+\item 
+\hypertarget{mcasp__init_8c_a4b05effdaf294a993a95b084d1a1d40b}{\#define {\bfseries A\-F\-S\-X\-\_\-\-B\-I\-T}~B\-I\-T(28)}\label{mcasp__init_8c_a4b05effdaf294a993a95b084d1a1d40b}
+
+\item 
+\hypertarget{mcasp__init_8c_a6e8d79557b6594dce01300da12b5479b}{\#define {\bfseries M\-C\-A\-S\-P\-\_\-\-P\-F\-U\-N\-C\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( $\sim$(  A\-X\-R0\-\_\-\-B\-I\-T $\vert$ A\-X\-R1\-\_\-\-B\-I\-T  $\vert$ A\-C\-L\-K\-X\-\_\-\-B\-I\-T $\vert$ A\-F\-S\-X\-\_\-\-B\-I\-T ) )}\label{mcasp__init_8c_a6e8d79557b6594dce01300da12b5479b}
+
+\item 
+\hypertarget{mcasp__init_8c_ad9addbda2d2f16a1202edb03d790af9f}{\#define {\bfseries M\-C\-A\-S\-P\-\_\-\-P\-D\-I\-R\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)(     A\-X\-R0\-\_\-\-B\-I\-T $\vert$ 0x0       $\vert$ 0x0       $\vert$ 0x0        )}\label{mcasp__init_8c_ad9addbda2d2f16a1202edb03d790af9f}
+
+\item 
+\hypertarget{mcasp__init_8c_a0612e336aa09e562b64d5cf37385b574}{\#define {\bfseries A\-H\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-H\-C\-L\-K\-D\-I\-V}(x)~(uint32\-\_\-t)( x -\/ 1 ) /$\ast$ 0x0\-: Divide-\/by-\/1; 0x1\-: Divide-\/by-\/2; ... $\ast$/}\label{mcasp__init_8c_a0612e336aa09e562b64d5cf37385b574}
+
+\item 
+\hypertarget{mcasp__init_8c_aa9563d2f57f2e149a2b2d5c9afdab0e4}{\#define {\bfseries A\-H\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-H\-C\-L\-K\-P}~B\-I\-T(14)             /$\ast$ 0x0\-: Falling edge; 0x1\-: Rising edge. $\ast$/}\label{mcasp__init_8c_aa9563d2f57f2e149a2b2d5c9afdab0e4}
+
+\item 
+\hypertarget{mcasp__init_8c_a867a35c9791084ff633b15ade58110e0}{\#define {\bfseries A\-H\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-H\-C\-L\-K\-M}~B\-I\-T(15)             /$\ast$ 0x0\-: External; 0x1\-: Internal. $\ast$/}\label{mcasp__init_8c_a867a35c9791084ff633b15ade58110e0}
+
+\item 
+\hypertarget{mcasp__init_8c_ae3392d8c860ccc800597e5df9b514ea0}{\#define {\bfseries A\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-C\-L\-K\-D\-I\-V}(x)~(uint32\-\_\-t)( x -\/ 1 ) /$\ast$ 0x0\-: Divide-\/by-\/1; 0x1\-: Divide-\/by-\/2; ... $\ast$/}\label{mcasp__init_8c_ae3392d8c860ccc800597e5df9b514ea0}
+
+\item 
+\hypertarget{mcasp__init_8c_ae80b295971f4bb915f661aa9982046d3}{\#define {\bfseries A\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-C\-L\-K\-M}~B\-I\-T(5)              /$\ast$ 0x0\-: External; 0x1\-: Internal. $\ast$/}\label{mcasp__init_8c_ae80b295971f4bb915f661aa9982046d3}
+
+\item 
+\hypertarget{mcasp__init_8c_a89600aef5fcae7ed92f2c861fa4e0b62}{\#define {\bfseries A\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-C\-L\-K\-P}~B\-I\-T(7)              /$\ast$ 0x0\-: Falling edge; 0x1\-: Rising edge. $\ast$/}\label{mcasp__init_8c_a89600aef5fcae7ed92f2c861fa4e0b62}
+
+\item 
+\hypertarget{mcasp__init_8c_a08e6fbc534a159d7e5f896b727ccef9a}{\#define {\bfseries A\-H\-C\-L\-K\-X\-\_\-\-C\-T\-L\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( A\-H\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-H\-C\-L\-K\-D\-I\-V(24)   $\vert$ 0x0             $\vert$ 0x0             ) /$\ast$ A\-S\-Y\-N\-C = 0 -\/$>$ Synchronous $\ast$/}\label{mcasp__init_8c_a08e6fbc534a159d7e5f896b727ccef9a}
+
+\item 
+\hypertarget{mcasp__init_8c_a5a56376d2a1829537511068202b01de8}{\#define {\bfseries A\-H\-C\-L\-K\-R\-\_\-\-C\-T\-L\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( A\-H\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-H\-C\-L\-K\-D\-I\-V(24)   $\vert$ 0x0             $\vert$ 0x0             )}\label{mcasp__init_8c_a5a56376d2a1829537511068202b01de8}
+
+\item 
+\hypertarget{mcasp__init_8c_aceb1f3fb16580d4cc94379921b8ca576}{\#define {\bfseries A\-C\-L\-K\-X\-\_\-\-C\-T\-L\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( A\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-C\-L\-K\-D\-I\-V(1)      $\vert$ A\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-C\-L\-K\-P   $\vert$ 0x0             )}\label{mcasp__init_8c_aceb1f3fb16580d4cc94379921b8ca576}
+
+\item 
+\hypertarget{mcasp__init_8c_a67e2d7ba75f5174f05e1af6771b16699}{\#define {\bfseries A\-C\-L\-K\-R\-\_\-\-C\-T\-L\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( A\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-C\-L\-K\-D\-I\-V(1)      $\vert$ A\-C\-L\-K\-\_\-\-C\-T\-L\-\_\-\-C\-L\-K\-P   $\vert$ 0x0             )}\label{mcasp__init_8c_a67e2d7ba75f5174f05e1af6771b16699}
+
+\item 
+\hypertarget{mcasp__init_8c_a3b4dd0d578ffce3f6cbe25f637781d0e}{\#define {\bfseries R\-P\-S}~0x8 /$\ast$ 0x8\-: Mc\-A\-S\-P interface clock divided by 256 $\ast$/}\label{mcasp__init_8c_a3b4dd0d578ffce3f6cbe25f637781d0e}
+
+\item 
+\hypertarget{mcasp__init_8c_a9a1110efda64b709a1ab7a9e99f610e8}{\#define {\bfseries X\-P\-S}~0x8 /$\ast$ 0x8\-: Mc\-A\-S\-P interface clock divided by 256 $\ast$/}\label{mcasp__init_8c_a9a1110efda64b709a1ab7a9e99f610e8}
+
+\item 
+\hypertarget{mcasp__init_8c_a68da1f8dcfbdad085dc1493e92471885}{\#define {\bfseries C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-M\-I\-N}(x)~(uint32\-\_\-t)( x $<$$<$ 8 )}\label{mcasp__init_8c_a68da1f8dcfbdad085dc1493e92471885}
+
+\item 
+\hypertarget{mcasp__init_8c_abcf28b7eb9e41d5293d191bc669d2e72}{\#define {\bfseries C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-M\-A\-X}(x)~(uint32\-\_\-t)( x $<$$<$ 16 )}\label{mcasp__init_8c_abcf28b7eb9e41d5293d191bc669d2e72}
+
+\item 
+\hypertarget{mcasp__init_8c_ac76a3c2e48b6e7a8f391f0ad54b40446}{\#define {\bfseries T\-X\-\_\-\-C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( X\-P\-S $\vert$ C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-M\-I\-N(0x0) $\vert$ C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-M\-A\-X(0xff) )}\label{mcasp__init_8c_ac76a3c2e48b6e7a8f391f0ad54b40446}
+
+\item 
+\hypertarget{mcasp__init_8c_ac5b01969d68e551fe7f4594fcffe55d9}{\#define {\bfseries R\-X\-\_\-\-C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( R\-P\-S $\vert$ C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-M\-I\-N(0x0) $\vert$ C\-L\-K\-\_\-\-C\-H\-K\-\_\-\-M\-A\-X(0xff) )}\label{mcasp__init_8c_ac5b01969d68e551fe7f4594fcffe55d9}
+
+\item 
+\hypertarget{mcasp__init_8c_a0fe5198b1962ab91ce1d5b456459fddb}{\#define {\bfseries F\-M\-\_\-\-C\-T\-L\-\_\-\-F\-S\-P}~B\-I\-T(0)}\label{mcasp__init_8c_a0fe5198b1962ab91ce1d5b456459fddb}
+
+\item 
+\hypertarget{mcasp__init_8c_aa2cad309947e5b3390e2167eaeec5271}{\#define {\bfseries F\-M\-\_\-\-C\-T\-L\-\_\-\-F\-S\-M}~B\-I\-T(1)}\label{mcasp__init_8c_aa2cad309947e5b3390e2167eaeec5271}
+
+\item 
+\hypertarget{mcasp__init_8c_a75c7ade4e2f1d762abb7e05b41bda1b2}{\#define {\bfseries F\-M\-\_\-\-C\-T\-L\-\_\-\-F\-W\-I\-D}~B\-I\-T(4)}\label{mcasp__init_8c_a75c7ade4e2f1d762abb7e05b41bda1b2}
+
+\item 
+\hypertarget{mcasp__init_8c_a7c06eab46fb871052a817d2efea3c9a7}{\#define {\bfseries F\-M\-\_\-\-C\-T\-L\-\_\-\-M\-O\-D}(x)~(uint32\-\_\-t)( x $<$$<$ 7 )}\label{mcasp__init_8c_a7c06eab46fb871052a817d2efea3c9a7}
+
+\item 
+\hypertarget{mcasp__init_8c_a5f47ddd0142f38ec1b186b74d9b1d591}{\#define {\bfseries T\-X\-\_\-\-F\-M\-\_\-\-C\-T\-L\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( F\-M\-\_\-\-C\-T\-L\-\_\-\-F\-S\-P $\vert$ 0x0        $\vert$ F\-M\-\_\-\-C\-T\-L\-\_\-\-F\-W\-I\-D $\vert$ F\-M\-\_\-\-C\-T\-L\-\_\-\-M\-O\-D(0x2) )}\label{mcasp__init_8c_a5f47ddd0142f38ec1b186b74d9b1d591}
+
+\item 
+\hypertarget{mcasp__init_8c_a16b73f50b50797d9e3b7a0e7dd018be4}{\#define {\bfseries R\-X\-\_\-\-F\-M\-\_\-\-C\-T\-L\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( F\-M\-\_\-\-C\-T\-L\-\_\-\-F\-S\-P $\vert$ 0x0        $\vert$ F\-M\-\_\-\-C\-T\-L\-\_\-\-F\-W\-I\-D $\vert$ F\-M\-\_\-\-C\-T\-L\-\_\-\-M\-O\-D(0x2) )}\label{mcasp__init_8c_a16b73f50b50797d9e3b7a0e7dd018be4}
+
+\item 
+\hypertarget{mcasp__init_8c_a5522d7960ef5d7a057881f570eb09cde}{\#define {\bfseries F\-M\-T\-\_\-\-X\-R\-O\-T}(x)~(uint32\-\_\-t)( x / 4 )}\label{mcasp__init_8c_a5522d7960ef5d7a057881f570eb09cde}
+
+\item 
+\hypertarget{mcasp__init_8c_afebd023d2f86172c0e00cc678de5de48}{\#define {\bfseries F\-M\-T\-\_\-\-B\-U\-S\-S\-E\-L}~B\-I\-T(3)}\label{mcasp__init_8c_afebd023d2f86172c0e00cc678de5de48}
+
+\item 
+\hypertarget{mcasp__init_8c_a25b5a2912ae18dcd1353e43d12a2fbd9}{\#define {\bfseries F\-M\-T\-\_\-\-S\-S\-Z}(x)~(uint32\-\_\-t)( x $<$$<$ 4 )}\label{mcasp__init_8c_a25b5a2912ae18dcd1353e43d12a2fbd9}
+
+\item 
+\hypertarget{mcasp__init_8c_a85a907f30c4b35b9715afcc0e0324ec8}{\#define {\bfseries F\-M\-T\-\_\-\-R\-V\-R\-S}~B\-I\-T(15)}\label{mcasp__init_8c_a85a907f30c4b35b9715afcc0e0324ec8}
+
+\item 
+\hypertarget{mcasp__init_8c_a0dcca555fbad7d2c315b24620779ad2b}{\#define {\bfseries F\-M\-T\-\_\-\-D\-A\-T\-\_\-\-D\-L\-Y}(x)~(uint32\-\_\-t)( x $<$$<$ 16 )}\label{mcasp__init_8c_a0dcca555fbad7d2c315b24620779ad2b}
+
+\item 
+\hypertarget{mcasp__init_8c_aa88bba467c7c785095dc88bc19ad959d}{\#define {\bfseries T\-X\-\_\-\-F\-M\-T\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( F\-M\-T\-\_\-\-X\-R\-O\-T(16) $\vert$ F\-M\-T\-\_\-\-B\-U\-S\-S\-E\-L $\vert$ F\-M\-T\-\_\-\-S\-S\-Z(0xf) $\vert$ F\-M\-T\-\_\-\-R\-V\-R\-S $\vert$ F\-M\-T\-\_\-\-D\-A\-T\-\_\-\-D\-L\-Y(0x1) )}\label{mcasp__init_8c_aa88bba467c7c785095dc88bc19ad959d}
+
+\item 
+\hypertarget{mcasp__init_8c_a5187f5a15fa6bf3dd109e46189ba8ee8}{\#define {\bfseries R\-X\-\_\-\-F\-M\-T\-\_\-\-S\-E\-T\-U\-P}~(uint32\-\_\-t)( F\-M\-T\-\_\-\-X\-R\-O\-T(16) $\vert$ F\-M\-T\-\_\-\-B\-U\-S\-S\-E\-L $\vert$ F\-M\-T\-\_\-\-S\-S\-Z(0xf) $\vert$ F\-M\-T\-\_\-\-R\-V\-R\-S $\vert$ F\-M\-T\-\_\-\-D\-A\-T\-\_\-\-D\-L\-Y(0x1) )}\label{mcasp__init_8c_a5187f5a15fa6bf3dd109e46189ba8ee8}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{mcasp__init_8c_ac676ac7bf31759cb2f09aa71d63b775b}{void {\bfseries init\-\_\-mcasp} ()}\label{mcasp__init_8c_ac676ac7bf31759cb2f09aa71d63b775b}
+
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{mcasp__init_8c_a114e0f17e607c192b2d575dc1bdfdbff}{struct \hyperlink{structMCASP__GBLCTL}{M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L} $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-\_\-bits\-\_\-ptr} = (struct \hyperlink{structMCASP__GBLCTL}{M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L} $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a114e0f17e607c192b2d575dc1bdfdbff}
+
+\item 
+\hypertarget{mcasp__init_8c_a40ca3e93318b084a862c6915808a545b}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a40ca3e93318b084a862c6915808a545b}
+
+\item 
+\hypertarget{mcasp__init_8c_adb5eb2ce0f158a4b6deba23154cae901}{struct \hyperlink{structMCASP__GBLCTL}{M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L} $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-X\-\_\-bits\-\_\-ptr} = (struct \hyperlink{structMCASP__GBLCTL}{M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L} $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-X\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_adb5eb2ce0f158a4b6deba23154cae901}
+
+\item 
+\hypertarget{mcasp__init_8c_a62b3e2ae73205ce6db5e12d1061cd630}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-X\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-X\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a62b3e2ae73205ce6db5e12d1061cd630}
+
+\item 
+\hypertarget{mcasp__init_8c_a9936b07c5b674ab0afd888d6e187ff76}{struct \hyperlink{structMCASP__GBLCTL}{M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L} $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-R\-\_\-bits\-\_\-ptr} = (struct \hyperlink{structMCASP__GBLCTL}{M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L} $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-R\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a9936b07c5b674ab0afd888d6e187ff76}
+
+\item 
+\hypertarget{mcasp__init_8c_ac9c0f891234a2fc0aafcd1965c115952}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-R\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-G\-B\-L\-C\-T\-L\-R\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ac9c0f891234a2fc0aafcd1965c115952}
+
+\item 
+\hypertarget{mcasp__init_8c_a36a61970dc1ac141d7fa272c9771ca03}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-L\-B\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-L\-B\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a36a61970dc1ac141d7fa272c9771ca03}
+
+\item 
+\hypertarget{mcasp__init_8c_a5f03d129f3b81ee9e824427246cf97ce}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-D\-I\-T\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-D\-I\-T\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a5f03d129f3b81ee9e824427246cf97ce}
+
+\item 
+\hypertarget{mcasp__init_8c_a3c8dfda3eade3ca1a36e2f12da862913}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-I\-R\-Q\-C\-T\-L\-X} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-I\-R\-Q\-C\-T\-L\-X\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a3c8dfda3eade3ca1a36e2f12da862913}
+
+\item 
+\hypertarget{mcasp__init_8c_aa96aa5bbb7203d3f4a46489d9d9b4937}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-I\-R\-Q\-C\-T\-L\-R} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-I\-R\-Q\-C\-T\-L\-R\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_aa96aa5bbb7203d3f4a46489d9d9b4937}
+
+\item 
+\hypertarget{mcasp__init_8c_aa15f88285b70f06f18b741c301987c9f}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-D\-M\-A\-C\-T\-L\-X\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-D\-M\-A\-C\-T\-L\-X\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_aa15f88285b70f06f18b741c301987c9f}
+
+\item 
+\hypertarget{mcasp__init_8c_a74148fc4d370c9bef3708668e7433681}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-D\-M\-A\-C\-T\-L\-R\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-D\-M\-A\-C\-T\-L\-R\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a74148fc4d370c9bef3708668e7433681}
+
+\item 
+\hypertarget{mcasp__init_8c_ac54164348acd06ca3366aac1ba1ea9f6}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-P\-F\-U\-N\-C\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-P\-F\-U\-N\-C\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ac54164348acd06ca3366aac1ba1ea9f6}
+
+\item 
+\hypertarget{mcasp__init_8c_a460f626ac686e0286eecae6c48334763}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-P\-D\-I\-R\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-P\-D\-I\-R\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a460f626ac686e0286eecae6c48334763}
+
+\item 
+\hypertarget{mcasp__init_8c_aa5a37dc1c4aa6fc2754a8b74ebe2f0a5}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-M\-A\-S\-K} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-M\-A\-S\-K\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_aa5a37dc1c4aa6fc2754a8b74ebe2f0a5}
+
+\item 
+\hypertarget{mcasp__init_8c_ac5e93dec684b019351db38f3bb5efcdb}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-M\-A\-S\-K} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-M\-A\-S\-K\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ac5e93dec684b019351db38f3bb5efcdb}
+
+\item 
+\hypertarget{mcasp__init_8c_ab5b949fba7a8f2e0ec9b1cb44f21e177}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-B\-U\-F\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-B\-U\-F\-\_\-00\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ab5b949fba7a8f2e0ec9b1cb44f21e177}
+
+\item 
+\hypertarget{mcasp__init_8c_ab19b5e8db965c3bcd109421b1c24a410}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-B\-U\-F\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-B\-U\-F\-\_\-01\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ab19b5e8db965c3bcd109421b1c24a410}
+
+\item 
+\hypertarget{mcasp__init_8c_af91708d4dd1c076d519a7cdf6385f645}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-A\-H\-C\-L\-K\-X\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-A\-H\-C\-L\-K\-X\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_af91708d4dd1c076d519a7cdf6385f645}
+
+\item 
+\hypertarget{mcasp__init_8c_a8d23f99662241b313b98a3049b850b98}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-A\-H\-C\-L\-K\-R\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-A\-H\-C\-L\-K\-R\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a8d23f99662241b313b98a3049b850b98}
+
+\item 
+\hypertarget{mcasp__init_8c_ab09f299ca08a252d0bf0e18d22a46796}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-A\-C\-L\-K\-X\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-A\-C\-L\-K\-X\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ab09f299ca08a252d0bf0e18d22a46796}
+
+\item 
+\hypertarget{mcasp__init_8c_ae1f33bd7dc6af0e5af3e06943281ab26}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-A\-C\-L\-K\-R\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-A\-C\-L\-K\-R\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ae1f33bd7dc6af0e5af3e06943281ab26}
+
+\item 
+\hypertarget{mcasp__init_8c_a18ee72b822cba1bd2a739330ae717bd9}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-C\-L\-K\-C\-H\-K\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-C\-L\-K\-C\-H\-K\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a18ee72b822cba1bd2a739330ae717bd9}
+
+\item 
+\hypertarget{mcasp__init_8c_aef5cbe42d23ae86f9509f1092e700d13}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-C\-L\-K\-C\-H\-K\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-C\-L\-K\-C\-H\-K\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_aef5cbe42d23ae86f9509f1092e700d13}
+
+\item 
+\hypertarget{mcasp__init_8c_a67cf04cc4d1b009636f6eefc3655013d}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-F\-M\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-F\-M\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a67cf04cc4d1b009636f6eefc3655013d}
+
+\item 
+\hypertarget{mcasp__init_8c_a863cb38583f01c34771c232ff7ea2c67}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-F\-M\-C\-T\-L\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-F\-M\-C\-T\-L\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a863cb38583f01c34771c232ff7ea2c67}
+
+\item 
+\hypertarget{mcasp__init_8c_a6c297b64b11075283dbaa43467667e35}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-F\-M\-T\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-F\-M\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a6c297b64b11075283dbaa43467667e35}
+
+\item 
+\hypertarget{mcasp__init_8c_a92848bc0e067a171162f4e892108290c}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-F\-M\-T\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-F\-M\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a92848bc0e067a171162f4e892108290c}
+
+\item 
+\hypertarget{mcasp__init_8c_a42699d0f0fd6de3df7b1e279df11de26}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-T\-D\-M\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-T\-D\-M\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a42699d0f0fd6de3df7b1e279df11de26}
+
+\item 
+\hypertarget{mcasp__init_8c_a1c024c1eeb1d99db17e20f0a8e9826e8}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-T\-D\-M\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-T\-D\-M\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a1c024c1eeb1d99db17e20f0a8e9826e8}
+
+\item 
+\hypertarget{mcasp__init_8c_a10bb9ec6881b22f3e7c9440b364f8fbb}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-S\-T\-A\-T\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-S\-T\-A\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a10bb9ec6881b22f3e7c9440b364f8fbb}
+
+\item 
+\hypertarget{mcasp__init_8c_ae37930139a17067a12cc99f18f38f885}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-S\-T\-A\-T\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-S\-T\-A\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ae37930139a17067a12cc99f18f38f885}
+
+\item 
+\hypertarget{mcasp__init_8c_a8c4d8e8d3359542299af6689dbd5a8a5}{struct \hyperlink{structMCASP__STAT}{M\-C\-A\-S\-P\-\_\-\-S\-T\-A\-T} $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-S\-T\-A\-T\-\_\-bits\-\_\-ptr} = (struct \hyperlink{structMCASP__STAT}{M\-C\-A\-S\-P\-\_\-\-S\-T\-A\-T} $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-S\-T\-A\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a8c4d8e8d3359542299af6689dbd5a8a5}
+
+\item 
+\hypertarget{mcasp__init_8c_ae16b39b1a6da9e21e3f1d623f1c35588}{struct \hyperlink{structMCASP__STAT}{M\-C\-A\-S\-P\-\_\-\-S\-T\-A\-T} $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-S\-T\-A\-T\-\_\-bits\-\_\-ptr} = (struct \hyperlink{structMCASP__STAT}{M\-C\-A\-S\-P\-\_\-\-S\-T\-A\-T} $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-S\-T\-A\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ae16b39b1a6da9e21e3f1d623f1c35588}
+
+\item 
+\hypertarget{mcasp__init_8c_ab3106f5172f40c6ab717d1b34ac6c214}{struct \hyperlink{structMCASP__TDMSLOT}{M\-C\-A\-S\-P\-\_\-\-T\-D\-M\-S\-L\-O\-T} $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-T\-X\-T\-D\-M\-S\-L\-O\-T\-\_\-bits\-\_\-ptr} = (struct \hyperlink{structMCASP__TDMSLOT}{M\-C\-A\-S\-P\-\_\-\-T\-D\-M\-S\-L\-O\-T} $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-T\-X\-T\-D\-M\-S\-L\-O\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_ab3106f5172f40c6ab717d1b34ac6c214}
+
+\item 
+\hypertarget{mcasp__init_8c_a3f6e03cd1079c243f56568f0b7b56313}{struct \hyperlink{structMCASP__TDMSLOT}{M\-C\-A\-S\-P\-\_\-\-T\-D\-M\-S\-L\-O\-T} $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-R\-X\-T\-D\-M\-S\-L\-O\-T\-\_\-bits\-\_\-ptr} = (struct \hyperlink{structMCASP__TDMSLOT}{M\-C\-A\-S\-P\-\_\-\-T\-D\-M\-S\-L\-O\-T} $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-R\-X\-T\-D\-M\-S\-L\-O\-T\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a3f6e03cd1079c243f56568f0b7b56313}
+
+\item 
+\hypertarget{mcasp__init_8c_a49e0209c7edae3b8756621ed4c5c4cd1}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-S\-R\-C\-T\-L\-\_\-\-T\-X\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-X\-R\-S\-R\-C\-T\-L\-\_\-00\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a49e0209c7edae3b8756621ed4c5c4cd1}
+
+\item 
+\hypertarget{mcasp__init_8c_afb0e5132ad2a939f1aa4268abee6468a}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-S\-R\-C\-T\-L\-\_\-\-R\-X\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-X\-R\-S\-R\-C\-T\-L\-\_\-01\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_afb0e5132ad2a939f1aa4268abee6468a}
+
+\item 
+\hypertarget{mcasp__init_8c_a9e4faec64a3f005471601c42274879d7}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-X\-R\-S\-R\-C\-T\-L\-\_\-02\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-X\-R\-S\-R\-C\-T\-L\-\_\-02\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_a9e4faec64a3f005471601c42274879d7}
+
+\item 
+\hypertarget{mcasp__init_8c_aaa3c77d79d1117fb46fb03369cc82278}{uint32\-\_\-t $\ast$ {\bfseries M\-C\-A\-S\-P\-\_\-\-X\-R\-S\-R\-C\-T\-L\-\_\-03\-\_\-ptr} = (uint32\-\_\-t $\ast$) (M\-C\-A\-S\-P\-\_\-\-C\-F\-G\-\_\-\-A\-D\-D\-R + M\-C\-A\-S\-P\-\_\-\-X\-R\-S\-R\-C\-T\-L\-\_\-03\-\_\-\-O\-F\-F)}\label{mcasp__init_8c_aaa3c77d79d1117fb46fb03369cc82278}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+In this file Mc\-A\-S\-P initialization routines provided. 

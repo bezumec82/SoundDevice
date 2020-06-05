@@ -1,0 +1,106 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            /************/
+            /*** QSPI ***/
+            /************/
+            qspi0: spi@f0020000 {
+                compatible      = "atmel,sama5d2-qspi";
+                clocks          = <&qspi0_clk>;
+                #address-cells  = <1>;
+                #size-cells     = <0>;
+            }; /* qspi0 */
+            qspi1: spi@f0024000 {
+                #address-cells  = <1>;
+                #size-cells     = <0>;
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_qspi1_default>;
+                compatible      = "atmel,sama5d2-qspi";
+                clocks          = <&qspi1_clk>;
+                flash@0 {
+                    #address-cells      = <1>;
+                    #size-cells         = <1>;
+                    compatible          = "jedec,spi-nor";
+                    reg                 = <0>;
+                    spi-max-frequency   = <80000000>;
+                    m25p,fast-read;
+                        at91bootstrap@00000000 {
+                            label   = "bootstrap";
+                            reg     = <0x00000000 0x00010000>;
+                        }; /* at91bootstrap@00000000 */
+                        bootloader@00010000 {
+                            label   = "bootloader";
+                            reg     = <0x00010000 0x000a0000>;
+                        }; /* bootloader@00010000 */
+                        bootloaderenv@000b0000 {
+                            label   = "env";
+                            reg     = <0x000b0000 0x00010000>;
+                        }; /* bootloaderenv@000b0000 */
+//                      dtb@000c0000 {
+//                          label   = "device tree";
+//                          reg     = <0x000c0000 0x0020000>;
+//                      }; /* dtb@000c0000 */
+//                      kernel@000e0000 {
+//                          label   = "kernel";
+//                          reg     = <0x000e0000 0x0400000>;
+//                      }; /* kernel@000e0000 */
+                }; /* flash@0 */
+            }; /* qspi1 */
+            /***********/
+            /*** SPI ***/
+            /***********/
+            spi0: spi@f8000000 {
+                #address-cells      = <1>;
+                #size-cells         = <0>;
+                pinctrl-names       = "default";
+                pinctrl-0           = <&pinctrl_spi0_default>;
+                compatible          = "atmel,at91rm9200-spi";
+                clocks              = <&spi0_clk>;
+                clock-names         = "spi_clk";
+                atmel,fifo-size     = <16>;
+            }; /* spi0 */
+            spi1: spi@fc000000 {
+                #address-cells      = <1>;
+                #size-cells         = <0>;
+                compatible          = "atmel,at91rm9200-spi";
+                clocks              = <&spi1_clk>;
+                clock-names         = "spi_clk";
+                atmel,fifo-size     = <16>;
+            }; /* spi1 */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /************/
+                /*** QSPI ***/
+                /************/
+                pinctrl_qspi1_default: qspi1_default {
+                    sck_cs  {
+                            pinmux =    <PIN_PB5__QSPI1_SCK>,
+                                        <PIN_PB6__QSPI1_CS>;
+                            bias-disable;
+                            };
+                    data    {
+                            pinmux =    <PIN_PB7__QSPI1_IO0>,
+                                        <PIN_PB8__QSPI1_IO1>,
+                                        <PIN_PB9__QSPI1_IO2>,
+                                        <PIN_PB10__QSPI1_IO3>;
+                            bias-pull-up;
+                            };
+                }; /* pinctrl_qspi1_default */
+                /***********/
+                /*** SPI ***/
+                /***********/
+                pinctrl_spi0_default: spi0_default {
+                    pinmux =        <PIN_PA14__SPI0_SPCK>,
+                                    <PIN_PA15__SPI0_MOSI>,
+                                    <PIN_PA16__SPI0_MISO>,
+                                    <PIN_PA17__SPI0_NPCS0>;
+                    bias-disable;
+                }; /* pinctrl_spi0_default */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */
+

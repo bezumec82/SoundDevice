@@ -1,0 +1,26 @@
+/* microElk */
+/ {
+    etb { /* 8-Kbyte Embedded Trace Buffer */
+        compatible  = "arm,coresight-etb10", "arm,primecell";
+        reg         = <0x740000 0x1000>;
+        clocks      = <&mck>;
+        clock-names = "apb_pclk";
+        port {
+            etb_in: endpoint {
+                slave-mode;
+                remote-endpoint = <&etm_out>;
+            }; /* etb_in */
+        }; /* port */
+    }; /* etb */
+    etm {
+        compatible      = "arm,coresight-etm3x", "arm,primecell";
+        reg             = <0x73C000 0x1000>;
+        clocks          = <&mck>;
+        clock-names     = "apb_pclk";
+        port {
+            etm_out: endpoint {
+                remote-endpoint = <&etb_in>;
+            }; /* etm_out */
+        }; /* port */
+    }; /* etm */
+}; /* / */

@@ -1,0 +1,9 @@
+#find device
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="8003", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="8004", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="8008", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="8009", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="800d", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="800e", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="800f", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"
+KERNEL=="ft245*", ATTRS{idVendor}=="fff0", ATTRS{idProduct}=="8020", OPTIONS="string_escape=replace", SYMLINK:="lira/$attr{idProduct}/$attr{product}", MODE="0666"

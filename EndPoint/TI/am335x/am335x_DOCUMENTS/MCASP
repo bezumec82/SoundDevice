@@ -1,0 +1,68 @@
+BeableBone Black -> ZCZ part
+----------------------------------------------------------------------------------------------------                
+
+MCASP1 MODE3
+mcasp1_aclkx    B12     GPIO3_18->GPIO0_7       P9.42                   MODE3 (R50<->R51 Remove R50)                
+mcasp1_fsx      C13     GPIO3_19                P9.27                   MODE3    
+mcasp1_axr0(tx) D13     GPIO3_20->CLKOUT2       P9.41                   MODE3 (R19<->R20 Remove R19)
+mcasp1_axr1(rx) A14     GPIO3_21                P9.25                   MODE3   !!! 24.576MHz OUT !!!
+
+MCASP0 MODE3
+mcasp0_aclkx    U1      UART5_TXD               P8.37                   MODE3                
+mcasp0_fsx      U2      UART5_RXD               P8.38                   MODE3       
+mcasp0_axr0(tx) U3      UART3_CTSN              P8.36                   MODE3            
+mcasp0_axr1(rx) V4      UART5_CTSN              P8.31                   MODE3   
+
+MCASP1 MODE0
+mcasp0_aclkx    A13     SPI1_SCLK               P9.31   MODE0
+mcasp0_fsx      B13     SPI1_D0                 P9.29   MODE0
+mcasp0_axr0(tx) D12     SPI1_D1                 P9.30   MODE0
+mcasp0_axr1(rx) D13     GPIO3_20->CLKOUT2       P9.41   MODE0 (R19<->R20 Remove R19)
+
+
+
+----------------------------------------------------------------------------------------------------
+High speed transmit clock
+~~~~~~~~~~~~~~~~~~~~~~~~~
+mcasp0_ahclkx   A14     GPIO3_21                P9.25   MODE0           !!! 24.576MHz OUT !!!
+                T5      UART5_RTSN              P8.32                   MODE3
+mcasp0_axr2     C12     SPI1_CS0                P9.28           MODE2
+                B12     GPIO3_18->GPIO0_7       P9.42           MODE2
+                U4      UART3_RTSN              P8.34                           MODE4
+                V2      UART4_CTSN              P8.35                           MODE4
+
+mcasp0_axr3     C13     GPIO3_19                P9.27           MODE2
+                A14     GPIO3_21                P9.25           MODE2           !!! 24.576MHz OUT !!!
+                T5      UART5_RTSN              P8.32                           MODE4
+                V3      UART4_RTSN              P8.33                           MODE4
+High speed receive clock
+~~~~~~~~~~~~~~~~~~~~~~~~
+mcasp0_ahclkr   C12     SPI1_CS0                P9.28   MODE0 ch5(green)
+                U4      UART3_RTSN              P8.34                   MODE3
+Receive clock
+~~~~~~~~~~~~~
+mcasp0_aclkr    U18     GPIO1_28                P9.12                                   MODE6
+                B12     GPIO3_18->GPIO0_7       P9.42   MODE0 ch6(blue)
+                V2      UART4_CTSN              P8.35                   MODE3
+Frame synch for receive
+~~~~~~~~~~~~~~~~~~~~~~~
+mcasp0_fsr      C13     GPIO3_19                P9.27   MODE0 ch7(magenta)
+                V12     GPIO2_1                 P8.18                                   MODE6
+                V3      UART4_RTSN              P8.33                   MODE3
+----------------------------------------------------------------------------------------------------
+24.576MHz
+GPIO1_27        V17     EN
+GPIO1 4804c000  gpiochip32
+echo $((27+32)) >       /sys/class/gpio/export
+echo out >              /sys/class/gpio/gpio$((27+32))/direction
+echo 1 >                /sys/class/gpio/gpio$((27+32))/value
+
+
+
+
+
+
+
+
+
+

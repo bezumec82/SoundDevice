@@ -1,0 +1,385 @@
+========================================================================
+Sinchronous serial controller (SSC)
+========================================================================
+SAMA5D2 datasheet. p.1277
+~~~~~~~
+Signals
+~~~~~~~ 
+        Name                                Direction
+RF      Receive Frame Synchronization       in
+RK      Receive Clock                       in
+RD      Receive Data                        in
+TF      Transmit Frame Synchronizaton       out
+TK      Transmit Clock                      out
+TD      Transmit Data                       out
+
+~~~~~~~~~~
+SSC0 MUX 1 
+~~~~~~~~~~
+Good location. Test points at all the signals.
+Receive part <--
+            ATSAMA5D27  EVK             XC6SLX9 TQG144  Bank    SOM     Collide 
+SSC0 RF     PB25        LCD pin 20      P137    IO_L4N  0       159
+SSC0 RF     PC17        J27 pin 26      P139    IO_L3N  0       5       GMAC GTX1
+
+SSC0 RK     PB24        LCD pin 19      P134    GCLK19  0       198 
+SSC0 RK     PC16        J27 pin 25      P133    GCLK18  0       174     GMAC GTX0
+
+SSC0 RD     PB23        LCD pin 18      P138    IO_L4P  0       160     GMAC GMDIO
+SSC0 RD     PC15        J27 pin 24      P140    IO_L3P  0       12      GMAC GRX1
+Transmit part -->
+SSC0 TF     PB21        LCD pin 15      P97     IO_L34N 1       164     GMAC GTX1
+SSC0 TF     PC13        J27 pin 22      P99     IO_L33N 1       4       GMAC GRXER
+
+SSC0 TK     PB20        LCD pin 14      P95     GCLK11  1       156     GMAC GTX0
+SSC0 TK     PC12        J27 pin 16      P94     GCLK10  1       7       GMAC GTXER
+
+SSC0 TD     PB22        LCD pin 16      P98     IO_L34P 1       161     GMAC GMDC
+SSC0 TD     PC14        J27 pin 23      P100    IO_L33P 1       8       GMAC GRX0
+
+~~~~
+SSC1 
+~~~~
+Transmit part -->
+            ATSAMA5D27  MUX             EVK             XC6SLX9 TQG144  Bank    SOM     Collide
+SSC1 RF     PA19                        SD MMC1 D1      P57     O_L14N  2       101
+SSC1 RF     PB19                        LCD pin 13      P59     IO_L13N 2       158     GMAC GRX1
+
+SSC1 RK     PA18        I2SC1 DO0       SD MMC1 D0      P56     GCLK1   2       105
+SSC1 RK     PB18        I2SC1 DO0       LCD pin 11      P51     GCLK31  2       152     GMAC GRX0   ch5
+
+SSC1 RD     PA17        I2SC1 DI0       LCD pin 40      P58     IO_L14P 2       108
+SSC1 RD     PB17        I2SC1 DI0       LCD pin 10      P60     IO_L13P 2       157     GMAC GRXER  ch6
+
+Receive part <--
+SSC1 TF     PA15        I2SC1 CK        LCD pin 38      P26     IO_L37N 3       109
+SSC1 TF     PB15        I2SC1 CK        LCD pin 8       P29     IO_L36N 3       162     GMAC GTXEN  ch7
+
+SSC1 TK     PA14        I2SC1 MCK       LCD pin 37      P24     GCLK27  3       111
+SSC1 TK     PB14        I2SC1 MCK       LCD pin 6       P23     GCLK26  3       150     GMAC GTXCK  ch8
+
+SSC1 TD     PA16        I2SC1 WS        LCD pin 29      P27     IO_L37P 3       112
+SSC1 TD     PB16        I2SC1 WS        LCD pin 9       P30     IO_L36P 3       154     GMAC GRXDV  ch9
+
+
+
+========================================================================
+Inter-IC Sound Controller (I2SC)
+========================================================================
+SAMA5D2 datasheet. p.1255
+~~~~~~~
+Signals
+~~~~~~~
+            Name                Direction
+I2SC_CK     Serial Clock        in/out
+I2SC_DI     Serial Data Input   in
+I2SC_DO     Serial Data Output  out
+I2SC_MCK    Master Clock        out
+I2SC_WS     I2S Word Select     in/out
+~~~~~~~~~~
+I2SC0 MUX1
+~~~~~~~~~~
+            ATSAMA5D27  EVK                 XC6SLX9 TQG144      Bank    SOM
+I2SC0 CK    PC01        LCD pin 30          P132    GCLK17      0       141     ch0
+I2SC0 CK    PD19        USB ov.curr         P50     GCLK30      2       58      
+
+I2SC0 MCK   PC02        LCD pin 31          P93     GCLK9       1       146     ch1
+I2SC0 MCK   PD20        USB VBUS            P22     GCLK25      3       57
+
+I2SC0 DI0   PC04        LCD pin 41          P141    IO_L2N      0       136     ch2
+I2SC0 DI0   PD22        TWI clk EEPROM      P32     IO_L2N      3       20
+
+I2SC0 DO0   PC05        LCD pin 34          P142    IO_L2P      0       137     ch3
+I2SC0 DO0   PD23        MicroBUS2 Pin3R     P33     IO_L2P      3       30
+
+I2SC0 WS    PC03        LCD PWM pin 46      P121    IO_L62P     0       142     ch4
+I2SC0 WS    PD21        TWI data EEPROM     P35     IO_L1P      3       19
+
+========================================================================
+FPGA <-> CDC
+========================================================================
+Should be foreseen possibility to connect all the codecs to the common line 
+and each codec separately.
+
+Common signals for codecs:
+        XC6SLX9 TQG144  Bank
+SDOUT_0 P119    IO_L63P 0
+BCLK_0  P131    GCLK16  0
+SDIN_0  P118    IO_L63N 0
+
+Individual signals for each codec:
+            CDC #   XC6SLX9 TQG144  Bank
+LRCLK       0       P117    IO_L64P 0
+LRCLK       1       P116    IO_L64N 0
+LRCLK       2       P105    IO_L1P  1
+LRCLK       3       P10     IO_L50P 3  
+
+For individual schematic 0Om should be provided on these signals:
+            XC6SLX9 TQG144  Bank
+SDOUT_1     P114    IO_L65N 0
+BCLK_1      P127    GCLK15  0 
+SDIN_1      P115    IO_L65P 0
+
+SDOUT_2     P101    IO_L32N 1
+BCLK_2      P92     GCLK8   1
+SDIN_2      P102    IO_L32P 1
+
+SDOUT_3     P11     IO_L49N 3
+BCLK_3      P21     GCLK24  3
+SDIN_3      P12     IO_L49P 3
+
+~~~
+I2C
+~~~
+            XC6SLX9 -> SDA          XC6SLX9 -> SCL
+CDC0        IO_L66P P112 B0         IO_L66N P111    B0
+CDC1        IO_L45P P83  B0         IO_L45N P82     B0
+CDC2        IO_L46P P81  B1         IO_L46N P80     B1
+CDC3        IO_L50N P9   B3         IO_L51P P8      B3
+
+
+========================================================================
+FPGA CLOCK
+========================================================================
+            XC6SLX9 TQG144  Bank
+12288 TXO   P126    GCLK14  0
+50MHz TXO   P17     GCLK23  3
+
+
+========================================================================
+FPGA SPI flash
+========================================================================
+~~~~~~~
+Signals
+~~~~~~~
+MOSI_CSI_B_MISO0    In SPI modes, Master Output/Slave
+                    Input (MOSI) connects from the 
+                    FPGA to the SPI flash slave data 
+                    input to send read commands and 
+                    starting addresses
+D0_DIN_MISO_MISO1   In SPI mode, MISO is the Master Input/Slave Output. 
+                    In SPI x2 or x4 modes, MISO1 is the second bit of the SPI bus
+MISO2
+MISO3               In SPIx4 mode, MISO2 and MISO3 are two MSBs of the SPI bus
+CSO_B               In SPI mode, SPI flash chip select.
+CCLK                Configuration clock. Output in Master mode or input in Slave mode.
+
+Look
+https://reference.digilentinc.com/_media/atlys:atlys:atlys_sch.pdf
+Sheet #8
+
+N25QXXX         XC6SLX9 TQG144  Pin     Bank    Full name
+SDI     /DQ0    MOSI/MISO0      P64     2       IO_L3N_MOSI_CSI_B_MISO0_2
+SDO     /DQ1    MISO/MISO1      P65     2       IO_L3P_D0_DIN_MISO_MISO1_2
+!WP     /DQ2        /MISO2      P62     2       IO_L12P_D1_MISO2_2
+!HOLD   /DQ3        /MISO3      P61     2       IO_L12N_D2_MISO3_2
+CS                  CSO_B       P38     2       IO_L65N_CSO_B_2
+SCK                 CCLK        P70     2       IO_L1P_CCLK_2
+
+
+========================================================================
+FPGA I2C MUX
+========================================================================
+SAMA5D2 datasheet. p.1318
+~~~~~~~
+Signals
+~~~~~~~
+TWD     Two-wire Serial Data
+TWCK    Two-wire Serial Clock
+~~~~~~
+TWIHS0
+~~~~~~
+                ATSAMA5D27  EVK             SOM                         XC6SLX9 TQG144      Bank    Collide     
+TWIHS0 TWCK     PC00        LCD pin 29      145                         P79     IO_L47P     1
+TWIHS0 TWCK     PC28        MOSI_mBUS1&2    117                         P75     IO_L74P     1
+TWIHS0 TWCK     PD22                        20/TWCK0 SOM! EEPROM        (отпаять нахуй это говно)
+TWIHS0 TWCK     PD30                        SOM JTAG TMS
+    
+TWIHS0 TWD      PB31        LCD pin 28      143                         P78     IO_L47N     1
+TWIHS0 TWD      PC27        CAN RX1         114                         P74     IO_L74N     1       GMAC GTX3
+TWIHS0 TWD      PD21                        19/TWD0 SOM! EEPROM         (отпаять нахуй это говно)
+TWIHS0 TWD      PD29                        SOM JTAG TDO
+         
+~~~~~~
+TWIHS1
+~~~~~~
+                ATSAMA5D27  EVK                     SOM     XC6SLX9 TQG144      Bank    Collide 
+TWIHS1 TWCK     PC07        LCD pin 33              139     P67     IO_L2P      2
+TWIHS1 TWCK     PD05        LCD pin 43              21      P59     IO_L13N     2       GMAC GRX2  
+TWIHS1 TWCK     PD20        USBA_VBUS_5V            57      P48     IO_L48P     2
+    
+TWIHS1 TWD      PC06        LCD pin 35              140     P66     IO_L2N      2
+TWIHS1 TWD      PD04        LCD pin 42              27      P58     IO_L14P     2       GMAC GCOL       
+TWIHS1 TWD      PD19        USBB_OVCUR              58      P49     IO_L49P     2
+
+========================================================================
+XC6SLX9 PWM
+========================================================================
+P40 IO_L64N         PCA9635 SCL     R0 to SOM pin 20/ATSAMA5D27 TWIHS0 TWCK0
+P41 IO_L64P         PCA9635 SDA     R0 to SOM pin 19/ATSAMA5D27 TWIHS0 TWD0  
+
+Couple of tricolor LEDs directly to the FPGA
+XC6SLX9 TQG144  Bank Purpose               
+P43 IO_L62N     2    to RED part of LED1   
+P44 IO_L62P     2    to GREEN part of LED1 
+P45 IO_L49N     2    to BLUE part of LED1  
+
+P7  IO_L51N     3    to RED part of LED2   
+P6  IO_L52P     3    to GREEN part of LED2 
+P5  IO_L52N     3    to BLUE part of LED2  
+
+========================================================================
+SAMA5D2 Ethernet
+========================================================================
+            SAMA5D2             SOM     EVK             Collide
+GMAC GCOL   Collision Detect
+            PB09                132     QSPI0_IO2       QSPI on SOM
+            PC23                170     J27 pin 14      -
+            PD04                27      LCD pin 42      XC6SLX9 P58 IO_L14P B2  TWIHS1 TWD1
+            
+GMAC GCRS   Carrier Sense and Data Valid
+            PB08                128     QSPI0_IO1       QSPI on SOM
+            PC22                11      J27 pin 12      -
+            PD03                24      DBGU_TXD        -
+
+GMAC GMDC   Management Data Clock
+            PB22                161     LCD pin 16      XC6SLX9 P98 IO_L34P B1  SSC0 TD
+            PC18                172     J27 pin 27      -
+            PD17                -       -               -
+            
+GMAC GMDIO  Management Data Input/Output
+            PB23                160     LCD pin 18      XC6SLX9 P138 IO_L4P B0  SSC0 RD
+            PC19                6       J27 pin 28      -
+            PD18                -       -               -
+            
+GMAC GRXCK  Receive Clock
+            PB07                133     QSPI0_IO0       QSPI on SOM
+            PC20                14      J27 pin 29      -
+            PD01                113     LCD pin 44      -
+
+GMAC GRXDV  Receive Data Valid
+            PB16                154     LCD pin 9       XC6SLX9 P30 IO_L36P B3  SSC1 TD
+            PC12                3       J27 pin 21      -
+            PD11                -       -               -
+            
+GMAC GRXER  Transmit Coding Error
+            PB17                157     LCD pin 10      XC6SLX9 P60 IO_L13P B2  SSC1 RD
+            PC13                4       J27 pin 22      XC6SLX9 P99 IO_L33N B1  SSC0 TF
+            PD12                -       -               -
+            
+GMAC GRX0   Receive Data 0
+            PB18                152     LCD pin 11      XC6SLX9 P51 GCLK31 B2   SSC1 RK
+            PC14                8       J27 pin 23      XC6SLX9 P100 IO_L33P B1 SSC0 TD
+            PD13                -       -
+GMAC GRX1   Receive Data 1
+            PB19                158     LCD pin 13      XC6SLX9 P59 IO_L13N B2  SSC1 RF
+            PC15                12      J27 pin 26      XC6SLX9 P140 IO_L3P B0  SSC0 RD
+            PD14                -       -               -
+GMAC GRX2   Receive Data 2
+            PB10                135     QSPI0_IO3       QSPI on SOM
+            PC24                13      J27 pin 10      -
+            PD05                21      LCD pin 43      XC6SLX9 P59 IO_L13N B2  TWIHS1 TWCK1
+GMAC GRX3   Receive Data 3
+            PB11                148     LCD pin 3       -
+            PC25                173     LCD pin 45      -
+            PD06                22      J27 pin 5       -
+GMAC GTSUCOMP
+            PB05                134     QSPI1_SCK       QSPI on SOM
+            PC09                2       J27 pin 18      -
+            PD00                121     NPCS1_mBUS2     -
+GMAC GTXCK  Transmit Clock or Reference Clock
+            PB14                150     LCD pin 6       XC6SLX9 P23 GCLK26 B3   SSC1 TK
+            PC10                9       J27 pin 19      -
+            PD09                -       -               -
+GMAC GTXEN  Transmit Enable
+            PB15                162     LCD pin 8       XC6SLX9 P29 IO_L36N B3  SSC1 TF
+            PC11                175     J27 pin 20      -
+            PD10                -       -               -
+GMAC GTXER  Transmit Coding Error
+            PB06                127     QSPI1_CS        QSPI on SOM
+            PC21                7       J27 pin 16      XC6SLX9 P94 GCLK10 B1   SSC0 TK
+            PD02                23      DBGU_RXD        -
+GMAC GTX0   Transmit Data 0
+            PB20                156     LCD pin 14      XC6SLX9 P95 GCLK11 B1   SSC0 TK
+            PC16                174     J27 pin 25      XC6SLX9 P133 GCLK18 B0  SSC0 RK
+            PD15                -       -               -
+GMAC GTX1   Transmit Data 1
+            PB21                164     LCD pin 15      XC6SLX9 P97 IO_L34N B1  SSC0 TF
+            PC17                5       J27 pin 26      XC6SLX9 P139 IO_L3N B0  SSC0 RF
+            PD16                -       -               -
+GMAC GTX2   Transmit Data 2
+            PB12                151     LCD pin 4       -
+            PC26                115     CAN TX1         -
+            PD07                25      J27 pin 6       -
+GMAC GTX3   Transmit Data 3
+            PB13                155     LCD pin 5       -
+            PC27                114     CAN RX1         XC6SLX9 P74 IO_L74N B1  TWIHS0 MUX2 TWD0
+            PD08                28      PGOOD           -
+        
+========================================================================
+SAMA5D2 SPI
+========================================================================
+~~~~~~~~~~~~~
+SPI 0 signals
+~~~~~~~~~~~~~
+            ATSAMA5D27  Collide     SOM
+SPI0 MISO   PA16        SSC1 TD     
+SPI0 MISO   PA31        -           93      LAN9313 MISO
+                        
+SPI0 MOSI   PA15        SSC1 TF
+SPI0 MOSI   PB00        -           119     LAN9313 MOSI
+                        
+SPI0 SCK    PA14        SSC1 TK
+SPI0 SCK    PB01        -           122     LAN9313 SCK
+                        
+~~~~~~~~                
+SPI 0 CS                
+~~~~~~~~                
+SPI0 CS0    PA17        SSC1 RD
+SPI0 CS0    PA30        -           94      LAN9313 CS
+                        
+SPI0 CS1    PA18        SSC1 RK 
+SPI0 CS1    PA29        -           96      
+                        
+SPI0 CS2    PA19        SSC1 RF
+SPI0 CS2    PA27        -
+                        
+SPI0 CS3    PA20        -
+SPI0 CS3    PA28        -
+
+~~~~~~~~~~~~~
+SPI 1 signals
+~~~~~~~~~~~~~
+            ATSAMA5D27  Collide
+SPI1 MISO   PA24        -
+SPI1 MISO   PC03        I2SC0 WS
+SPI1 MISO   PD27        -
+                        
+SPI1 MOSI   PA23        -
+SPI1 MOSI   PC02        I2SC0 MCK
+SPI1 MOSI   PD26        -
+                        
+SPI1 SCK    PA22        -
+SPI1 SCK    PC01        I2SC0 CK
+SPI1 SCK    PD25        -
+                        
+~~~~~~~~                
+SPI 1 CS                
+~~~~~~~~                
+SPI1 CS0    PA25        -
+SPI1 CS0    PC04        I2SC0 DI0
+SPI1 CS0    PD28        -
+                        
+SPI1 CS1    PA26        -
+SPI1 CS1    PC05        I2SC0 DO0
+SPI1 CS1    PD29        TWIHS0 TWD
+                        
+SPI1 CS2    PA27        SPI0 NPCS2
+SPI1 CS2    PC06        TWIHS1 TWD
+SPI1 CS2    PD30        TWIHS0 TWCK
+                        
+SPI1 CS3    PA28        SPI0 NPCS3
+SPI1 CS3    PC07        TWIHS1 TWCK
+
+
+

@@ -1,0 +1,39 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            lcdc: lcdc@f0000000 { /* LCD Controller */
+                compatible  = "atmel,sama5d2-hlcdc";
+                clocks      =   <&lcdc_clk>,
+                                <&lcdck>,
+                                <&slck>;
+                clock-names =   "periph_clk",
+                                "sys_clk",
+                                "slow_clk";
+                lcdc-display-controller {
+                    compatible      = "atmel,hlcdc-display-controller";
+                    #address-cells  = <1>;
+                    #size-cells     = <0>;
+                    port@0 {
+                        #address-cells  = <1>;
+                        #size-cells     = <0>;
+                        reg             = <0>;
+                    }; /* port@0 */
+                }; /* hlcdc-display-controller */
+                lcdc_pwm: hlcdc-pwm {
+                    compatible  = "atmel,hlcdc-pwm";
+                    #pwm-cells  = <3>;
+                }; /* lcdc_pwm */
+            }; /* lcdc */
+            ptc@fc060000 { /* Peripheral Touch Controller */
+                compatible  = "atmel,sama5d2-ptc";
+                clocks      =   <&ptc_clk>,
+                                <&mainck>,
+                                <&slck>;
+                clock-names =   "ptc_clk",
+                                "ptc_int_osc",
+                                "slow_clk";
+            }; /* ptc */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

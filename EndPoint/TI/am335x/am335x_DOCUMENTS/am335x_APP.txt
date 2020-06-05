@@ -1,0 +1,73 @@
+#1      Build meta-toolchain
+#2      Go to '/tisdk/build/arago-tmp/deploy/sdk'
+#2.1    Launch script 'poky-glibc-x86_64-meta-toolchain-armv7ahf-neon-toolchain-2.4.4.sh'
+#2.2    Set directory '/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/IDE_SUPPORT'
+
+###############
+### ECLIPSE ###
+###############
+
+#1 Properties --> C/C++ Build --> Builder Settings --> Build command
+make ARCH=arm CROSS_COMPILE=arm-poky-linux-gnueabi-
+
+#2 Properties --> C/C++ Build --> Environment
+TI_PTH
+/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+AM335_PTH
+${TI_PTH}/am335x
+SDK_PTH
+${AM335_PTH}/IDE_SUPPORT
+GCC_PTH
+${SDK_PTH}/sysroots/x86_64-pokysdk-linux/usr/bin/arm-poky-linux-gnueabi
+SDKTARGETSYSROOT
+${SDK_PTH}/sysroots/armv7ahf-neon-poky-linux-gnueabi
+SDK_INC
+${SDKTARGETSYSROOT}/usr/include
+SDK_USR_LIB
+${SDKTARGETSYSROOT}/usr/lib
+SDK_LIB
+${SDKTARGETSYSROOT}/lib
+SDK_BIN
+${SDKTARGETSYSROOT}/bin
+SDK_USR_BIN
+${SDKTARGETSYSROOT}/usr/bin
+SDK_SBIN
+${SDKTARGETSYSROOT}/sbin
+SDK_CPP
+${SDKTARGETSYSROOT}/usr/include/c++/7.3.0
+ORIG_PTH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PATH
+${GCC_PTH}:${SDK_CPP}:${SDK_BIN}:${SDK_USR_BIN}:${SDK_SBIN}:${SDK_USR_LIB}:${SDKTARGETSYSROOT}:${ORIG_PTH}
+CC_FLAGS
+-c -fmessage-length=0 -W -Wall -pipe -g -march=armv7-a -marm -mfpu=neon -mfloat-abi=hard -feliminate-unused-debug-symbols --sysroot=${SDKTARGETSYSROOT}
+LD_FLAGS
+-t --verbose --sysroot=${SDKTARGETSYSROOT}
+
+# 3
+Properties --> C/C++ Build --> Settings --> Cross Settings --> Prefix
+arm-poky-linux-gnueabi-
+Properties --> C/C++ Build --> Settings --> Cross Settings --> Path
+${GCC_PTH}
+Properties --> C/C++ Build --> Settings --> Cross GCC Compiler --> Includes
+${SDK_INC}
+${SDK_CPP}
+Properties --> C/C++ Build --> Settings --> Cross G++ Compiler --> Includes
+${SDK_INC}
+${SDK_CPP}
+${SDK_CPP}/arm-poky-linux-gnueabi
+Properties --> C/C++ Build --> Settings --> Cross G++ Compiler --> Miscellaneous --> Other flags
+${CC_FLAGS}
+Properties --> C/C++ Build --> Settings --> Cross G++ Linker --> Library search path
+${SDK_LIB}
+${SDK_USR_LIB}
+Properties --> C/C++ Build --> Settings --> Cross G++ Linker --> Miscellaneous --> Linker flags
+${LD_FLAGS}
+
+!!!!!!!!!!!!!!!!!!!!!!
+!!! IMPORTANT MOVE !!!
+!!!!!!!!!!!!!!!!!!!!!!
+ln -s /lib/ld-linux-armhf.so.3 /lib/ld-linux.so.3
+cp /lib/ld-linux-armhf.so.3 /lib/ld-linux.so.3
+
+

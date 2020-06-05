@@ -1,0 +1,33 @@
+# Build
+bitbake core-image-minimal -c clean
+bitbake netscript -c clean
+bitbake initscripts -c cleansstate
+bitbake sysvinit -c cleansstate
+
+bitbake netscript
+
+bitbake initscripts
+bitbake sysvinit
+
+bitbake core-image-minimal
+
+
+bitbake glibc -c cleansstate
+bitbake bash -c cleansstate
+bitbake gawk -c cleansstate
+
+bitbake gawk
+bitbake bash
+bitbake glibc
+
+bitbake apps -c clean
+bitbake glibc -c clean
+bitbake core-image-minimal -c clean
+
+bitbake apps
+bitbake glibc
+bitbake core-image-minimal
+
+
+
+

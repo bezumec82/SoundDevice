@@ -1,0 +1,288 @@
+/* microElk */
+/ {
+                                    /* 0x00000000 - 0x00040000     ROM */
+                                    /* 0x00040000 - 0x00100000     ECC ROM */
+                                    /* 0x00100000 - 0x00200000     NFC (SRAM) */
+    sram@00200000 {
+        reg                     =   <0x00200000 0x20000>;
+    }; /* SRAM0 */
+                                    /* 0x00220000 - 0x00300000     SRAM1 */
+    memory {
+        reg                     =   <0x20000000 0x20000000>;    /* DDR Chip Select */
+    }; /* memory */
+    ahb {
+        gadget@00300000 {           /* UDPHS (RAM) */
+            reg                 = < 0x00300000 0x100000
+                                    0xfc02c000 0x400>;
+        }; /* usb0 */
+        ohci@00400000 {             /* UHPHS (OHCI) */
+            reg                 =   <0x00400000 0x100000>;
+        }; /* usb1 */
+        usb2: ehci@00500000 {       /* UHPHS (EHCI) */
+            reg                 =   <0x00500000 0x100000>;
+        }; /* usb2 */
+                                    /* 0x00600000 - 0x00700000     AXIMX */
+                                    /* 0x00700000 - 0x00800000     DAP */
+                                    /* 0x00800000 - 0x00A00000     PTC */    
+        l2cc: cache-controller@00a00000 { /* L2 Cache Controller */
+            reg                 =   <0x00a00000 0x1000>;
+        }; /* l2cc */
+                                    /* 0x00C00000 - 0x0FFFFFFF     Undefined (Abort) */
+        nand0: nand@80000000 {
+            reg                 = < 
+                                    0x80000000 0x08000000       /* EBI CS3 */                                    
+                                    0xf8014070 0x00000490       /* SMC PMECC regs */                                    
+                                    0xf8014500 0x00000200       /* SMC PMECC Error Location regs */   
+                                    0x00040000 0x00018000       /* ECC ROM */
+                                    >;
+            nfc@c0000000 {
+                reg             = < 
+                                    0xc0000000 0x08000000       /* NFC Command Registers */                                    
+                                    0xf8014000 0x00000070       /* NFC HSMC regs */
+                                    0x00100000 0x00100000       /* NFC (SRAM) */
+                                    >;
+            }; /* nfc */
+        }; /* nand0 */
+                                    /* 0x10000000 - 0x20000000     EBI CS0 */
+                                    /* 0x40000000 - 0x60000000     DDR AESB Chip Select */
+                                    /* 0x60000000 - 0x70000000     EBI CS1 */
+                                    /* 0x70000000 - 0x80000000     EBI CS2 */
+                                    /* 0x90000000 - 0x98000000     QSPI0 AESB MEM */
+                                    /* 0x98000000 - 0xA0000000     QSPI1 AESB MEM */
+        sdio-host@a0000000 {
+            reg                 =   <0xa0000000 0x300>;
+        }; /* sdmmc0 */
+        sdio-host@b0000000 {
+            reg                 =   <0xb0000000 0x300>;
+        }; /* sdmmc1 */
+                                    /* 0xD0000000 - 0xD8000000     QSPI0 MEM */
+                                    /* 0xD8000000 - 0xF0000000     QSPI1 MEM */        
+        apb {
+            lcdc@f0000000 {
+                reg             =   <0xf0000000 0x2000>;        /* LCDC */
+            }; /* lcdc */            
+            /* Place xdmac1 here despite its address */
+            dma-controller@f0004000 {
+                reg             =   <0xf0004000 0x1000>;        /* XDMAC1 */
+            }; /* xdmac1 */
+            isc@f0008000 {          
+                reg             =   <0xf0008000 0x4000>;        /* Image Sensor Controller */
+            }; /* isc */
+            mpddrc@f000c000 {       
+                reg             =   <0xf000c000 0x200>;         /* Multiport DDR-SDRAM Controller */
+            }; /* mpddrc */
+            xdmac0: dma-controller@f0010000 {
+                reg             =   <0xf0010000 0x1000>;        /* XDMAC0 */
+            }; /* xdmac0 */
+            pmc@f0014000 {
+                reg             =   <0xf0014000 0x160>;         /* PMC */
+            }; /* pmc */
+                                    /* 0xF0018000 - 0xF001C000     H64MX */
+                                    /* 0xF001C000 - 0xF0020000     AESB */            
+            /**********************************************************/
+            spi@f0020000 {
+                reg             =   <0xf0020000 0x100>,         /* QSPI0 */
+                                    <0xd0000000 0x08000000>;
+                reg-names       =   "qspi_base", "qspi_mmap";
+            }; /* qspi0 */
+            spi@f0024000 {
+                reg             =   <0xf0024000 0x100>,         /* QSPI1*/
+                                    <0xd8000000 0x08000000>;
+                reg-names       =   "qspi_base", "qspi_mmap";
+            }; /* qspi1 */
+            /**********************************************************/
+            sha@f0028000 {          
+                reg             =   <0xf0028000 0x100>;         /* Secure Hash Algorithm */
+            }; /* sha */
+            aes@f002c000 {          
+                reg             =   <0xf002c000 0x100>;         /* Advanced Encryption Standard  */
+            }; /* aes */
+            spi@f8000000 {
+                reg             =   <0xf8000000 0x100>;         /* SPI0 */
+            }; /* spi0 */
+            ssc0@f8004000 {
+                reg             =   <0xf8004000 0x100>;         /* SSC0 */
+            }; /* ssc0 */
+            ethernet@f8008000 {
+                reg             =   <0xf8008000 0x1000>;        /* GMAC */
+            }; /* gmac */
+            /**********************************************************/
+            timer@f800c000 {        
+                reg             =   <0xf800c000 0x100>;         /* Timer Counter */
+            }; /* tc0 */
+            timer@f8010000 {        
+                reg             =   <0xf8010000 0x100>;         /* Timer Counter */
+            }; /* tc1 */
+                                    /* 0xF8014000 - 0xF8018000     HSMC */
+            /**********************************************************/
+            pdmic@f8018000 {
+                reg             =   <0xf8018000 0x124>;         /* PDMIC */
+            }; /* pdmic */
+            /**********************************************************/
+            serial@f801c000 {
+                reg             =   <0xf801c000 0x100>;         /* UART0 */
+            }; /* uart0 */
+            serial@f8020000 {
+                reg             =   <0xf8020000 0x100>;         /* UART1 */
+            }; /* uart1 */
+            serial@f8024000 {
+                reg             =   <0xf8024000 0x100>;         /* UART2 */
+            }; /* uart2 */
+            /**********************************************************/
+            i2c@f8028000 {
+                reg             =   <0xf8028000 0x100>;         /* TWIHS0 */
+            }; /* i2c0 */
+            pwm@f802c000 {
+                reg             =   <0xf802c000 0x4000>;        /* PWM */
+            }; /* pwm */
+            sfr@f8030000 { 
+                reg             =   <0xf8030000 0x98>;          /* Special Function Registers */
+            }; /* sfr */
+            /**********************************************************/
+            flexcom@f8034000 {
+                reg             =   <0xf8034000 0x200>;         /* FLEXCOM0 */
+                ranges          =   <0x0 0xf8034000 0x800>;
+            }; /* flx0 */
+            flexcom@f8038000 {
+                reg             =   <0xf8038000 0x200>;         /* FLEXCOM1 */
+                ranges          =   <0x0 0xf8038000 0x800>;
+                i2c2: i2c@600 {
+                    reg         =   <0x600 0x200>;
+                }; /* i2c2 */
+            }; /* flx1 */
+            /**********************************************************/
+                                    /* 0xF803C000 - 0xF8040000     SAIC */
+                                    /* 0xF8040000 - 0xF8044000     ICM */
+            sram@f8044000 {
+                reg             =   <0xf8044000 0x1420>;        /* SECURAM */
+            }; /* securam */
+            rstc@f8048000 {         
+                reg             =   <0xf8048000 0x10>;          /* Reset Controller */
+            }; /* rstc */
+            shdwc@f8048010 {        
+                reg             =   <0xf8048010 0x10>;          /* Shutdown Controller */
+            }; /* shdwc */
+            timer@f8048030 {        
+                reg             =   <0xf8048030 0x10>;          /* Periodic Interval Timer */
+            }; /* pit */
+            watchdog@f8048040 {
+                reg             =   <0xf8048040 0x10>;          /* WDT */
+            }; /* watchdog */
+            sckc@f8048050 {         
+                reg             =   <0xf8048050 0x4>;           /* Slow Clock Controller */
+            }; /* sckc */
+            rtc@f80480b0 { /* Real-time Clock */
+                reg             =   <0xf80480b0 0x30>;          /* RTC */
+            }; /* rtc */
+            syscwp@f80480e4 {
+                reg             =   <0xf80480e4 0x30>;          /* SYSCWP */
+            }; /* syscwp */
+                                    /* 0xF8049000 - 0xF804A000     RXLP */
+                                    /* 0xF804A000 - 0xF804B000     ACC */
+                                    /* 0xF804B000 - 0xF804C000     RESERVED */
+                                    /* 0xF804C000 - 0xf8050000     SFC */
+            i2s@f8050000 {
+                reg             =   <0xf8050000 0x100>;         /* I2SC0 */
+            }; /* i2s0 */
+            can@f8054000 {
+                reg             =   <0xf8054000 0x4000>,        /* CAN0 */
+                                    <0x210000 0x4000>;
+                reg-names       =   "m_can", "message_ram";
+            }; /* can0 */
+            spi@fc000000 {
+                reg             =   <0xfc000000 0x100>;         /* SPI1 */
+            }; /* spi1 */           
+            ssc1@fc004000 {
+                reg             =   <0xfc004000 0x100>;         /* SSC1 */
+            }; /* ssc1 */
+            /**********************************************************/
+            serial@fc008000 {
+                reg             =   <0xfc008000 0x100>;         /* UART3 */
+            }; /* uart3 */
+            serial@fc00c000 {
+                reg             =   <0xfc00c000 0x100>;         /* UART4 */
+            }; /* uart4 */
+            /**********************************************************/
+            flexcom@fc010000 {
+                reg             =   <0xfc010000 0x200>;         /* FLEXCOM2 */
+                ranges          =   <0x0 0xfc010000 0x800>;
+            }; /* flx2 */
+            flexcom@fc014000 {
+                reg             =   <0xfc014000 0x200>;         /* FLEXCOM3 */
+                ranges          =   <0x0 0xfc014000 0x800>;
+                uart7: serial@200 {
+                    reg         =   <0x200 0x200>;
+                }; /* uart7 */
+                spi2: spi@400 {
+                    reg         =   <0x400 0x200>;
+                }; /* spi2 */
+            }; /* flx3 */
+            flx4: flexcom@fc018000 {
+                reg             =   <0xfc018000 0x200>;         /* FLEXCOM4 */
+                ranges          =   <0x0 0xfc018000 0x800>;
+                uart6: serial@200 {
+                    reg         =   <0x200 0x200>;
+                }; /* uart6 */
+                spi3: spi@400 {
+                    reg         =   <0x400 0x200>;
+                }; /* spi3 */
+                i2c3: i2c@600 {
+                    reg         =   <0x600 0x200>;
+                }; /* i2c3 */
+            };/* flx4 */
+            /**********************************************************/
+            trng@fc01c000 {         
+                reg             =   <0xfc01c000 0x100>;         /* True Random Number Generator */
+            }; /* trng */
+            interrupt-controller@fc020000 { 
+                reg             =   <0xfc020000 0x200>;         /* Advanced Interrupt Controller */
+            };
+                                    /* 0xFC024000 - 0xFC028000     RESERVED */
+            i2c@fc028000 {
+                reg             =   <0xfc028000 0x100>;         /* TWIHS1 */                
+            }; /* i2c1 */
+                                    /* 0xFC02C000 - 0xFC030000     UDPHS */
+            adc@fc030000 {
+                reg             =   <0xfc030000 0x100>;         /* ADC */
+            }; /* adc */            
+                                    /* 0xFC034000 - 0xFC038000     RESERVED */
+            pinctrl@fc038000 {
+                reg             =   <0xfc038000 0x600>;         /* PIOA */
+            }; /* pioA */
+                                    /* 0xFC03C000 - 0xFC040000     H32MX */
+            secumod@fc040000 {      
+                reg             =   <0xfc040000 0x100>;         /* Security Module */
+            }; /* secumod */
+            tdes@fc044000 {         
+                reg             =   <0xfc044000 0x100>;         /* Triple Data Encryption Standard */
+            }; /* tdes */            
+            classd@fc048000 {
+                reg             =   <0xfc048000 0x100>;         /* CLASSD */
+            }; /* classd */            
+            i2s@fc04c000 {
+                reg             =   <0xfc04c000 0x100>;         /* I2SC1 */
+            }; /* i2s1 */            
+            can1: can@fc050000 {
+                reg             =   <0xfc050000 0x4000>,        /* CAN1 */
+                                    <0x210000 0x4000>;
+                reg-names       =   "m_can", "message_ram";
+            }; /* can1 */
+                                    /* 0xFC054000 - 0xFC058000     UTMI */
+                                    /* 0xFC058000 - 0xFC05C000     RESERVED */
+            sfr@fc05c000 {          
+                reg             =   <0xfc05c000 0x20>;          /* Special Function Registers Backup */
+            }; /* sfrbu */
+            ptc@fc060000 {          /* Peripheral Touch Controller */
+                reg         = < 0x00800000 0x10000 /* PTC */
+                                0xfc060000 0xcf>;
+            }; /* ptc */            
+                                    /* 0xFC064000 - 0xFC068000      RESERVED */
+                                    /* 0xFC068000 - 0xFC069000      RESERVED */
+            chipid@fc069000 {
+                reg             =   <0xfc069000 0x8>;
+            }; /* chipid */
+                                    /* 0xFC06A000 - 0xFFFFFFFF      RESERVED */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */
+

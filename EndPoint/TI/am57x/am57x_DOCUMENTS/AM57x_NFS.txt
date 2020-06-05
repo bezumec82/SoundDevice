@@ -1,0 +1,141 @@
+export TI_PTH=/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+export AM57x_PTH=${TI_PTH}/am57x
+export U_BOOT_PTH=${AM57x_PTH}/ti-u-boot
+
+export BSP_BIN_PTH=${AM57x_PTH}/board-support-bin
+export PBLT_PTH=${BSP_BIN_PTH}/prebuilt-images
+export ROOT_BIN_PTH=${BSP_BIN_PTH}/filesystem
+
+reset
+stat ${TI_PTH}
+stat ${AM57x_PTH}
+stat ${U_BOOT_PTH}
+stat ${BSP_BIN_PTH}
+stat ${PBLT_PTH}
+stat ${ROOT_PTH}
+
+#####################
+### From ready rootfs
+#####################
+sudo rm -rf ${AM57x_PTH}/nfsroot
+mkdir ${AM57x_PTH}/nfsroot
+tar -Jxvf \
+${ROOT_BIN_PTH}/arago-base-tisdk-image-am57xx-evm.tar.xz \
+-C ${AM57x_PTH}/nfsroot
+ls -ls ${AM57x_PTH}/nfsroot
+
+###########
+### Prepare
+###########
+sudo chown -R root ${AM57x_PTH}/nfsroot/*
+sudo chgrp -R root ${AM57x_PTH}/nfsroot/*
+ls -ls  ${AM57x_PTH}/nfsroot
+
+#########
+### Setup
+#########
+sudo gedit /etc/exports &
+/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/nfsroot 192.168.2.200/24(rw,nohide,insecure,no_subtree_check,async,no_root_squash)
+/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/nfsroot 192.168.12.200/24(rw,nohide,insecure,no_subtree_check,async,no_root_squash)
+
+sudo gedit /etc/hosts.allow &
+rpcbind mountd nfsd statd lockd rquotad : 192.168.2.108 192.168.2.200 192.168.12.200
+
+### After start
+sudo service    nfs-kernel-server   restart
+sudo service    isc-dhcp-server     start
+
+############
+### boot.scr
+############
+gedit ${AM57x_PTH}/bootcmd &
+
+setenv serverip                 192.168.2.200;
+setenv ipaddr                   192.168.2.108;
+setenv gatewayip                192.168.2.1;
+setenv netmask                  255.255.255.0;
+setenv hostname                 am57x;
+setenv kernel_image             /tftpboot/am57x/zImage;
+setenv devicetree_image         /tftpboot/am57x/am572x-idk.dtb;
+setenv rootpath                 /media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/nfsroot;
+setenv bootargs root=/dev/nfs rw rootfstype=nfs nfsroot=${serverip}:${rootpath} \
+ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}::eth0:off console=ttyS2,115200n8;
+printenv bootargs;
+echo Booting from tftp server:  ${serverip};
+tftpboot ${kernel_addr_r}       ${kernel_image};
+tftpboot ${fdt_addr_r}          ${devicetree_image};
+echo Loading LINUX;
+bootz ${kernel_addr_r} - ${fdt_addr_r};
+
+### Tests
+mount -t nfs -o proto=tcp,port=2049 \ 192.168.12.200:/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/nfsroot /mnt
+sudo service nfs-kernel-server status
+
+#######################
+### Convert boot script
+#######################
+touch ${AM57x_PTH}/bootcmd
+touch ${AM57x_PTH}/uEnv.txt
+gedit ${AM57x_PTH}/bootcmd &
+
+rm ${TI_PTH}/am57x/boot.scr
+mkimage \
+-A arm \
+-O linux \
+-T script \
+-C none \
+-a 0 -e 0 \
+-n 'Boot script' \
+-d ${AM57x_PTH}/bootcmd ${AM57x_PTH}/boot.scr
+
+date -r ${AM57x_PTH}/boot.scr
+file ${AM57x_PTH}/boot.scr
+
+###########
+### SD CARD
+###########
+clear
+### Clean
+cd ${TI_PTH}
+export DRIVE=/dev/sdg
+sudo umount ${DRIVE}*
+sudo dd if=/dev/zero of=${DRIVE}    bs=512 count=2048
+sync
+sudo partprobe ${DRIVE}
+
+### Making partition
+sudo parted -s $DRIVE          mklabel msdos
+sudo parted -s $DRIVE unit s   mkpart primary fat32 2048 $((64*1024*1024/512))
+sudo parted -s $DRIVE          set 1 boot on
+sudo parted -s $DRIVE print
+sudo fdisk $DRIVE -l
+
+### Partitioning
+sudo mkfs.vfat -F 32 -n "boot"          ${DRIVE}1
+sync
+
+### Mounting
+sudo rm -rf ${AM57x_PTH}/am57x_boot
+mkdir ${AM57x_PTH}/am57x_boot
+sudo mount -t vfat ${DRIVE}1 ${AM57x_PTH}/am57x_boot
+sudo rm -rf ${AM57x_PTH}/am57x_boot/*
+
+### Filing
+#sudo cp ${PBLT_PTH}/MLO-am57x-evm               ${AM57x_PTH}/am57x_boot/MLO
+#sudo cp ${PBLT_PTH}/u-boot-am57x-evm.img        ${AM57x_PTH}/am57x_boot/u-boot.img
+#sudo cp ${AM57x_PTH}/uEnv.txt                    ${AM57x_PTH}/am57x_boot/uEnv.txt
+#sudo cp ${AM57x_PTH}/boot.scr                    ${AM57x_PTH}/am57x_boot/boot.scr
+#sync
+
+sudo cp ${AM57x_PTH}/ti-u-boot/MLO              ${AM57x_PTH}/am57x_boot/MLO
+sudo cp ${AM57x_PTH}/ti-u-boot/u-boot.img       ${AM57x_PTH}/am57x_boot/u-boot.img
+sudo cp ${AM57x_PTH}/boot.scr                   ${AM57x_PTH}/am57x_boot/boot.scr
+#sudo cp ${AM57x_PTH}/uEnv.txt                  ${AM57x_PTH}/am57x_boot/uEnv.txt
+sync
+ls -ls ${AM57x_PTH}/am57x_boot
+
+### Un-mounting
+sudo umount ${AM57x_PTH}/am57x_boot
+sync
+sudo rm -rf ${TI_PTH}/am57x_boot
+sudo eject ${DRIVE}

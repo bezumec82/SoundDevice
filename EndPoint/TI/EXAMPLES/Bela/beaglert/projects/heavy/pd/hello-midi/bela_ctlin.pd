@@ -1,0 +1,76 @@
+#N canvas 554 204 703 475 10;
+#X obj 53 431 outlet;
+#X obj 108 429 outlet;
+#X obj 99 127 r ctlin;
+#X obj 92 151 unpack f f f;
+#X obj 154 429 outlet;
+#X obj 86 322 spigot;
+#X text 51 450 value;
+#X text 105 450 number;
+#X obj 211 138 loadbang;
+#X obj 177 193 \$1;
+#X obj 126 214 == \$1;
+#X obj 119 299 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 84 349 unpack f f f;
+#X obj 143 247 ||;
+#X obj 177 217 == 0;
+#X text 70 11 Emulates ctlin \, except number of outlets is fixed.
+;
+#X obj 228 247 ||;
+#X obj 262 217 == 0;
+#X obj 212 214 == \$2;
+#X obj 262 193 \$2;
+#X obj 177 277 &&;
+#X obj 211 163 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X text 173 299 If (inputController==\$1 || \$1==0) && (inputChannel==\$2
+|| \$2==0);
+#X text 197 52 Known issue: trying to select inputController 0 will
+result i accepting all controllers (because a pd external cannot tell
+the difference between \$1 been explicitely set to 0 and the patch
+not having any argument);
+#X text 162 450 channel;
+#X obj 56 192 pack f f f;
+#X obj 80 408 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+-1;
+#X floatatom 81 382 5 0 0 0 - - -, f 5;
+#X obj 121 412 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 122 386 5 0 0 0 - - -, f 5;
+#X obj 172 406 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 173 380 5 0 0 0 - - -, f 5;
+#X obj 122 92 s ctlin;
+#X obj 64 29 r bela_ctlin;
+#X connect 2 0 3 0;
+#X connect 3 0 25 0;
+#X connect 3 1 10 0;
+#X connect 3 1 25 1;
+#X connect 3 2 18 0;
+#X connect 3 2 25 2;
+#X connect 5 0 12 0;
+#X connect 8 0 21 0;
+#X connect 9 0 14 0;
+#X connect 10 0 13 0;
+#X connect 11 0 5 1;
+#X connect 12 0 0 0;
+#X connect 12 0 27 0;
+#X connect 12 1 1 0;
+#X connect 12 1 29 0;
+#X connect 12 2 4 0;
+#X connect 12 2 31 0;
+#X connect 13 0 20 0;
+#X connect 14 0 13 1;
+#X connect 16 0 20 1;
+#X connect 17 0 16 1;
+#X connect 18 0 16 0;
+#X connect 19 0 17 0;
+#X connect 20 0 11 0;
+#X connect 21 0 9 0;
+#X connect 21 0 19 0;
+#X connect 25 0 5 0;
+#X connect 27 0 26 0;
+#X connect 29 0 28 0;
+#X connect 31 0 30 0;
+#X connect 33 0 32 0;

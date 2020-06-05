@@ -1,0 +1,25 @@
+/* microElk */
+/ {
+    aliases {
+        tcb0    = &tc0;
+        tcb1    = &tc1;
+    }; /* aliases */
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            tc0: timer@f800c000 { /* Timer Counter */
+                compatible      = "atmel,at91sam9x5-tcb";
+                clocks          =   <&tcb0_clk>,
+                                    <&slck>;
+                clock-names     =   "t0_clk",
+                                    "slow_clk";
+            }; /* tc0 */
+            tc1: timer@f8010000 { /* Timer Counter */
+                compatible      = "atmel,at91sam9x5-tcb";
+                clocks          =   <&tcb1_clk>,
+                                    <&slck>;
+                clock-names     =   "t0_clk",
+                                    "slow_clk";
+            }; /* tc1 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

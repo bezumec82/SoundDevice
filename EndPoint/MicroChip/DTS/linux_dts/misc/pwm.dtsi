@@ -1,0 +1,28 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            pwm: pwm@f802c000 {
+                pinctrl-names     = "default";
+                pinctrl-0         = <   &pinctrl_mikrobus1_pwm
+                                        &pinctrl_mikrobus2_pwm>;
+                compatible          = "atmel,sama5d2-pwm";
+                #pwm-cells          = <3>;
+                clocks              = <&pwm_clk>;
+            }; /* pwm */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                pinctrl_mikrobus1_pwm: mikrobus1_pwm {
+//                  pinmux =        <PIN_PB1__PWML1>;
+//                  bias-disable;
+                }; /* mikrobus1_pwm */
+                pinctrl_mikrobus2_pwm: mikrobus2_pwm {
+//                  pinmux =        <PIN_PA31__PWML0>;
+//                  bias-disable;
+                }; /* mikrobus2_pwm */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

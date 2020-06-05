@@ -1,0 +1,149 @@
+export TI_PTH=/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+export TI_INSTALL=${TI_PTH}/INSTALL
+export AM57x_PTH=${TI_PTH}/am57x
+export U_BOOT_PTH=${AM57x_PTH}/ti-u-boot
+export TCH_PTH=${AM57x_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf/bin
+
+export CC=${TCH_PTH}/arm-linux-gnueabihf-
+export PATH=${TCH_PTH}:${PATH}
+export ARCH=arm
+export CROSS_COMPILE=arm-linux-gnueabihf-
+
+reset
+stat ${TI_PTH}
+stat ${TI_INSTALL}
+stat ${AM57x_PTH}
+stat ${U_BOOT_PTH}
+stat ${TCH_PTH}
+
+
+#################
+### Get toolchain
+#################
+cd ${TI_PTH}/am57x
+sudo rm -rf ${TI_PTH}/am57x/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf
+cd ${TI_INSTALL}
+#wget \
+https://releases.linaro.org/components/toolchain/binaries/\
+6.2-2016.11/arm-linux-gnueabihf/gcc-linaro-6.2.1-2016.11-x86_64_arm-linux-gnueabihf.tar.xz
+#wget \
+https://releases.linaro.org/components/toolchain/binaries/\
+7.2-2017.11/arm-linux-gnueabihf/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf.tar.xz
+
+tar -Jxvf \
+${TI_INSTALL}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf.tar.xz \
+-C ${TI_PTH}/am57x
+ls -ls ${TI_PTH}/am57x
+
+
+#####################
+### Get u-boot source
+#####################
+reset
+http://processors.wiki.ti.com/index.php/Processor_SDK_Linux_U-Boot_Release_Notes
+cd ${TI_PTH}/am57x
+sudo rm -rf ${AM57x_PTH}/ti-u-boot
+git clone git://git.ti.com/ti-u-boot/ti-u-boot.git
+cd ${AM57x_PTH}/ti-u-boot
+git show
+git checkout 54707a942009fae083dd78b58ff057127ba0e900
+git log
+
+
+###########
+### Compile
+###########
+reset
+cd ${AM57x_PTH}/ti-u-boot
+
+make arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- mrproper
+make arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- am57xx_evm_defconfig
+make arch=ARM CROSS_COMPILE=arm-linux-gnueabihf-
+
+${U_BOOT_PTH}/scripts/get_default_envs.sh \
+${U_BOOT_PTH} > ${U_BOOT_PTH}/u-boot-env-default.txt
+gedit ${U_BOOT_PTH}/u-boot-env-default.txt &
+
+### KCONFIG MOVEMENT
+
+Kconfig
+source "arch/Kconfig"
+
+    arch/Kconfig
+    CONFIG_ARM=y
+    config ARM
+    source "arch/arm/Kconfig"        
+        arch/arm/Kconfig
+        CONFIG_ARCH_OMAP2PLUS=y
+        config ARCH_OMAP2PLUS           
+        source "arch/arm/mach-omap2/Kconfig"    
+            arch/arm/mach-omap2/Kconfig
+            CONFIG_OMAP54XX=y
+            config OMAP54XX
+            source "arch/arm/mach-omap2/omap5/Kconfig"
+                arch/arm/mach-omap2/omap5/Kconfig
+                CONFIG_TARGET_AM57XX_EVM=y
+                config TARGET_AM57XX_EVM
+                source "board/ti/am57xx/Kconfig"                
+                    board/ti/am57xx/Kconfig   
+                    if TARGET_AM57XX_EVM
+                    config SYS_BOARD default "am57xx"
+                    config SYS_CONFIG_NAME default "am57xx_evm"
+                    source "board/ti/common/Kconfig"                    
+                        board/ti/common/Kconfig
+                        CONFIG_TI_COMMON_CMD_OPTIONS=y
+                        config TI_COMMON_CMD_OPTIONS
+
+gedit ${U_BOOT_PTH}/Kconfig &
+gedit ${U_BOOT_PTH}/arch/Kconfig &
+gedit ${U_BOOT_PTH}/arch/arm/Kconfig &
+gedit ${U_BOOT_PTH}/arch/arm/mach-omap2/Kconfig &
+gedit ${U_BOOT_PTH}/arch/arm/mach-omap2/omap5/Kconfig &
+gedit ${U_BOOT_PTH}/board/ti/am57xx/Kconfig &
+gedit ${U_BOOT_PTH}/board/ti/common/Kconfig &
+
+#############
+### Key files
+#############
+geany ${U_BOOT_PTH}/configs/am57xx_evm_defconfig &
+
+geany ${U_BOOT_PTH}/include/configs/am57xx_evm.h &
+    geany ${U_BOOT_PTH}/include/environment/ti/dfu.h &
+    geany ${U_BOOT_PTH}/include/configs/ti_omap5_common.h &    
+        geany ${U_BOOT_PTH}/include/configs/ti_armv7_omap.h &
+        geany ${U_BOOT_PTH}/include/environment/ti/mmc.h &
+        geany ${U_BOOT_PTH}/include/environment/ti/boot.h &        
+            geany ${U_BOOT_PTH}/include/configs/ti_armv7_common.h &
+
+
+geany ${AM57x_PTH}/bootcmd &
+
+### Restore environment
+env default -f -a
+saveenv
+
+### Fix envboot
+geany ${U_BOOT_PTH}/include/environment/ti/mmc.h &
+
+
+setenv envboot "mmc part; " \
+		"mmc dev ${mmcdev}; " \
+		"if mmc rescan; then " \
+			"echo SD/MMC found on device ${mmcdev};" \
+			"if run loadbootscript; then " \
+				"run bootscript;" \
+			"else " \
+				"if run loadbootenv; then " \
+					"echo Loaded env from ${bootenvfile};" \
+					"run importbootenv;" \
+				"fi;" \
+				"if test -n $uenvcmd; then " \
+					"echo Running uenvcmd ...;" \
+					"run uenvcmd;" \
+				"fi;" \
+			"fi;" \
+		"fi;\0"
+setenv bootargs
+saveenv
+
+

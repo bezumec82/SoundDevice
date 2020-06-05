@@ -1,0 +1,156 @@
+export SAM_LNX_PATH=/media/constantine/RAID/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux
+export SAM_TCH_PTH=${SAM_LNX_PATH}/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi
+export YCTO_PTH=${SAM_LNX_PATH}/Yocto
+export POKY_TMP_PTH=${SAM_LNX_PATH}/Yocto/poky/build-microchip/tmp
+export IMG_PTH=${POKY_TMP_PTH}/deploy/images/sama5d2-xplained
+export BLDRT_PTH=${SAM_LNX_PATH}/BuildRoot
+export CROSS_COMPILE=${SAM_TCH_PTH}/bin/arm-linux-gnueabi-
+export CC=${CROSS_COMPILE}gcc
+
+
+stat ${SAM_LNX_PATH}
+stat ${SAM_TCH_PTH}
+stat ${YCTO_PTH}
+stat ${IMG_PTH}
+stat ${BLDRT_PTH}
+stat ${CC}
+
+###################
+### YOCTO BUILD ###
+###################
+cd ${YCTO_PTH}
+
+#1 Clone yocto/poky git repository with the proper branch ready
+git clone git://git.yoctoproject.org/poky -b sumo
+
+#2 Clone meta-openembedded git repository with the proper branch ready
+git clone git://git.openembedded.org/meta-openembedded -b sumo
+
+#3 Clone meta-qt5 git repository with the proper branch ready
+git clone git://code.qt.io/yocto/meta-qt5.git
+cd meta-qt5
+git checkout v5.9.6
+cd ..
+
+#4 Clone meta-atmel layer with the proper branch ready
+git clone git://github.com/linux4sam/meta-atmel.git -b sumo
+
+#6 Initialize build directory
+cd ${YCTO_PTH}/poky
+source oe-init-build-env build-microchip
+
+#7 Configuration
+geany ${YCTO_PTH}/poky/build-microchip/conf/bblayers.conf &
+geany ${YCTO_PTH}/poky/build-microchip/conf/local.conf &
+
+9# Build core minimal image
+cd ${YCTO_PTH}/poky
+bitbake core-image-minimal
+
+cd ${IMG_PTH}
+sudo rm -rf /media/constantine/sama/*
+sudo tar -xzvf \
+${IMG_PTH}/core-image-minimal-sama5d2-xplained.tar.gz \
+-C /media/constantine/sama
+tree /media/constantine/sama
+sudo chown -R root:root /media/constantine/sama/*
+sudo chmod -R 777 /media/constantine/sama/*
+ls -ls /media/constantine/sama/*
+
+### Rebuild rootfs ###
+bitbake core-image-minimal -c clean
+bitbake core-image-minimal
+
+### meta-user ###
+cd ${YCTO_PTH}/meta-user
+
+##################
+### Create sdk ###
+##################
+bitbake meta-toolchain
+bitbake meta-ide-support
+${POKY_TMP_PTH}/deploy/sdk/poky-atmel-glibc-x86_64-meta-toolchain-cortexa5hf-neon-toolchain-2.5.1.sh
+
+#######################
+### Create ram disk ###
+#######################
+
+sudo rm -rf /tftpboot/SoundDevice/core-image-minimal-sama5d2-xplained*
+cp ${IMG_PTH}/core-image-minimal-sama5d2-xplained.cpio.gz \
+/tftpboot/SoundDevice/core-image-minimal-sama5d2-xplained.cpio.gz
+mkimage -A arm -T ramdisk \
+-d /tftpboot/SoundDevice/core-image-minimal-sama5d2-xplained.cpio.gz \
+/tftpboot/SoundDevice/uramdisk.gz
+date -r /tftpboot/SoundDevice/uramdisk.gz
+
+##################
+### Build root ###
+##################
+
+sudo apt-get install subversion build-essential bison flex gettext \
+libncurses5-dev texinfo autoconf automake libtool mercurial git-core \
+gperf gawk expat curl cvs libexpat-dev bzr unzip bc python-dev
+
+cd ${BLDRT_PTH}
+
+git clone https://github.com/linux4sam/buildroot-external-microchip.git
+git clone https://github.com/linux4sam/buildroot-at91.git -b 2018.02-at91
+cd buildroot-at91
+
+BR2_EXTERNAL=../buildroot-external-microchip/ make sama5d4_xplained_demo_defconfig
+make ARCH=arm \
+CROSS_COMPILE=arm-linux-gnueabi-
+
+######################
+### TROBLESHOOTING ###
+######################
+
+# g++ not found
+sudo apt-get remove g++  
+sudo apt-get install g++
+########################################################################
+
+# login: can't set groups: Operation not permitted
+# Change rootfs owner:
+sudo chown -R root:root /media/constantine/sama/*
+########################################################################
+
+PATH="/media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/host/bin:/media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/host/sbin:/opt/OpenPrinting-Gutenprint/sbin:/opt/OpenPrinting-Gutenprint/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games" PKG_CONFIG="/media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/host/bin/pkg-config" PKG_CONFIG_SYSROOT_DIR="/" PKG_CONFIG_ALLOW_SYSTEM_CFLAGS=1 PKG_CONFIG_ALLOW_SYSTEM_LIBS=1 PKG_CONFIG_LIBDIR="/media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/host/lib/pkgconfig:/media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/host/share/pkgconfig"  /usr/bin/make -j1  -C /media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/build/host-python-2.7.14/
+LD_LIBRARY_PATH=/media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/build/host-python-2.7.14 ./python -E -S -m sysconfig --generate-posix-vars ;\
+	if test $? -ne 0 ; then \
+		echo "generate-posix-vars failed" ; \
+		rm -f ./pybuilddir.txt ; \
+		exit 1 ; \
+	fi
+Segmentation fault (core dumped)
+generate-posix-vars failed
+make[2]: *** [pybuilddir.txt] Error 1
+make[1]: *** [/media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/build/host-python-2.7.14/.stamp_built] Error 2
+make: *** [_all] Error 2
+
+This bug causes miscompilation of Python 2.7 by GCC 8 on x86-64 
+(with no sanitizers enabled, just compiler optimization).
+
+Change alternatives for GCC from 8 to 4
+########################################################################
+Host key verification failed.
+ssh-keygen -f "/home/constantine/.ssh/known_hosts" -R 192.168.1.60
+########################################################################
+  GEN      stamp-gdk-pixbuf-marshal.h
+/usr/bin/env: /media/constantine/Work/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux/BuildRoot/buildroot-at91/output/host/bin: Permission denied
+
+Build separately : 
+cd ${BLDRT_PTH}/buildroot-at91/output/build/host-gdk-pixbuf-2.36.10/gdk-pixbuf
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+cd ${BLDRT_PTH}/buildroot-at91/output/build/host-gdk-pixbuf-2.36.10
+sudo chmod -R 777 ./*
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+cd ${BLDRT_PTH}/buildroot-at91/output/build/gdk-pixbuf-2.36.10/
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+cd ${BLDRT_PTH}/buildroot-at91/output/build/gstreamer1-1.12.4/
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+cd ${BLDRT_PTH}/buildroot-at91/output/build/gstreamer1-1.12.4/common
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+
+
+

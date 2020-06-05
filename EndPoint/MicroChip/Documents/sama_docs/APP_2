@@ -1,0 +1,62 @@
+export SDKTARGETSYSROOT=/opt/poky-atmel/2.5.1/sysroots/cortexa5hf-neon-poky-linux-gnueabi
+export GCC_PTH=/opt/poky-atmel/2.5.1/sysroots/x86_64-pokysdk-linux/usr/bin/arm-poky-linux-gnueabi
+
+export SDK_INC=${SDKTARGETSYSROOT}/usr/include
+export SDK_USR_LIB=${SDKTARGETSYSROOT}/usr/lib
+export SDK_LIB=${SDKTARGETSYSROOT}/lib
+export SDK_USR_BIN=${SDKTARGETSYSROOT}/usr/bin
+export SDK_SBIN=${SDKTARGETSYSROOT}/sbin
+
+
+ls -ls ${SDKTARGETSYSROOT}
+ls -ls ${GCC_PTH}
+ls -ls ${SDK_INC}
+ls -ls ${SDK_USR_LIB}
+ls -ls ${SDK_LIB}
+ls -ls ${SDK_USR_BIN}
+ls -ls ${SDK_SBIN}
+
+###############
+### ECLIPSE ###
+###############
+make ARCH=arm CROSS_COMPILE=arm-linux-gnueabi-
+
+SDKTARGETSYSROOT
+/opt/poky-atmel/2.5.1/sysroots/cortexa5hf-neon-poky-linux-gnueabi
+
+GCC_PTH
+/opt/poky-atmel/2.5.1/sysroots/x86_64-pokysdk-linux/usr/bin/arm-poky-linux-gnueabi
+
+SDK_INC
+${SDKTARGETSYSROOT}/usr/include
+SDK_USR_LIB
+${SDKTARGETSYSROOT}/usr/lib
+SDK_LIB
+${SDKTARGETSYSROOT}/lib
+SDK_USR_BIN
+${SDKTARGETSYSROOT}/usr/bin
+SDK_SBIN
+${SDKTARGETSYSROOT}/sbin
+SDK_CPP
+${SDKTARGETSYSROOT}/usr/include/c++/7.3.0
+
+ORIG_PTH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+PATH
+${GCC_PTH}:${SDK_CPP}:${SDK_USR_BIN}:${SDK_SBIN}:${SDK_USR_LIB}:${SDKTARGETSYSROOT}:${ORIG_PTH}
+
+CC_FLAGS
+-W -Wall -march=armv7-a -marm -mfpu=neon -mfloat-abi=hard -mcpu=cortex-a5 --sysroot=${SDKTARGETSYSROOT}
+
+LD_FLAGS
+-t --verbose --sysroot=${SDKTARGETSYSROOT}
+
+Prefix : arm-poky-linux-gnueabi-
+make ARCH=arm CROSS_COMPILE=arm-poky-linux-gnueabi-
+
+!!!!!!!!!!!!!!!!!!!!!!
+!!! IMPORTANT MOVE !!!
+!!!!!!!!!!!!!!!!!!!!!!
+ln -s /lib/ld-linux-armhf.so.3 /lib/ld-linux.so.3
+cp /lib/ld-linux-armhf.so.3 /lib/ld-linux.so.3

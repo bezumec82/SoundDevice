@@ -1,0 +1,120 @@
+#####################
+### Get kernel source
+#####################
+http://processors.wiki.ti.com/index.php/Processor_SDK_Linux_RT_Kernel_Release_Notes
+cd ${AM335_PTH}
+sudo rm -rf ${AM335_PTH}/processor-sdk-linux-rt
+git clone git://git.ti.com/processor-sdk/processor-sdk-linux.git \
+processor-sdk-linux-rt
+cd ${AM335_PTH}/processor-sdk-linux-rt
+git checkout 273202a0d36d6cc2c0ca8bd2a9fd6333a7b69407
+git log
+
+##############
+### Get config
+##############
+ls -ls ${BSP_PTH}/linux-rt-4.14.79+gitAUTOINC+28d73230da-g28d73230da\
+/arch/arm/configs/tisdk_am335x-evm-rt_defconfig
+cp \
+${BSP_PTH}/linux-rt-4.14.79+gitAUTOINC+28d73230da-g28d73230da\
+/arch/arm/configs/tisdk_am335x-evm-rt_defconfig \
+${KRNL_PTH}/arch/arm/configs/tisdk_am335x-evm-rt_defconfig
+ls -ls ${KRNL_PTH}/arch/arm/configs/at91_dt_defconfig
+
+###############
+### Make kernel
+###############
+reset
+cd ${KRNL_PTH}
+cp ${KRNL_PTH}/arch/arm/boot/zImage ${KRNL_PTH}/arch/arm/boot/zImage.old
+cp ${TFTPBOOT_PTH}/zImage           zImage.old
+#make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- distclean
+#make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- tisdk_am335x-evm-rt_defconfig
+make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
+make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
+cp ${KRNL_PTH}/arch/arm/boot/zImage ${TFTPBOOT_PTH}
+cp ${KRNL_PTH}/arch/arm/boot/zImage ${FIT_PTH}
+
+### Save config
+cp ${KRNL_PTH}/.config \
+${AM335_PTH}/RESERVE/Kernel
+ls -lsa ${AM335_PTH}/RESERVE/Kernel
+
+reset
+ls -ls ${KRNL_PTH}/arch/arm/boot
+sudo rm /tftpboot/BBB/zImage
+sudo cp ${KRNL_PTH}/arch/arm/boot/zImage \
+/tftpboot/BBB/zImage
+sudo chmod -R 777 /tftpboot/BBB/*
+ls -ls /tftpboot/BBB
+
+### Restore config
+cp ${AM335_PTH}/RESERVE/Kernel/.config \
+${KRNL_PTH}/.config
+date -r ${KRNL_PTH}/.config
+
+##################
+### Restore kernel
+##################
+sudo rm /tftpboot/BBB/zImage
+sudo cp ${PBLT_PTH}/zImage-am335x-evm.bin \
+/tftpboot/BBB/zImage
+sudo chmod -R 777 /tftpboot/BBB/*
+ls -ls /tftpboot/BBB/zImage
+
+### Add initramfs
+/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/tisdk/build/arago-tmp/deploy/images/am57xx-evm/core-image-minimal-am57xx-evm.cpio.gz
+
+#######################
+### Get info from Yocto
+#######################
+${U_BOOT_PTH}/tools/mkimage -l \
+${TISDK_PTH}/build/arago-tmp/deploy/images/am57xx-evm/uImage
+# OUTPUT:
+# Image Name:   Linux-...
+# Created:      ...
+# Image Type:   ARM Linux Kernel Image (uncompressed)
+# Data Size:    ...
+# Load Address: 80008000
+# Entry Point:  80008000
+
+########
+### Wrap
+########
+reset
+date -r ${KRNL_PTH}/arch/arm/boot/zImage
+rm ${KRNL_PTH}/arch/arm/boot/uImage
+${U_BOOT_PTH}/tools/mkimage \
+-A arm        \
+-O linux      \
+-T kernel     \
+-C none       \
+-a 0x80008000 \
+-e 0x80008000 \
+-n "Linux kernel" \
+-d ${KRNL_PTH}/arch/arm/boot/zImage \
+${KRNL_PTH}/arch/arm/boot/uImage
+
+${U_BOOT_PTH}/tools/mkimage -l \
+${KRNL_PTH}/arch/arm/boot/uImage
+
+${U_BOOT_PTH}/tools/mkimage -l \
+/tftpboot/BBB/uImage
+
+
+cp ${KRNL_PTH}/arch/arm/boot/uImage /tftpboot/BBB
+cp ${KRNL_PTH}/arch/arm/boot/zImage /tftpboot/BBB
+sudo chmod 777 -R /tftpboot/*
+ls -ls /tftpboot/BBB
+
+
+
+
+
+
+
+
+
+
+
+

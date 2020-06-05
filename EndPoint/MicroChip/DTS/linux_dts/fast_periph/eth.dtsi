@@ -1,0 +1,52 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            /***********/
+            /*** ETH ***/
+            /***********/
+            gmac: ethernet@f8008000 {
+                pinctrl-names   = "default";
+                pinctrl-0       = <&pinctrl_macb0_default>;
+                phy-mode        = "rmii";
+                compatible      = "atmel,sama5d2-gem";
+                #address-cells = <1>;
+                #size-cells = <0>;
+                clocks = <&macb0_clk>, <&macb0_clk>;
+                clock-names = "hclk", "pclk";
+                ethernet-phy@0 {
+                    reg                 = <0x0>;
+                    interrupt-parent    = <&pioA>;
+                    interrupts          = <PIN_PD31 IRQ_TYPE_LEVEL_LOW>;
+                    pinctrl-names       = "default";
+                    pinctrl-0           = <&pinctrl_macb0_phy_irq>;
+                }; /* ethernet-phy@0 */
+            }; /* gmac */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /***********/
+                /*** MAC ***/
+                /***********/
+                pinctrl_macb0_default: macb0_default {
+                    pinmux =        <PIN_PD9__GTXCK>,
+                                    <PIN_PD10__GTXEN>,
+                                    <PIN_PD11__GRXDV>,
+                                    <PIN_PD12__GRXER>,
+                                    <PIN_PD13__GRX0>,
+                                    <PIN_PD14__GRX1>,
+                                    <PIN_PD15__GTX0>,
+                                    <PIN_PD16__GTX1>,
+                                    <PIN_PD17__GMDC>,
+                                    <PIN_PD18__GMDIO>;
+                    bias-disable;
+                }; /* pinctrl_macb0_default */
+                pinctrl_macb0_phy_irq: macb0_phy_irq {
+                    pinmux =        <PIN_PD31__GPIO>;
+                    bias-disable;
+                }; /* pinctrl_macb0_phy_irq */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

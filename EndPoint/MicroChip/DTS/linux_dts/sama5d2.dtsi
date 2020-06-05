@@ -1,0 +1,83 @@
+/* microElk */
+
+#include "skeleton.dtsi"
+#include "./include/dt-bindings/dma/at91.h"
+#include "./include/dt-bindings/interrupt-controller/irq.h"
+#include "./include/dt-bindings/clock/at91.h"
+#include "./include/dt-bindings/mfd/atmel-flexcom.h"
+#include "./include/dt-bindings/gpio/gpio.h"
+#include "./include/dt-bindings/pinctrl/at91.h"
+
+#include "sama5d2-pinfunc.h"
+
+#include "mem_map.dtsi"
+
+/* System */
+#include "./sys/clock.dtsi"
+#include "./sys/coresight.dtsi"
+#include "./sys/dma.dtsi"
+#include "./sys/irq.dtsi"
+#include "./sys/mem.dtsi"
+#include "./sys/pinctl.dtsi"
+#include "./sys/sysc.dtsi"
+#include "./sys/tmrs.dtsi"
+
+/* Slow peripheral */
+#include "./slow_periph/flexcom.dtsi"
+#include "./slow_periph/i2c.dtsi"
+#include "./slow_periph/spi_qspi.dtsi"
+#include "./slow_periph/uart.dtsi"
+#include "./slow_periph/can.dtsi"
+
+/* Miscelaneous */
+#include "./misc/pwm.dtsi"
+#include "./misc/adc.dtsi"
+#include "./misc/crypto.dtsi"
+#include "./misc/isc.dtsi"
+#include "./misc/keys_leds.dtsi"
+#include "./misc/lcd_tch.dtsi"
+#include "./misc/misc.dtsi"
+#include "./misc/nand.dtsi"
+#include "./misc/pwm.dtsi"
+
+/* Sound */
+#include "./sound/ssc_i2s.dtsi"
+#include "./sound/classd.dtsi"
+#include "./sound/pdmic.dtsi"
+
+/* Fast peripheral */
+#include "./fast_periph/sd_usb.dtsi"
+#include "./fast_periph/eth.dtsi"
+
+/ {
+    model               = "Atmel SAMA5D2 family SoC";
+    compatible          = "atmel,sama5d2";
+    interrupt-parent    = <&aic>;
+    cpus {
+        #address-cells          = <1>;
+        #size-cells             = <0>;
+        cpu@0 {
+            device_type         = "cpu";
+            compatible          = "arm,cortex-a5";
+            reg                 = <0>;
+            next-level-cache    = <&l2cc>;
+        }; /* cpu@0 */
+    }; /* cpus */
+
+    pmu { /* Performance Monitor Unit */
+        compatible = "arm,cortex-a5-pmu";
+    }; /* pmu */
+
+    ahb { /* Advanced high-speed bus */
+        compatible = "simple-bus";
+        #address-cells      = <1>;
+        #size-cells         = <1>;
+        ranges;
+        apb { /* Advanced peripheral bus */
+            compatible      = "simple-bus";
+            #address-cells  = <1>;
+            #size-cells     = <1>;
+            ranges;
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

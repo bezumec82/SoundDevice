@@ -1,0 +1,120 @@
+\hypertarget{main_8c}{\section{main.\-c File Reference}
+\label{main_8c}\index{main.\-c@{main.\-c}}
+}
+{\ttfamily \#include \char`\"{}main.\-h\char`\"{}}\\*
+{\ttfamily \#include \char`\"{}resource\-\_\-table\-\_\-0.\-h\char`\"{}}\\*
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structrpc__msg}{rpc\-\_\-msg}
+\item 
+struct \hyperlink{structbuffer}{buffer}
+\end{DoxyCompactItemize}
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{main_8c_a05155dbb1f4b618ec57b67cdd5992664}{\#define {\bfseries P\-R\-U\-\_\-\-C\-L\-K\-\_\-\-S\-P\-E\-E\-D}~200 $\ast$ 1000 $\ast$ 1000}\label{main_8c_a05155dbb1f4b618ec57b67cdd5992664}
+
+\item 
+\hypertarget{main_8c_a4b76a0c2859cfd819a343a780070ee2b}{\#define {\bfseries S\-A\-M\-P\-L\-E\-\_\-\-R\-A\-T\-E}~16000}\label{main_8c_a4b76a0c2859cfd819a343a780070ee2b}
+
+\item 
+\hypertarget{main_8c_ae1a6e8cb13a5cb1b0aba4865a3130d2a}{\#define {\bfseries X\-D\-A\-T\-A\-\_\-\-T\-I\-M\-E\-O\-U\-T}~(1 $\ast$ P\-R\-U\-\_\-\-C\-L\-K\-\_\-\-S\-P\-E\-E\-D / S\-A\-M\-P\-L\-E\-\_\-\-R\-A\-T\-E)}\label{main_8c_ae1a6e8cb13a5cb1b0aba4865a3130d2a}
+
+\end{DoxyCompactItemize}
+\begin{Indent}{\bf Direction flags}\par
+{\em Used in R\-P\-C messages to A\-R\-M to say what direction is ready to give/take new data. Used together with buffer index and timeslot index. These three parameters describes what part of D\-D\-R was currently used by P\-R\-U to read/write data to/from Mc\-A\-S\-P. }\begin{DoxyCompactItemize}
+\item 
+\hypertarget{main_8c_a26bc8026e638ade054d9eb880cb19c12}{\#define {\bfseries D\-I\-R\-E\-C\-T\-I\-O\-N\-\_\-\-T\-X}~0x1}\label{main_8c_a26bc8026e638ade054d9eb880cb19c12}
+
+\item 
+\hypertarget{main_8c_a1e41d66d778f9e5beefb1939d3f89d2b}{\#define {\bfseries D\-I\-R\-E\-C\-T\-I\-O\-N\-\_\-\-R\-X}~0x2}\label{main_8c_a1e41d66d778f9e5beefb1939d3f89d2b}
+
+\end{DoxyCompactItemize}
+\end{Indent}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{main_8c_a840291bc02cba5474a4cb46a9b9566fe}{main} (void)
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{main_8c_a12603e6d0a678b4e74c17c6da4355dea}{volatile register uint32\-\_\-t {\bfseries \-\_\-\-\_\-\-R31}}\label{main_8c_a12603e6d0a678b4e74c17c6da4355dea}
+
+\item 
+\hypertarget{main_8c_a66139ce96e7530edfc1d53c4a853e41a}{struct \hyperlink{structbuffer}{buffer} {\bfseries tx\-\_\-bufs} \mbox{[}N\-U\-M\-\_\-\-T\-X\-\_\-\-S\-L\-O\-T\-S\mbox{]}\mbox{[}N\-U\-M\-\_\-\-T\-X\-\_\-\-B\-U\-F\-S\mbox{]}}\label{main_8c_a66139ce96e7530edfc1d53c4a853e41a}
+
+\item 
+\hypertarget{main_8c_ae172db1f6d0fef6e9719b5f505ab446e}{struct \hyperlink{structbuffer}{buffer} {\bfseries rx\-\_\-bufs} \mbox{[}N\-U\-M\-\_\-\-R\-X\-\_\-\-S\-L\-O\-T\-S\mbox{]}\mbox{[}N\-U\-M\-\_\-\-R\-X\-\_\-\-B\-U\-F\-S\mbox{]}}\label{main_8c_ae172db1f6d0fef6e9719b5f505ab446e}
+
+\item 
+\hypertarget{main_8c_a74658391c75a7afa929ce18417dbc1a1}{uint32\-\_\-t {\bfseries rx\-\_\-bufs\-\_\-ddr\-\_\-start\-\_\-addr}}\label{main_8c_a74658391c75a7afa929ce18417dbc1a1}
+
+\item 
+\hypertarget{main_8c_abb336c43147cdda825d7bfebb34aeddf}{uint32\-\_\-t {\bfseries tx\-\_\-bufs\-\_\-ddr\-\_\-start\-\_\-addr}}\label{main_8c_abb336c43147cdda825d7bfebb34aeddf}
+
+\end{DoxyCompactItemize}
+{\bf }\par
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{main_8c_ae950ced54b1128aa423fa9a9e6dfbcb2}{struct \hyperlink{structrpc__msg}{rpc\-\_\-msg} {\bfseries \-\_\-\-\_\-packed\-\_\-\-\_\-}}\label{main_8c_ae950ced54b1128aa423fa9a9e6dfbcb2}
+
+\end{DoxyCompactItemize}
+
+
+
+\subsection{Detailed Description}
+This file is containing main cycle of the program. 
+
+\subsection{Function Documentation}
+\hypertarget{main_8c_a840291bc02cba5474a4cb46a9b9566fe}{\index{main.\-c@{main.\-c}!main@{main}}
+\index{main@{main}!main.c@{main.\-c}}
+\subsubsection[{main}]{\setlength{\rightskip}{0pt plus 5cm}int main (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}}\label{main_8c_a840291bc02cba5474a4cb46a9b9566fe}
+1) Clear S\-Y\-S\-C\-F\-G\mbox{[}S\-T\-A\-N\-D\-B\-Y\-\_\-\-I\-N\-I\-T\mbox{]} to enable O\-C\-P master port.
+
+2) Clear the status of the P\-R\-U-\/\-I\-C\-S\-S system event that the A\-R\-M will use to 'kick' us.
+
+3) Make sure the Linux drivers are ready for R\-P\-C communication.
+
+4) Initialize the R\-P\-Msg transport structure.
+
+4) Create the R\-P\-Msg channel between the P\-R\-U and A\-R\-M user space using the transport structure.
+
+5) Wait while A\-R\-M allocates memory and sends to us starting address of this audio buffer.
+
+5.\-1) Check bit 30 of register R31 to see if the A\-R\-M has kicked us.
+
+5.\-2) Clear the event status.
+
+5.\-3) Receive all available messages, multiple messages can be sent per kick.
+
+If address of audio buffer doesn't received. Start again.
+
+6) Initialize Mc\-A\-S\-P buffers system. Booths sides (P\-R\-U and A\-R\-M) agree about how many memory will be used for audio buffers. There are two distinguish audio buffers -\/ for T\-X and for R\-X. Both buffers placed in memory subsequently. T\-X buf then R\-X buf. Each of them consists of P\-A\-G\-E\-\_\-\-S\-I\-Z\-E x N\-U\-M\-\_\-\-T\-X\-\_\-\-B\-U\-F\-S and P\-A\-G\-E\-\_\-\-S\-I\-Z\-E x N\-U\-M\-\_\-\-R\-X\-\_\-\-B\-U\-F\-S accordingly. For the quick access these buffers P\-R\-U uses 2d array of struct buffer.
+
+6.\-1) Initialize Mc\-A\-S\-P T\-X buffers system.
+
+6.\-2) Initialize Mc\-A\-S\-P R\-X buffers system.
+
+7) Hardware configuration
+
+8) M\-A\-I\-N P\-R\-O\-G\-R\-A\-M\-M C\-Y\-C\-L\-E
+
+8.\-1) Mc\-A\-S\-P1 T\-X block
+
+8.\-1.\-1) Read transmit data ready flag. If 1 -\/$>$ put data in T\-X serializer buffer.
+
+8.\-1.\-2) If new T\-X buffer in use -\/$>$ send mailbox to A\-R\-M with new buf num.
+
+8.\-1.\-3) Zero buffer after data was sent.
+
+8.\-2) Mc\-A\-S\-P1 R\-X block
+
+8.\-2.\-1) Read receive data ready flag. If 1 -\/$>$ get data from R\-X serializer buffer.
+
+8.\-2.\-2) If new R\-X buffer in use -\/$>$ send mailbox to A\-R\-M with new buf num. 

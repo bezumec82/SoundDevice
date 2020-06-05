@@ -1,0 +1,35 @@
+#N canvas 503 319 861 473 10;
+#N canvas 0 22 450 278 (subpatch) 0;
+#X array exampleTable 65238 float 2;
+#X coords 0 1 65238 -1 200 140 1 0 0;
+#X restore 21 213 graph;
+#X obj 243 329 adc~ 1 2 3;
+#X obj 300 426 dac~;
+#X text 317 264 <<< delete this object before compiling!;
+#X obj 300 392 tabread4~ exampleTable;
+#X msg 243 218 read -resize rt.wav exampleTable;
+#X obj 300 350 lop~ 1;
+#X obj 300 371 *~ 65238;
+#X obj 243 266 soundfiler;
+#X text 489 229 right-click array -> properties -> toggle "save contents"
+;
+#X text 463 216 <<< after loading a file:;
+#X text 17 23 Load sample into table and scrub using analog input;
+#X text 17 33 ===================================================;
+#X text 362 351 <<< avoid zipper noise;
+#X text 362 371 <<< length of sample;
+#X text 317 328 <<< analog input 0 (range 0-1);
+#X text 631 419 ---------------------------------;
+#X text 631 409 @krighxz / BELA / heavy / 12/2015;
+#X text 655 428 beaglert.cc / enzienaudio.com;
+#X text 30 61 N.B. the patch cannot be bigger than 512kb in size \;
+only use this for *very small soundfiles*;
+#X text 29 99 You can modify the render.cpp file to load samples into
+tables using the Heavy API: https://enzienaudio.com/docs/c.html#api-hv-table
+;
+#X connect 1 2 6 0;
+#X connect 4 0 2 0;
+#X connect 4 0 2 1;
+#X connect 5 0 8 0;
+#X connect 6 0 7 0;
+#X connect 7 0 4 0;

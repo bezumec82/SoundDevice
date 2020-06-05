@@ -1,0 +1,112 @@
+export TI_PTH=/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI
+export AM335_PTH=${TI_PTH}/am335x
+cd ${AM335_PTH}
+reset
+
+# CDC module origin :
+stat ${AM335_PTH}/MODULES/max9867_i2c/max9867_i2c_mod.ko
+# PRU firmware origins :
+stat ${TI_PTH}/ccs_workspace/pru_mcasp_rpcmsg/Debug/pru_mcasp_rpcmsg.out
+# RPC module origins :
+stat ${TI_PTH}/am335x/MODULES/mcasp_rpcmsg/mcasp_rpmsg.ko
+
+#PRU firmware stable :
+stat ${TI_PTH}/am335x/RESERVE/pru0_mcasp0_rpcmsg.out
+stat ${TI_PTH}/am335x/RESERVE/pru1_mcasp1_rpcmsg.out
+#CDC firmware stable :
+stat ${TI_PTH}/am335x/RESERVE/max9867_i2c_mod.ko
+# RPC module stable :
+stat ${TI_PTH}/am335x/RESERVE/mcasp_rpmsg.ko
+
+##############
+### Copy files
+##############
+reset
+export SSHPASS=root
+export TI_HOST_ADDR=192.168.12.172
+sshpass -e sftp -o StrictHostKeyChecking=no root@${TI_HOST_ADDR} <<EOT
+put ${TI_PTH}/am335x/RESERVE/pru0_mcasp0_rpcmsg.out     \
+/home/root
+put ${TI_PTH}/am335x/RESERVE/pru1_mcasp1_rpcmsg.out     \
+/home/root
+put ${TI_PTH}/am335x/RESERVE/max9867_i2c_mod.ko         \
+/home/root
+put ${TI_PTH}/am335x/RESERVE/mcasp_rpmsg.ko             \
+/home/root
+exit
+EOT
+
+
+if [ ! -d /lib/firmware ]; then 
+        echo "Creating directory '/lib/firmware'"
+        mkdir /lib/firmware
+        ls -ls /lib/firmware
+else
+        echo "Directory '/lib/firmware' exists"
+fi
+
+###############
+### Start
+###############
+rmmod     max9867_i2c_mod.ko
+insmod  ~/max9867_i2c_mod.ko
+
+rmmod    mcasp_pad_clk.ko
+insmod ~/mcasp_pad_clk.ko
+
+echo 'stop'                 > /sys/class/remoteproc/remoteproc1/state
+echo 'stop'                 > /sys/class/remoteproc/remoteproc2/state
+
+rmmod     mcasp_rpmsg.ko
+insmod  ~/mcasp_rpmsg.ko
+
+rm -rf                            /lib/firmware/pru0_mcasp0_rpcmsg.out
+rm -rf                            /lib/firmware/pru1_mcasp1_rpcmsg.out
+
+cp ~/pru0_mcasp0_rpcmsg.out       /lib/firmware
+cp ~/pru1_mcasp1_rpcmsg.out       /lib/firmware
+ls -ls                            /lib/firmware
+
+cat /sys/class/remoteproc/remoteproc1/device/of_node/label; echo
+cat /sys/class/remoteproc/remoteproc1/state; echo
+cat /sys/class/remoteproc/remoteproc2/device/of_node/label; echo
+cat  /sys/class/remoteproc/remoteproc2/state; echo
+
+echo 'stop'                     > /sys/class/remoteproc/remoteproc1/state
+echo 'pru0_mcasp0_rpcmsg.out'   > /sys/class/remoteproc/remoteproc1/firmware
+echo 'start'                    > /sys/class/remoteproc/remoteproc1/state
+
+
+echo 'stop'                     > /sys/class/remoteproc/remoteproc2/state
+echo 'pru1_mcasp1_rpcmsg.out'   > /sys/class/remoteproc/remoteproc2/firmware
+echo 'start'                    > /sys/class/remoteproc/remoteproc2/state
+
+~/pru_mcasp
+
+find / -name pru_mcasp
+export PRU0_DIR=/sys/devices/platform/ocp\
+/4a326000.pruss-soc-bus\
+/4a300000.pruss\
+/4a334000.pru0\
+/remoteproc/remoteproc1/virtio0/virtio0.mcasp0_pru0.-1.30/pru_mcasp
+export PRU1_DIR=/sys/devices/platform/ocp\
+/4a326000.pruss-soc-bus\
+/4a300000.pruss/\
+4a338000.pru1\
+/remoteproc/remoteproc2/virtio1/virtio1.mcasp1_pru1.-1.31/pru_mcasp
+
+ls -ls $PRU0_DIR
+ls -ls $PRU1_DIR
+
+clear
+cat $PRU0_DIR/last_tx_msg_ts1 ; echo
+cat $PRU0_DIR/last_tx_msg_ts2 ; echo
+cat $PRU0_DIR/last_rx_msg_ts1 ; echo
+cat $PRU0_DIR/last_rx_msg_ts2 ; echo
+
+
+watch -n 4 'cat $PRU0_DIR/last_tx_msg_ts1 ; echo ; date'
+
+
+cd /sys/devices/platform/ocp/4a326000.pruss-soc-bus/4a300000.pruss/\
+4a338000.pru1/remoteproc/remoteproc2/virtio1/virtio1.mcasp1_pru1.-1.31/pru_mcasp

@@ -1,0 +1,61 @@
+export SAM_LNX_PTH=/media/constantine/RAID/SoundDevice/SoundDevice_endPoint/SAMA5D27_linux
+export SAM_TCH_PTH=${SAM_LNX_PTH}/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabi
+export CROSS_COMPILE=${SAM_TCH_PTH}/bin/arm-linux-gnueabi-
+export CC=${CROSS_COMPILE}gcc
+
+export KRNL_PTH=${SAM_LNX_PTH}/linux-at91
+
+export SAM_BA_PTH=${SAM_LNX_PTH}/SAM-BA
+export DTS_PTH=${SAM_LNX_PTH}/DTS/linux_dts
+
+##############
+### KERNEL ###
+##############
+cd ${KRNL_PTH}
+
+#make ARCH=arm \
+#CROSS_COMPILE=arm-linux-gnueabi- \
+#mrproper
+
+#make ARCH=arm \
+#CROSS_COMPILE=arm-linux-gnueabi- \
+#sama5_defconfig
+
+#make ARCH=arm \
+#CROSS_COMPILE=arm-linux-gnueabi- \
+#sama5d27_sound_device_defconfig
+
+make ARCH=arm \
+CROSS_COMPILE=arm-linux-gnueabi- \
+menuconfig
+
+make ARCH=arm \
+CROSS_COMPILE=arm-linux-gnueabi-
+
+date -r ${KRNL_PTH}/arch/arm/boot/zImage
+cp ${KRNL_PTH}/arch/arm/boot/zImage \
+/tftpboot/SoundDevice
+date -r /tftpboot/SoundDevice/zImage
+
+stat ${KRNL_PTH}/arch/arm/boot/dts/at91-sama5d27_sound_device.dtb
+cp ${KRNL_PTH}/arch/arm/boot/dts/at91-sama5d27_sound_device.dtb \
+${SAM_BA_PTH}/sama5d27_sound_device.dtb
+stat ${SAM_BA_PTH}/sama5d27_sound_device.dtb
+
+mkimage -A arm -O linux -T kernel -C none \
+-a 0x20080000 -e 0x20080000 \
+-d ${KRNL_PTH}/arch/arm/boot/zImage \
+/tftpboot/SoundDevice/uImage
+date -r /tftpboot/SoundDevice/uImage
+
+###################
+### DEVICE TREE ###
+###################
+cd ${DTS_PTH}
+make ARCH=arm \
+CROSS_COMPILE=arm-linux-gnueabi-
+date -r /tftpboot/SoundDevice/at91-sama5d27_sound_device.dtb
+
+
+
+

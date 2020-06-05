@@ -1,0 +1,50 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            can0: can@f8054000 {
+                compatible              = "bosch,m_can";
+                clocks                  = <&can0_clk>, <&can0_gclk>;
+                clock-names             = "hclk", "cclk";
+                assigned-clocks         = <&can0_gclk>;
+                /* It is recommended to use the CAN clock at frequencies of 20, 40 or 80 MHz. 
+                 * To achieve these frequencies, PMC GCLK must select the UPLLCK (480 MHz) 
+                 * as source clock and divide by 24,12, or 6.
+                 */
+                assigned-clock-parents  = <&upllck>;
+                assigned-clock-rates    = <40000000>;
+                bosch,mram-cfg          = <0x0 0 0 64 0 0 32 32>;
+            }; /* can0 */
+            can1: can@fc050000 {
+                pinctrl-names           = "default";
+                pinctrl-0               = <&pinctrl_can1_default>;
+                compatible              = "bosch,m_can";
+                clocks                  = <&can1_clk>, <&can1_gclk>;
+                clock-names             = "hclk", "cclk";
+                assigned-clocks         = <&can1_gclk>;
+                
+                /* It is recommended to use the CAN clock at frequencies of 20, 40 or 80 MHz. 
+                 * To achieve these frequencies, PMC GCLK must select the UPLLCK (480 MHz) 
+                 * as source clock and divide by 24,12, or 6. 
+                 */
+                assigned-clock-parents  = <&upllck>;
+                
+                assigned-clock-rates    = <40000000>;
+                bosch,mram-cfg          = <0x1100 0 0 64 0 0 32 32>;
+            }; /* can1 */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+                /***********/
+                /*** CAN ***/
+                /***********/
+                pinctrl_can1_default: can1_default {
+//                  pinmux =        <PIN_PC26__CANTX1>,
+//                                  <PIN_PC27__CANRX1>;
+//                  bias-disable;
+                }; /* can1 */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */

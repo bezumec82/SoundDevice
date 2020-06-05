@@ -1,0 +1,3 @@
+[submodule "pru-software-support-package"]
+	path = pru-software-support-package
+	url = https://github.com/ev3dev/pru-software-support-package.git

@@ -1,0 +1,98 @@
+/* microElk */
+/ {
+    ahb { /* Advanced high-speed bus */
+        apb { /* Advanced peripheral bus */
+            /***********/
+            /*** SSC ***/
+            /***********/
+            ssc0: ssc0@f8004000 {
+//              compatible      = "lemz,lemz-ssc";
+//
+//              pinctrl-names   = "default";
+//              pinctrl-0       = <&pinctrl_ssc0_default>;
+//
+//              clocks          =   <&ssc0_clk>,
+//                                  <&audio_core_clk>,
+//                                  <&audio_pin_clk>,
+//                                  <&audio_pll_clk>,
+//                                  <&prog0>, <&prog1>, <&prog2>;
+//              clock-names     =   "ssc0_clk",
+//                                  "acclk",
+//                                  "apclk",
+//                                  "aclk",
+//                                  "prog0", "prog1", "prog2";
+            }; /* ssc0 */
+            ssc1: ssc1@fc004000 {
+//              pinctrl-names   = "default";
+//              pinctrl-0       = <&pinctrl_ssc1_default>;
+            }; /* ssc1 */
+            i2s0: i2s@f8050000 {
+                pinctrl-names   =   "default";
+                pinctrl-0       =   <&pinctrl_i2s0_default>;
+                compatible  =       "lemz,lemz-i2s0";
+                clocks          =   <&i2s0_clk>,
+                                    <&i2s0_gclk>,
+                                    <&audio_core_clk>,
+                                    <&audio_pin_clk>,
+                                    <&audio_pll_clk>;
+                clock-names     =   "i2s0_pclk",
+                                    "i2s0_gclk",
+                                    "acclk",
+                                    "apclk",
+                                    "aclk";
+            }; /* i2s0 */
+            i2s1: i2s@fc04c000 {
+                pinctrl-names   =   "default";
+                pinctrl-0       =   <&pinctrl_i2s1_default>;
+                compatible      =   "lemz,lemz-i2s1";
+                clocks          =   <&i2s1_clk>,
+                                    <&i2s1_gclk>,
+                                    <&audio_core_clk>,
+                                    <&audio_pin_clk>,
+                                    <&audio_pll_clk>;
+                clock-names     =   "i2s1_pclk",
+                                    "i2s1_gclk",
+                                    "acclk",
+                                    "apclk",
+                                    "aclk";
+            }; /* i2s1 */
+            /**************/
+            /*** PINCTL ***/
+            /**************/
+            pinctrl@fc038000 {
+//              pinctrl_ssc0_default: ssc0_default {
+//                    pinmux =    <PIN_PC17__RF0>,  /* Receive Frame Synchronization */
+//                                <PIN_PC16__RK0>,  /* Receive Clock */
+//                                <PIN_PC15__RD0>,  /* Receive Data */
+//                                <PIN_PC14__TDO>,  /* Transmit Data */
+//                                <PIN_PC13__TF0>,  /* Transmit Frame Synchronizaton */
+//                                <PIN_PC12__TK0>;  /* Transmit Clock */
+//                    pinmux =    <PIN_PB25__RF0>,  /* Receive Frame Synchronization */
+//                                <PIN_PB24__RK0>,  /* Receive Clock */
+//                                <PIN_PB23__RD0>,  /* Receive Data */
+//                                <PIN_PB22__TDO>,  /* Transmit Data */
+//                                <PIN_PB21__TF0>,  /* Transmit Frame Synchronizaton */
+//                                <PIN_PB20__TK0>,  /* Transmit Clock */
+//                                <PIN_PB13__PCK1>; /* PCK to provide clock to RX */
+//                  bias-disable;
+//              }; /* ssc0 */
+                pinctrl_i2s0_default: i2s0_default {
+                    pinmux =    <PIN_PC1__I2SC0_CK>,  /* Serial Clock */
+                                <PIN_PC2__I2SC0_MCK>, /* Master Clock */
+                                <PIN_PC3__I2SC0_WS>,  /* I2S Word Select */
+                                <PIN_PC4__I2SC0_DI0>, /* Serial Data Input */
+                                <PIN_PC5__I2SC0_DO0>; /* Serial Data Output */
+                     bias-disable;
+                }; /* i2s0 */
+                pinctrl_i2s1_default: i2s1_default {
+                    pinmux =    <PIN_PB15__I2SC1_CK>,  /* Serial Clock */
+                                <PIN_PB14__I2SC1_MCK>, /* Master Clock */
+                                <PIN_PB16__I2SC1_WS>,  /* I2S Word Select */
+                                <PIN_PB17__I2SC1_DI0>, /* Serial Data Input */
+                                <PIN_PB18__I2SC1_DO0>; /* Serial Data Output */
+                     bias-disable;
+                }; /* i2s1 */
+            }; /* pinctrl@fc038000 */
+        }; /* apb */
+    }; /* ahb */
+}; /* / */
