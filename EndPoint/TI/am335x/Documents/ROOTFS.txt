@@ -47,13 +47,13 @@ cd ${AM335_PTH}/tisdk
 cd ${AM335_PTH}/tisdk/build
 . conf/setenv
 
-Common targets are:
-    core-image-minimal
-    core-image-sato
-    meta-toolchain
-    meta-toolchain-sdk
-    adt-installer
-    meta-ide-support
+# Common targets are:
+#     core-image-minimal
+#     core-image-sato
+#     meta-toolchain
+#     meta-toolchain-sdk
+#     adt-installer
+#     meta-ide-support
 
 #################
 ### Minimal image
@@ -61,6 +61,7 @@ Common targets are:
 reset
 cd ${AM335_PTH}/tisdk/build
 . conf/setenv
+
 TOOLCHAIN_PATH=${TOOLCHAIN_PATH} \
 MACHINE=am57xx-evm \
 bitbake core-image-minimal -c clean
@@ -97,7 +98,7 @@ ls -ls ${TFTPBOOT_PTH}
 #######################
 sudo rm -rf ${AM335_PTH}/nfsroot
 mkdir ${AM335_PTH}/nfsroot
-ls -ls ${ARAGO_IMGS_PTH}
+ls ${ARAGO_IMGS_PTH}
 tar -Jxvf ${ARAGO_IMGS_PTH}/core-image-minimal-am57xx-evm.tar.xz \
 -C ${AM335_PTH}/nfsroot
 ls -ls ${AM335_PTH}/nfsroot
@@ -195,3 +196,12 @@ mkdir ${AM335_PTH}/meta-user/recipes-connectivity
 rm -rf ${AM335_PTH}/meta-user/recipes-connectivity/linuxptp
 cp -r ${AM335_PTH}/meta-openembedded/meta-oe/recipes-connectivity/linuxptp \
 ${AM335_PTH}/meta-user/recipes-connectivity
+
+########
+### Nano
+########
+mkdir ${AM335_PTH}/meta-user/recipes-support
+rm -rf ${AM335_PTH}/meta-user/recipes-support/nano
+cp -r ${AM335_PTH}/meta-openembedded/meta-oe/recipes-support/nano \
+${AM335_PTH}/meta-user/recipes-support
+ls -ls ${AM335_PTH}/meta-user/recipes-support

@@ -1,1 +1,7 @@
-ptp4l -m -H -E -i eth0 -s
+killall -9 ptp4l phc2sys
+
+ptp4l -m -H -E -i eth0 -s &
+phc2sys -a -r -r -m -u 10 &
+
+phc2sys -s eth0 -c CLOCK_REALTIME -O -0 -u 5 &
+
