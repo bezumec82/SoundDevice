@@ -1,0 +1,62 @@
+Device tree:
+&mac {
+	// timer16 -> timer15
+	/* cptr pps1 generator and latch properties */
+	timers = <&timer16>, /* ==> */<&timer15>;
+	pinctrl-names = "pwm_off",  /* 0 */
+                    "pwm_on",   /* 1 */
+                    
+                    "ref_off",  /* 2 */     //!!! NOT NEEDED !!! -> cpts.c
+                    "ref_on",   /* 3 */     //!!! NOT NEEDED !!! -> cpts.c
+                    
+                    "latch_on", /* 4 */
+                    "latch_off";/* 5 */
+                    
+	pinctrl-0 = <&pps1_timer16_pwm_off>;    //not a pin
+	pinctrl-1 = <&pps1_timer16_pwm_on>;     //timer16 pin
+	
+	pinctrl-2 = <&pps1_timer16_ref_off>;   //!!! NOT NEEDED !!! -> cpts.c
+	pinctrl-3 = <&pps1_timer16_ref_on>;    //!!! NOT NEEDED !!! -> cpts.c
+	
+	pinctrl-4 = <&pps1_timer15_latch_on>;   //timer15 pin
+	pinctrl-5 = <&pps1_timer15_latch_off>;  not a pin
+
+	pps-enable-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;             //A17   ->  AM57XX_INDETHER_LED1_YEL    ->     D17 Yel LED
+	ref-enable-gpios = <&gpio6 19 GPIO_ACTIVE_HIGH>;            //B26   ->  AM57XX_INDETHER_LED0_RED    ->     D16 Red LED  //!!! NOT NEEDED !!!
+};
+&dra7_pmx_core {
+	pps1_timer16_pwm_on: pps1_timer16_pwm_on {
+		pinctrl-single,pins = <
+			DRA7XX_CORE_IOPAD(0x36a0, PIN_OUTPUT | MUX_MODE10)  //0x4A00 36A0 -> CTRL_CORE_PAD_XREF_CLK3 ( MUX_MODE10 == timer16) -> C23 -> AM57XX_CLKOUT3
+                                                                //Remove R905 -> J21
+        >;
+	};
+	pps1_timer16_pwm_off: pps1_timer16_pwm_off {
+		pinctrl-single,pins = <
+			DRA7XX_CORE_IOPAD(0x36a0, PIN_OUTPUT | MUX_MODE15)  // MUX_MODE15 == Driver off
+		>;
+	};    
+	pps1_timer16_ref_on: pps1_timer16_ref_on {
+		pinctrl-single,pins = <                                 //!!! NOT NEEDED !!! -> cpts.c
+			DRA7XX_CORE_IOPAD(0x3680, PIN_OUTPUT | MUX_MODE7)   //0x4A00 3680 -> CTRL_CORE_PAD_USB1_DRVVBUS ( MUX_MODE7 == timer16 ) -> AB10 -> AM572X_USB1_DRVVBUS
+                                                                // R553 ->
+		>;
+	};    
+	pps1_timer16_ref_off: pps1_timer16_ref_off {
+		pinctrl-single,pins = <
+			DRA7XX_CORE_IOPAD(0x3680, PIN_OUTPUT | MUX_MODE15)  // MUX_MODE15 == Driver off
+		>;
+	};
+	pps1_timer15_latch_on: pps1_timer15_latch_on {
+		pinctrl-single,pins = <
+			DRA7XX_CORE_IOPAD(0x3684, PIN_INPUT | MUX_MODE7)    //0x4A00 3684 -> CTRL_CORE_PAD_USB2_DRVVBUS ( MUX_MODE7 == timer15 ) -> AC10 -> AM572X_USB2_DRVVBUS
+                                                                //R787 -> J21
+		>;
+	};
+	pps1_timer15_latch_off: pps1_timer15_latch_off {
+		pinctrl-single,pins = <
+			DRA7XX_CORE_IOPAD(0x3684, PIN_INPUT | MUX_MODE15)   // MUX_MODE15 == Driver off
+		>;
+	};
+    ...
+    ...

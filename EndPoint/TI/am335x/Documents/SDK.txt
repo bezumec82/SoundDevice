@@ -1,0 +1,14 @@
+get sources :
+https://software-dl.ti.com/processor-sdk-linux-rt/esd/AM335X/latest/index_FDS.html
+
+cd ${INSTLL_PTH}
+sudo chmod -R 777 ${AM335_PTH}/INSTALL/*
+./ti-processor-sdk-linux-rt-am335x-evm-06.03.00.106-Linux-x86-Install.bin
+
+mkdir ${AM335_PTH}/SDK
+
+### Build kernel
+mv ${SDK_PTH}/board-support/linux-rt-4.19.94+gitAUTOINC+a242ccf3f1-ga242ccf3f1 \
+${SDK_PTH}/board-support/linux-rt
+
+export KRNL_PTH=${SDK_PTH}/board-support/linux-rt

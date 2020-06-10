@@ -17,20 +17,52 @@
         //bootargs    = "console=ttyS0,115200n8 root=/dev/ram rw earlyprintk";
         stdout-path = &uart0;
     }; /* chosen */
+    
+    ptp_bc {
+        compatible = "ti,am57-bc";
+        status = "okay";
+    };
 };
 
+&mac {
+    /* cptr pps1 generator and latch properties */
+    timers = <&timer5>;
+    pinctrl-names = "pwm_on", "pwm_off";
+    pinctrl-0 = <&pps_timer5_pwm_on>;       //timer5 == T6 -> GPMC_BEn0_CLE -> 0x89C & MODE2
+    pinctrl-1 = <&pps_timer5_pwm_off>;      //driver off
+    status = "okay";
+};
 
+&am33xx_pinmux {
+        /* PWM */
+        pps_timer5_pwm_on: pps_timer5_pwm_on {
+                pinctrl-single,pins = <
+                        AM33XX_IOPAD(0x89C, PIN_OUTPUT_PULLUP | MUX_MODE2) //conf_gpmc_ben0_cle
+                >;
+        };
+
+        pps_timer5_pwm_off: pps_timer5_pwm_off {
+                pinctrl-single,pins = <
+                        AM33XX_IOPAD(0x89C, PIN_OUTPUT_PULLDOWN | MUX_MODE2) //conf_gpmc_ben0_cle
+                >;
+        };
+};
 
 &ldo3_reg {
     regulator-min-microvolt = <1800000>;
     regulator-max-microvolt = <3300000>;
     regulator-always-on;
+    status = "okay";
 };
 
 &mmc1 {
     vmmc-supply = <&ldo3_reg>;
+    status = "okay";
 };
 
 &sgx {
     status = "disabled";
 };
+
+
+

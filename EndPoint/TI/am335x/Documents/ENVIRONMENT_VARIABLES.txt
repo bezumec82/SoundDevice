@@ -20,6 +20,7 @@ export       TOOLCHAIN_PATH=${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-
 export TOOLCHAIN_PATH_ARMV7=${TI_PTH}/gcc-linaro-7.2.1-2017.11-x86_64_arm-linux-gnueabihf
 export          JRTPLIB_PTH=${AM335_PTH}/jrtplib-3.11.1
 export              FIT_PTH=${AM335_PTH}/FIT
+export           INSTLL_PTH=${AM335_PTH}/INSTALL
 
 reset
 date -r ${TI_PTH}
@@ -39,3 +40,4 @@ date -r ${TOOLCHAIN_PATH}
 date -r ${TOOLCHAIN_PATH_ARMV7}
 date -r ${JRTPLIB_PTH}
 date -r ${FIT_PTH}
+date -r ${INSTLL_PTH}

@@ -148,9 +148,9 @@ struct cpts {
 	int pps_enable;
 	int pps_state;
 	int pps_latch_state;
-	int ref_enable;
+
 	struct omap_dm_timer *odt;/* timer for 1PPS generator */
-	struct omap_dm_timer *odt2;/* timer for 1PPS latch */
+
 	u32 count_prev;
 	u64 hw_timestamp;
 	u32 pps_latch_offset;
@@ -158,10 +158,6 @@ struct cpts {
 	struct pinctrl *pins;
 	struct pinctrl_state *pin_state_pwm_off;
 	struct pinctrl_state *pin_state_pwm_on;
-	struct pinctrl_state *pin_state_ref_off;
-	struct pinctrl_state *pin_state_ref_on;
-	struct pinctrl_state *pin_state_latch_off;
-	struct pinctrl_state *pin_state_latch_on;
 
 	int pps_tmr_irqn;
 	int pps_latch_irqn;

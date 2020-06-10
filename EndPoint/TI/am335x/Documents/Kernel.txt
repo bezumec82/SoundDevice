@@ -28,8 +28,9 @@ reset
 cd ${KRNL_PTH}
 cp ${KRNL_PTH}/arch/arm/boot/zImage ${KRNL_PTH}/arch/arm/boot/zImage.old
 cp ${TFTPBOOT_PTH}/zImage           zImage.old
-#make ARCH=arm CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/arm-linux-gnueabihf- distclean
-#make ARCH=arm CROSS_COMPILE=${TOOLCHAIN_PATH}/bin/arm-linux-gnueabihf- tisdk_am335x-evm-rt_defconfig
+#make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- distclean
+#make ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- \
+tisdk_am335x-evm-rt_defconfig
 make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf- menuconfig
 make -j8 ARCH=arm CROSS_COMPILE=arm-linux-gnueabihf-
 
@@ -42,7 +43,12 @@ ls -lsa ${AM335_PTH}/RESERVE/Kernel
 ### Restore config
 diff ${KRNL_PTH}/.config ${AM335_PTH}/RESERVE/Kernel/.config
 cp ${AM335_PTH}/RESERVE/Kernel/.config ${KRNL_PTH}/.config
+date -r ${KRNL_PTH}/.config
 
+
+###########
+### Results
+###########
 reset
 ls -ls ${KRNL_PTH}/arch/arm/boot
 sudo rm ${TFTPBOOT_PTH}/zImage
@@ -50,11 +56,6 @@ sudo cp ${KRNL_PTH}/arch/arm/boot/zImage \
 ${TFTPBOOT_PTH}/zImage
 sudo chmod -R 777 ${TFTPBOOT_PTH}/*
 ls -ls ${TFTPBOOT_PTH}
-
-### Restore config
-cp ${AM335_PTH}/RESERVE/Kernel/.config \
-${KRNL_PTH}/.config
-date -r ${KRNL_PTH}/.config
 
 ##################
 ### Restore kernel
@@ -104,28 +105,32 @@ ${KRNL_PTH}/arch/arm/boot/uImage
 ${U_BOOT_PTH}/tools/mkimage -l \
 /tftpboot/BBB/uImage
 
-
 cp ${KRNL_PTH}/arch/arm/boot/uImage /tftpboot/BBB
 cp ${KRNL_PTH}/arch/arm/boot/zImage /tftpboot/BBB
 sudo chmod 777 -R /tftpboot/*
 ls -ls /tftpboot/BBB
 
-
 +++ Trouble
 "fatal error: dt-bindings/gpio/gpio.h: No such file or directory"
 --- Solution
 rm -rf ${KRNL_PTH}/arch/arm/boot/dts/include
-ln -s ${KRNL_PTH}/arch/arm/boot/dts/include ${KRNL_PTH}/include
-ls ${KRNL_PTH}/arch/arm/boot/dts/include
+cd ${KRNL_PTH}
+cd arch/arm/boot/dts
+#ln -s /path/to/original /path/to/link
 
-ln -s /path/to/original /path/to/link
+ln -s ${PWD}/include ${PWD}/arch/arm/boot/dts/include
+
+mkdir ${PWD}/arch/arm/boot/dts/include
+ln -s ${PWD}/include/dt-bindings ${PWD}/arch/arm/boot/dts/include/dt-bindings
+ls ${PWD}/arch/arm/boot/dts
 
 +++ Trouble
 "fatal error: linux-event-codes.h: No such file or directory"
 --- Solution
+cd ${KRNL_PTH}
 ln -s \
-${KRNL_PTH}/include/uapi/linux/input-event-codes.h \
-${KRNL_PTH}/include/dt-bindings/input/linux-event-codes.h
+./include/uapi/linux/input-event-codes.h \
+./include/dt-bindings/input/linux-event-codes.h
 
 
 

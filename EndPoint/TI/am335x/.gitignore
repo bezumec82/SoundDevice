@@ -2,6 +2,7 @@
 !/FIT/fit.itb
 !/FIT/fit.its
 /IDE_SUPPORT
+/INSTALL
 /LIBRARIES
 /meta-openembedded
 /nfsroot/*
@@ -9,6 +10,5 @@
 /SDK
 /tisdk
 *~
-
 
 

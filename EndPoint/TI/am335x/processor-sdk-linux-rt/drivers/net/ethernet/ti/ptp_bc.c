@@ -40,7 +40,7 @@ static int ptp_bc_alloc_clk_id(void)
 			return i;
 		}
 	}
-
+	pr_err("ptp_bc_alloc_clk_id : No registered bc clocks\r\n");
 	return -1;
 }
 
@@ -84,7 +84,7 @@ bool ptp_bc_clock_sync_enable(int clkid, int enable)
 
 	spin_unlock_irqrestore(&bc_sync_lock, flags);
 
-	pr_info("ptp_bc_clk_sync_enable: Req clk=%d, %s, %s. ClkSyncEn(mask): 0x%08x\n",
+	printk("ptp_bc_clk_sync_enable: Req clk=%d, %s, %s. ClkSyncEn(mask): 0x%08x\n",
 		clkid,
 		(enable ? "on" : "off"),
 		(allow  ? "OK" : "Failed"),
@@ -100,7 +100,7 @@ int ptp_bc_clock_register(void)
 	int id = -1;
 
 	if (!ptp_bc_initialized) {
-		pr_info("ptp_bc error: NOT initialized.\n");
+		pr_err("ptp_bc error: NOT initialized.\n");
 		return -1;
 	}
 

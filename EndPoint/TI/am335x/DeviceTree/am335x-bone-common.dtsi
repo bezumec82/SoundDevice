@@ -22,40 +22,40 @@
                 stdout-path = &uart0;
         };
 
-        leds {
-                pinctrl-names = "default";
-                pinctrl-0 = <&user_leds_s0>;
-
-                compatible = "gpio-leds";
-
-                led2 {
-                        label = "beaglebone:green:heartbeat";
-                        gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
-                        linux,default-trigger = "heartbeat";
-                        default-state = "off";
-                };
-
-                led3 {
-                        label = "beaglebone:green:mmc0";
-                        gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
-                        linux,default-trigger = "mmc0";
-                        default-state = "off";
-                };
-
-                led4 {
-                        label = "beaglebone:green:usr2";
-                        gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
-                        linux,default-trigger = "cpu0";
-                        default-state = "off";
-                };
-
-                led5 {
-                        label = "beaglebone:green:usr3";
-                        gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
-                        linux,default-trigger = "mmc1";
-                        default-state = "off";
-                };
-        };
+        //leds {
+        //        pinctrl-names = "default";
+        //        pinctrl-0 = <&user_leds_s0>;
+        //
+        //        compatible = "gpio-leds";
+        //
+        //        led2 { //USR0
+        //                label = "beaglebone:green:heartbeat";
+        //                gpios = <&gpio1 21 GPIO_ACTIVE_HIGH>;
+        //                linux,default-trigger = "heartbeat";
+        //                default-state = "off";
+        //        };
+        //
+        //        led3 { //USR1
+        //                label = "beaglebone:green:mmc0";
+        //                gpios = <&gpio1 22 GPIO_ACTIVE_HIGH>;
+        //                linux,default-trigger = "mmc0";
+        //                default-state = "off";
+        //        };
+        //
+        //        led4 { //USR2
+        //                label = "beaglebone:green:usr2";
+        //                gpios = <&gpio1 23 GPIO_ACTIVE_HIGH>;
+        //                linux,default-trigger = "cpu0";
+        //                default-state = "off";
+        //        };
+        //
+        //        led5 { //USR3
+        //                label = "beaglebone:green:usr3";
+        //                gpios = <&gpio1 24 GPIO_ACTIVE_HIGH>;
+        //                linux,default-trigger = "mmc1";
+        //                default-state = "off";
+        //        };
+        //}; /* leds */
 
         vmmcsd_fixed: fixedregulator0 {
                 compatible              = "regulator-fixed";
@@ -68,15 +68,22 @@
 &am33xx_pinmux {
         pinctrl-names = "default";
         pinctrl-0 = <&clkout2_pin>;
-
-        user_leds_s0: user_leds_s0 {
+        clkout2_pin: pinmux_clkout2_pin {
                 pinctrl-single,pins = <
-                        AM33XX_IOPAD(0x854, PIN_OUTPUT_PULLDOWN | MUX_MODE7)    /* gpmc_a5.gpio1_21 */
-                        AM33XX_IOPAD(0x858, PIN_OUTPUT_PULLUP | MUX_MODE7)      /* gpmc_a6.gpio1_22 */
-                        AM33XX_IOPAD(0x85c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)    /* gpmc_a7.gpio1_23 */
-                        AM33XX_IOPAD(0x860, PIN_OUTPUT_PULLUP | MUX_MODE7)      /* gpmc_a8.gpio1_24 */
+                        AM33XX_IOPAD(0x9b4, PIN_OUTPUT_PULLDOWN | MUX_MODE3)    /* xdma_event_intr1.clkout2 */
                 >;
         };
+
+        //user_leds_s0: user_leds_s0 {
+        //        pinctrl-single,pins = <
+        //                AM33XX_IOPAD(0x854, PIN_OUTPUT_PULLDOWN | MUX_MODE7)    /* gpmc_a5.gpio1_21 */
+        //                AM33XX_IOPAD(0x858, PIN_OUTPUT_PULLUP | MUX_MODE7)      /* gpmc_a6.gpio1_22 */
+        //                AM33XX_IOPAD(0x85c, PIN_OUTPUT_PULLDOWN | MUX_MODE7)    /* gpmc_a7.gpio1_23 */
+        //                AM33XX_IOPAD(0x860, PIN_OUTPUT_PULLUP | MUX_MODE7)      /* gpmc_a8.gpio1_24 */
+        //        >;
+        //};
+        
+        
 /* ---------------------------------------------------------------------------------------------- */
         i2c0_pins: pinmux_i2c0_pins {
                 pinctrl-single,pins = <
@@ -95,7 +102,7 @@
         i2c2_pins: pinmux_i2c2_pins {
                 pinctrl-single,pins = <
                         AM33XX_IOPAD(0x978, PIN_INPUT_PULLUP | MUX_MODE3)       /* conf_uart1_ctsn.i2c2_sda */
-                        AM33XX_IOPAD(0x97c, PIN_INPUT_PULLUP | MUX_MODE3)       /* conf_uart1_rtsn.i2c2_scl */
+                        AM33XX_IOPAD(0x97C, PIN_INPUT_PULLUP | MUX_MODE3)       /* conf_uart1_rtsn.i2c2_scl */
                 >;
         }; /* i2c2_pins */
 /* ---------------------------------------------------------------------------------------------- */
@@ -106,11 +113,7 @@
                 >;
         }; 
 
-        clkout2_pin: pinmux_clkout2_pin {
-                pinctrl-single,pins = <
-                        AM33XX_IOPAD(0x9b4, PIN_OUTPUT_PULLDOWN | MUX_MODE3)    /* xdma_event_intr1.clkout2 */
-                >;
-        };
+
 
         cpsw_default: cpsw_default {
                 pinctrl-single,pins = <
@@ -186,9 +189,9 @@
                         AM33XX_IOPAD(0x81c, PIN_INPUT_PULLUP | MUX_MODE1) /* gpmc_ad7.mmc1_dat7 */
                 >;
         };
-        /*********/
+        /*-------*/
         /* McASP */
-        /*********/
+        /*-------*/
         mcasp0_pins_default: mcasp0_pins_default {
                 pinctrl-single,pins = <
                         AM33XX_IOPAD(0x8c0, PIN_INPUT | MUX_MODE3) /* (U1) lcd_data8    .mcasp0_aclkx  */
@@ -263,44 +266,44 @@
 };
 
 &i2c0 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&i2c0_pins>;
-        status = "okay";
-        clock-frequency = <400000>;
-        tps: tps@24 {
-                reg = <0x24>;
-        };
-        baseboard_eeprom: baseboard_eeprom@50 {
-                compatible = "at,24c256";
-                reg = <0x50>;
-                #address-cells = <1>;
-                #size-cells = <1>;
-                baseboard_data: baseboard_data@0 {
-                        reg = <0 0x100>;
-                };
-        }; /* baseboard_eeprom */
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&i2c0_pins>;
+    clock-frequency = <400000>;
+    tps: tps@24 {
+            reg = <0x24>;
+    };
+    baseboard_eeprom: baseboard_eeprom@50 {
+            compatible = "at,24c256";
+            reg = <0x50>;
+            #address-cells = <1>;
+            #size-cells = <1>;
+            baseboard_data: baseboard_data@0 {
+                    reg = <0 0x100>;
+            };
+    }; /* baseboard_eeprom */
 }; /* i2c0 */
 
 &i2c1 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&i2c1_pins>;
-        status = "okay";
-        clock-frequency = <100000>;
-        max9867_1: max9867@18 {
-            compatible = "maxim,max9867";
-            reg = <0x18>;
-        };
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&i2c1_pins>;
+    clock-frequency = <100000>;
+    max9867_1: max9867@18 {
+        compatible = "maxim,max9867";
+        reg = <0x18>;
+    };
 }; /* i2c1 */
 
 &i2c2 {
-        pinctrl-names = "default";
-        pinctrl-0 = <&i2c2_pins>;
-        status = "okay";
-        clock-frequency = <100000>;
-        max9867_2: max9867@18 {
-            compatible = "maxim,max9867";
-            reg = <0x18>;
-        };
+    status = "okay";
+    pinctrl-names = "default";
+    pinctrl-0 = <&i2c2_pins>;
+    clock-frequency = <100000>;
+    max9867_2: max9867@18 {
+        compatible = "maxim,max9867";
+        reg = <0x18>;
+    };
 }; /* i2c2 */
 
 /include/ "tps65217.dtsi"
