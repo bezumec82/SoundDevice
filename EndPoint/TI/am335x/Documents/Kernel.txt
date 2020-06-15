@@ -45,7 +45,6 @@ diff ${KRNL_PTH}/.config ${AM335_PTH}/RESERVE/Kernel/.config
 cp ${AM335_PTH}/RESERVE/Kernel/.config ${KRNL_PTH}/.config
 date -r ${KRNL_PTH}/.config
 
-
 ###########
 ### Results
 ###########
@@ -65,9 +64,6 @@ sudo cp ${PBLT_PTH}/zImage-am335x-evm.bin \
 /tftpboot/BBB/zImage
 sudo chmod -R 777 /tftpboot/BBB/*
 ls -ls /tftpboot/BBB/zImage
-
-### Add initramfs
-/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/tisdk/build/arago-tmp/deploy/images/am57xx-evm/core-image-minimal-am57xx-evm.cpio.gz
 
 #######################
 ### Get info from Yocto

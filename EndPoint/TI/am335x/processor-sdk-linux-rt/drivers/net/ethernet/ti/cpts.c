@@ -35,20 +35,25 @@
 #include "cpts.h"
 #include "ptp_bc.h"
 
-#define CPTS_SKB_TX_WORK_TIMEOUT 1 /* jiffies */
-#define LATCH_TMR	0
-#define AM57xx_IDK	0
-#define DEBUG_MAX	0
-#define DEBUG_PPS	1
+#define CPTS_SKB_TX_WORK_TIMEOUT	1 /* jiffies */
+#define LATCH_TMR			0
+#define AM57xx_IDK			0
+#define DEBUG_MAX			1
+#define DEBUG_PPS			1
+#define DEBUG_PPS_TMR_IRQ	0
+#define DEBUG_PPS_TMR		0
+#define DEBUG_OVERFLOW		0
+#define DEBUG_INIT			0
 
+/* Obvious things */
+#define ENABLE		1
+#define DISABLE		0
+#define TMR_CNTR_MAX	0xFFFFFFFFUL
+#define NS_IN_SEC		1000000000UL
 
 struct cpts_skb_cb_data {
 	unsigned long tmo;
 };
-
-
-
-
 
 #define cpts_read32(c, r)	readl_relaxed(&c->reg->r)
 #define cpts_write32(c, v, r)	writel_relaxed(v, &c->reg->r)
@@ -67,44 +72,46 @@ struct cpts_skb_cb_data {
 #define WRITE_TSICR(odt, val) __omap_dm_timer_write((odt), \
 				OMAP_TIMER_IF_CTRL_REG, (val), 0)
 
-#define NS_IN_SEC					1000000000UL
-#define CPTS_PPS_FREQUENCY_HZ		1
-#define CPTS_DEFAULT_PPS_WIDTH_MS	1
-#define CPTS_DEFAULT_PPS_WIDTH_NS	(CPTS_DEFAULT_PPS_WIDTH_MS * 1000000UL)
-#define CPTS_PPS_PERIOD_NS			( NS_IN_SEC/CPTS_PPS_FREQUENCY_HZ )
 
-#define CPTS_PPS_DUTY_CYCLE		1/10
 
-#if( CPTS_DEFAULT_PPS_WIDTH_NS > CPTS_PPS_PERIOD_NS )
-	#error "Wrong settings"
+/* !!! Base !!! */
+#define CPTS_TMR_CLK_RATE			24000000
+#define CPTS_TMR_CLK_PERIOD_NS		(NS_IN_SEC/CPTS_TMR_CLK_RATE)
+/* !!! */
+
+
+#define CPTS_PPS_FREQUENCY_HZ			1
+#define CPTS_PPS_WIDTH_MS				1
+#define CPTS_PPS_WIDTH_TICKS			( CPTS_PPS_WIDTH_MS * (CPTS_TMR_CLK_RATE/1000) ) /* 10ms */
+#define CPTS_PPS_PERIOD_TICKS			CPTS_TMR_CLK_RATE/CPTS_PPS_FREQUENCY_HZ
+
+#define CPTS_PPS_PERIOD_NS				(u32)( ( (u64)CPTS_PPS_PERIOD_TICKS * (u64)NS_IN_SEC ) / (u64)CPTS_TMR_CLK_RATE )
+
+#if( CPTS_PPS_WIDTH_TICKS > CPTS_PPS_PERIOD_TICKS )
+	#error "Wrong PPS settings"
 #endif
 
-#define CPTS_PLS_HIGH_LEN_NS		CPTS_DEFAULT_PPS_WIDTH_NS
-#define CPTS_PLS_LOW_LEN_NS			( CPTS_PPS_PERIOD_NS - CPTS_DEFAULT_PPS_WIDTH_NS )
+/* Not less than 1ms until annual */
+#define CPTS_TS_THRESH_NS		(CPTS_PPS_PERIOD_NS - 1*1000*1000) //1ms
 
-//#define CPTS_TS_THRESH		98000000ULL
-//#define CPTS_TMR_CLK_RATE		100000000
-#define CPTS_TMR_CLK_RATE		24000000 /* 100MHz */
-#define CPTS_TS_THRESH			( ( CPTS_TMR_CLK_RATE /100 ) * 98 )
+#define CPTS_OUT_OF_SYNC_TMR_TICKS		CPTS_PPS_PERIOD_TICKS/2
 
-#define CPTS_TMR_CLK_PERIOD_NS	(NS_IN_SEC/CPTS_TMR_CLK_RATE)
-//#define CPTS_TMR_RELOAD_CNT	(0xFFFFFFFFUL - 100000000UL/CPTS_TMR_CLK_PERIOD_NS + 1)
-#define CPTS_TMR_RELOAD_CNT		(0xFFFFFFFFUL - CPTS_PPS_PERIOD_NS/CPTS_TMR_CLK_PERIOD_NS + 1)
-//#define CPTS_TMR_CMP_CNT	(CPTS_TMR_RELOAD_CNT + 10000000UL/CPTS_TMR_CLK_PERIOD_NS)
-#define CPTS_TMR_CMP_CNT	(CPTS_TMR_RELOAD_CNT + \
-	CPTS_DEFAULT_PPS_WIDTH_NS/CPTS_TMR_CLK_PERIOD_NS)
-#define CPTS_MAX_MMR_ACCESS_TIME	1000
-#define CPTS_NOM_MMR_ACCESS_TIME	250
-#define CPTS_NOM_MMR_ACCESS_TICK	(CPTS_NOM_MMR_ACCESS_TIME / CPTS_TMR_CLK_PERIOD_NS)
+#define CPTS_TMR_RELOAD_CNT		(TMR_CNTR_MAX - CPTS_PPS_PERIOD_TICKS + 1)
+#define CPTS_TMR_CMP_CNT		(CPTS_TMR_RELOAD_CNT + CPTS_PPS_WIDTH_TICKS) //PPS WIDTH
+
+#define CPTS_MAX_TS_ACCSS_T_NS			1000
+#define CPTS_MAX_TS_ACCSS_T_TICKS		(CPTS_MAX_TS_ACCSS_T_NS / CPTS_TMR_CLK_PERIOD_NS)
 
 static u32 tmr_reload_cnt = CPTS_TMR_RELOAD_CNT;
 static u32 tmr_reload_cnt_prev = CPTS_TMR_RELOAD_CNT;
-static int ts_correct;
+
+
+static int pps_tmr_irq_cnt = 0;
 
 static void cpts_tmr_init(struct cpts *cpts);
 static void cpts_tmr_reinit(struct cpts *cpts);
 static irqreturn_t cpts_1pps_tmr_interrupt(int irq, void *dev_id);
-static void cpts_tmr_poll(struct cpts *cpts, bool cpts_poll);
+static void cpts_tmr_poll(struct cpts *cpts);
 static void cpts_pps_schedule(struct cpts *cpts);
 
 static int cpts_event_port(struct cpts_event *event)
@@ -305,9 +312,15 @@ static int cpts_ptp_adjfreq(struct ptp_clock_info *ptp, s32 ppb)
 	cpts->cc.mult = neg_adj ? mult - diff : mult + diff;
 
 	spin_unlock_irqrestore(&cpts->lock, flags);
-
-	tmr_reload_cnt = neg_adj ? CPTS_TMR_RELOAD_CNT - (ppb + 0) / (CPTS_TMR_CLK_PERIOD_NS*10) :
+#if(0)
+	tmr_reload_cnt = neg_adj ? 
+		CPTS_TMR_RELOAD_CNT - (ppb + 0) / (CPTS_TMR_CLK_PERIOD_NS*10) :
 		CPTS_TMR_RELOAD_CNT + (ppb + 0) / (CPTS_TMR_CLK_PERIOD_NS*10);
+#else
+	tmr_reload_cnt = neg_adj ? 
+		CPTS_TMR_RELOAD_CNT - ppb / (CPTS_TMR_CLK_PERIOD_NS * CPTS_PPS_FREQUENCY_HZ) :
+		CPTS_TMR_RELOAD_CNT + ppb / (CPTS_TMR_CLK_PERIOD_NS * CPTS_PPS_FREQUENCY_HZ);
+#endif
 
 	return 0;
 }
@@ -383,13 +396,13 @@ static int cpts_report_ts_events(struct cpts *cpts)
 	return reported;
 }
 
+/* PPS */
 static void cpts_pps_kworker(struct kthread_work *work)
 {
 	struct cpts *cpts = container_of(work, struct cpts, pps_work.work);
 
 	cpts_pps_schedule(cpts);
 }
-
 
 static inline void cpts_pps_stop(struct cpts *cpts)
 {
@@ -399,6 +412,9 @@ static inline void cpts_pps_stop(struct cpts *cpts)
 	v = READ_TCLR(cpts->odt);
 	v &= ~BIT(0);
 	WRITE_TCLR(cpts->odt, v);
+#if(DEBUG_PPS_TMR)
+	printk("PPS timer stopped\n");
+#endif
 }
 
 static inline void cpts_pps_start(struct cpts *cpts)
@@ -409,8 +425,13 @@ static inline void cpts_pps_start(struct cpts *cpts)
 
 	/* enable timer */
 	v = READ_TCLR(cpts->odt);
+/* Timer Control Register
+ * bit 0:	ST	Start timer */
 	v |= BIT(0);
 	WRITE_TCLR(cpts->odt, v);
+#if(DEBUG_PPS_TMR)
+	printk("PPS timer started\n");
+#endif
 }
 
 static int cpts_pps_enable(struct cpts *cpts, int on)
@@ -424,12 +445,16 @@ static int cpts_pps_enable(struct cpts *cpts, int on)
 
 	/* will stop after up coming pulse */
 	if (!on)
-	{ printk("cpts_pps_enable : STOP\n"); return 0; }
+	{ 
+		printk("cpts_pps_enable : STOP\n"); 
+		return 0; 
+	}
 
 	printk("Starting PPS\n");
 	cpts_pps_start(cpts);
-	cpts_tmr_poll(cpts, false);
-
+#if(0) //let first interrupt happen w/out correction
+	cpts_tmr_poll(cpts);
+#endif
 	return 0;
 }
 
@@ -437,7 +462,7 @@ static int cpts_pps_init(struct cpts *cpts)
 {
 	int err;
 
-	cpts->pps_enable = -1;
+	cpts->pps_enable = DISABLE;
 
 #ifdef CONFIG_OMAP_DM_TIMER
 	omap_dm_timer_enable(cpts->odt);
@@ -459,11 +484,11 @@ static int cpts_pps_init(struct cpts *cpts)
 
 static void cpts_pps_schedule(struct cpts *cpts)
 {
-	//cpts_fifo_read(cpts, -1);
-	if (cpts->pps_enable == -1) {
+	if (cpts->pps_enable == DISABLE) {
+		printk("Disable\n");
 		cpts_pps_stop(cpts);
 	} else {
-		cpts_tmr_poll(cpts, true);
+		cpts_tmr_poll(cpts);
 	}
 }
 
@@ -506,8 +531,10 @@ static long cpts_overflow_check(struct ptp_clock_info *ptp)
 	if (!skb_queue_empty(&cpts->txq))
 		delay = CPTS_SKB_TX_WORK_TIMEOUT;
 	spin_unlock_irqrestore(&cpts->lock, flags);
-#if(DEBUG_MAX)
-	printk("cpts overflow check at %lld.%09lu\n", ts.tv_sec, ts.tv_nsec);
+#if(DEBUG_OVERFLOW)
+	if(printk_ratelimit()) {
+		printk("cpts overflow check at %lld.%09lu\n", ts.tv_sec, ts.tv_nsec);
+	}
 #endif
 	return (long)delay;
 }
@@ -917,6 +944,7 @@ void cpts_release(struct cpts *cpts)
 	if (cpts->odt) {
 		devm_pinctrl_put(cpts->pins);
 	}
+
 #endif
 	if (cpts->pps_kworker) {
 		kthread_cancel_delayed_work_sync(&cpts->pps_work);
@@ -973,16 +1001,31 @@ enum cpts_1pps_state {
 
 static void cpts_tmr_reinit(struct cpts *cpts)
 {
-	/* re-initialize timer16 for 1pps generator */
+	/* re-initialize timer for 1pps generator */
 	WRITE_TCLR(cpts->odt, 0);
+/* When the auto-reload mode is enabled (TCLR AR bit = 1),
+ * the TCRR is reloaded with the Timer Load Register (TLDR) value
+ * after a counting overflow. */
 	WRITE_TLDR(cpts->odt, CPTS_TMR_RELOAD_CNT);
 	WRITE_TCRR(cpts->odt, CPTS_TMR_RELOAD_CNT);
-	WRITE_TMAR(cpts->odt, CPTS_TMR_CMP_CNT);	   /* 10 ms */
+	WRITE_TMAR(cpts->odt, CPTS_TMR_CMP_CNT);
+/* Timer Control Register
+ * bit12 :		PT		Pulse or toggle mode on PORTIMERPWM output pin : 
+ * 							Toggle
+ * bit10-11 :	TRG		Trigger output mode on PORTIMERPWM output pin :
+ * 							Trigger on overflow and match
+ * bit1 :		AR		Auto-reload timer */
 	WRITE_TCLR(cpts->odt, BIT(12) | 2 << 10 | BIT(6) | BIT(1));
+#if(0)
+/* Timer Synchronous Interface Control Register
+ * bit2 :		POSTED	Posted mode active */
 	WRITE_TSICR(cpts->odt, BIT(2));
-
+#endif
 	cpts->count_prev = 0xFFFFFFFF;
 	cpts->pps_state = INIT;
+#if(DEBUG_PPS_TMR)
+	printk("PPS timer reinitialized\n");
+#endif
 }
 
 static void cpts_tmr_init(struct cpts *cpts)
@@ -1014,26 +1057,11 @@ static void cpts_tmr_init(struct cpts *cpts)
 	pinctrl_select_state(cpts->pins, cpts->pin_state_pwm_off);
 }
 
-static void inline cpts_turn_on_off_1pps_output(struct cpts *cpts, u64 ts)
-{
-	if (ts >= CPTS_PLS_LOW_LEN_NS) {
-		if (cpts->pps_enable == 1)
-			pinctrl_select_state(cpts->pins,
-						 cpts->pin_state_pwm_on);
-#if(DEBUG_PPS)
-		printk("pps on at %llu\n", ts);
-#endif
-	} else if (ts < CPTS_PLS_LOW_LEN_NS) {
-		if (cpts->pps_enable == 1)
-			pinctrl_select_state(cpts->pins,
-						 cpts->pin_state_pwm_off);
-	}
-}
-
 /* The reload counter value is going to affect all cycles after the next SYNC
  * check. Therefore, we need to change the next expected drift value by
  * updating the ts_correct value
  */
+static int ts_correct;
 static void update_ts_correct(void)
 {
 	if (tmr_reload_cnt > tmr_reload_cnt_prev)
@@ -1042,14 +1070,25 @@ static void update_ts_correct(void)
 		ts_correct += (tmr_reload_cnt_prev - tmr_reload_cnt) * CPTS_TMR_CLK_PERIOD_NS;
 }
 
-static void cpts_tmr_poll(struct cpts *cpts, bool cpts_poll)
+u32 ts_push_avrg(u32 ts_push_imm)
+{
+	u32 ret_val;
+	static u32 ts_push_sum;
+	static u32 ts_push_cnt;
+	ts_push_sum += ts_push_imm;
+	ts_push_cnt++;
+	ret_val = ts_push_sum/ts_push_cnt;
+	return ret_val;
+}
+
+static void cpts_tmr_poll(struct cpts *cpts)
 {
 	unsigned long flags;
-	u32 tmr_count, tmr_count2, count_exp, tmr_diff_abs;
+	u32 tmr_count, tmr_count2, count_exp, tmr_diff_abs, ts_push_ticks;
 	s32 tmr_diff = 0;
 	int ts_val;
 	static int ts_val_prev;
-	u64 cpts_ts_short, cpts_ts, tmp64;
+	u64 cpts_ts_rem, cpts_ts, tmp64;
 	static u64 cpts_ts_trans;
 	bool updated = false;
 	static bool first;
@@ -1062,6 +1101,8 @@ static void cpts_tmr_poll(struct cpts *cpts, bool cpts_poll)
 	tmr_count = READ_TCRR(cpts->odt);
 	cpts_write32(cpts, TS_PUSH, ts_push);
 	tmr_count2 = READ_TCRR(cpts->odt);
+	ts_push_ticks = ts_push_avrg(tmr_count2 - tmr_count); /* push call weight in ticks */
+	
 	tmp64 = cpts_ts_read(cpts);
 	cpts_ts = tmp64;
 /*
@@ -1072,109 +1113,136 @@ static void cpts_tmr_poll(struct cpts *cpts, bool cpts_poll)
  * - modifies the 64-bit dividend _in_place_
  * - returns the 32-bit remainder
  */
-	cpts_ts_short = do_div(tmp64, NS_IN_SEC);
-
-	cpts_turn_on_off_1pps_output(cpts, cpts_ts_short);
-
+	cpts_ts_rem = do_div(tmp64, CPTS_PPS_PERIOD_NS);
 	tmp64 = cpts_ts;
-	cpts_ts_short = do_div(tmp64, CPTS_TMR_CLK_RATE);
 
 	/* Timer poll state machine */
 	switch (cpts->pps_state) {
 	case INIT:
-		if ((cpts_ts_short < CPTS_TS_THRESH) &&
-			((tmr_count2 - tmr_count) < \
-				CPTS_MAX_MMR_ACCESS_TIME/CPTS_TMR_CLK_PERIOD_NS)) {
+		pps_tmr_irq_cnt = 0;
+		if ((cpts_ts_rem < CPTS_TS_THRESH_NS) &&
+			(ts_push_ticks < CPTS_MAX_TS_ACCSS_T_TICKS)) {
 			/* The nominal delay of this operation about 9 ticks
 			 * We are able to compensate for the normal range 8-17
-			 * However, the simple compensation fials when the delay
-			 * is getting big, just skip this sample
-			 *
-			 * Calculate the expected tcrr value and update to it
-			 */
-			tmp64 = (CPTS_TMR_CLK_RATE - cpts_ts_short);
-				do_div(tmp64, CPTS_TMR_CLK_PERIOD_NS);
+			 * However, the simple compensation fails when the delay
+			 * is getting big, just skip this sample */
+			
+			 /* Adjust timer abruptly to the reminder  */
+			tmp64 = (CPTS_PPS_PERIOD_NS - cpts_ts_rem); //annual ts
+			do_div(tmp64, CPTS_TMR_CLK_PERIOD_NS); //from ns to ticks
 			count_exp = (u32)tmp64;
-			count_exp = 0xFFFFFFFFUL - count_exp + 1;
+			count_exp = TMR_CNTR_MAX - count_exp + 1; //invert for timer
 
-			WRITE_TCRR(cpts->odt, count_exp +
-				   READ_TCRR(cpts->odt) - tmr_count2 +
-				   CPTS_NOM_MMR_ACCESS_TICK);
-
+			u32 pps_tmr_count_reg = count_exp + /* Move timer to the ts reminder */
+				( READ_TCRR(cpts->odt) - tmr_count2 ) + /* time in ticks from ts push to this point */
+				ts_push_ticks; /* push call weight in ticks */
+			WRITE_TCRR(cpts->odt, pps_tmr_count_reg); /* Timer Counter Register */
+			WRITE_TLDR(cpts->odt, tmr_reload_cnt);
+			WRITE_TMAR(cpts->odt, CPTS_TMR_CMP_CNT);
+		#if(DEBUG_INIT)
+			printk( GRN"INIT : pps_tmr_count_reg = %d, count_exp = %d, tmr_reload_cnt = %d\n" \
+					"tmr_count = %d, tmr_count2 = %d, ts_push_ticks = %d\n,"\
+					"CPTS_TMR_CMP_CNT = %d, CPTS_TMR_RELOAD_CNT = %d, CPTS_TMR_CLK_PERIOD_NS = %lu\n"
+					"CPTS_PPS_PERIOD_NS = %u, cpts_ts_rem = %llu\n"NORM,
+					pps_tmr_count_reg, count_exp, tmr_reload_cnt,
+					tmr_count, tmr_count2, ts_push_ticks, 
+					(s32)CPTS_TMR_CMP_CNT, (s32)CPTS_TMR_RELOAD_CNT, CPTS_TMR_CLK_PERIOD_NS,
+					CPTS_PPS_PERIOD_NS, cpts_ts_rem );
+		#else
+			if(printk_ratelimit()) { printk( GRN"INIT\n"NORM); }
+		#endif
 			{
-				WRITE_TLDR(cpts->odt, tmr_reload_cnt);
-				WRITE_TMAR(cpts->odt, CPTS_TMR_CMP_CNT);
-
 				cpts->pps_state = WAIT;
 				first = true;
 				tmr_reload_cnt_prev = tmr_reload_cnt;
-				cpts_ts_trans = (cpts_ts - cpts_ts_short) +
-					CPTS_TMR_CLK_RATE;
+				cpts_ts_trans = (cpts_ts - cpts_ts_rem) + CPTS_PPS_PERIOD_NS; //timestamp of the next meeting
 				printk("cpts_tmr_poll: exit INIT state\n");
 			}
+		} 
+		else
+		{
+		#if(DEBUG_MAX)
+			printk( RED"AGAIN : cpts_ts_rem = %llu, CPTS_TS_THRESH_NS = %d\n"\
+					"ts_push_ticks = %d, tmr_count = %d, tmr_count2 = %d\n"\
+					"CPTS_MAX_TS_ACCSS_T_TICKS=%lu\n"NORM,
+					cpts_ts_rem, CPTS_TS_THRESH_NS,
+					ts_push_ticks, tmr_count, tmr_count2,
+					CPTS_MAX_TS_ACCSS_T_TICKS );
+		#else
+			printk_ratelimited( RED"AGAIN\n");
+		#endif
 		}
 		break;
 
 	case ADJUST:
 		/* Wait for the ldr load to take effect */
 		if (cpts_ts >= cpts_ts_trans) {
+		#if(0)
 			u64 ts = cpts->hw_timestamp;
-			u32 ts_offset;
+			ts_offset = do_div(ts, CPTS_PPS_PERIOD_NS);
+		#else
+			u32 ts_offset = cpts_ts_rem;
+		# if(DEBUG_MAX)
+			//if(printk_ratelimit()) { printk(MAG"off=%dns\n"NORM, ts_offset); }
+		# endif
+		#endif
+			ts_val = (ts_offset >= CPTS_PPS_PERIOD_NS/2) ?
+				(ts_offset - CPTS_PPS_PERIOD_NS) :	//undershoot - negative value
+				(ts_offset);						//overshoot - positive value
 
-			ts_offset = do_div(ts, CPTS_TMR_CLK_RATE);
-
-			ts_val = (ts_offset >= (CPTS_TMR_CLK_RATE/2)) ?
-				-(CPTS_TMR_CLK_RATE - ts_offset) :
-				(ts_offset);
-
-			/* restore the timer period to 100ms */
+			/* restore the timer period */
 			WRITE_TLDR(cpts->odt, tmr_reload_cnt);
 
 			if (tmr_reload_cnt != tmr_reload_cnt_prev)
 				update_ts_correct();
 
-			cpts_ts_trans += CPTS_TMR_CLK_RATE;
+			cpts_ts_trans += CPTS_PPS_PERIOD_NS;
 			cpts->pps_state = WAIT;
 
 			tmr_reload_cnt_prev = tmr_reload_cnt;
 			ts_val_prev = ts_val;
-			printk("padj\n");
+			//if(printk_ratelimit()) { printk(GRN"adj\n"NORM); }
 		}
 		break;
 
 	case WAIT:
 		/* Wait for the next poll period when the adjustment
-		 * has been taken effect
-		 */
+		 * has been taken effect */
 		if (cpts_ts < cpts_ts_trans)
+		{
+			if(printk_ratelimit()) { printk( RED"early\n"); }
 			break;
-
+		}
 		cpts->pps_state = SYNC;
 		/* pass through */
 
 	case SYNC:
 		{
+		#if(0)
+			if(printk_ratelimit()) { printk("sync\n"); }
+		#endif
+			s32 ts_adj;
+		#if(0)
 			u64 ts = cpts->hw_timestamp;
-			u32 ts_offset;
-			int tsAdjust;
+			u32 ts_offset = do_div(ts, CPTS_PPS_PERIOD_NS);
+		#else
+			u32 ts_offset = cpts_ts_rem;
+		#endif
 
-			ts_offset = do_div(ts, CPTS_TMR_CLK_RATE);
-			ts_val = (ts_offset >= (CPTS_TMR_CLK_RATE/2)) ?
-				-(CPTS_TMR_CLK_RATE - ts_offset) :
-				(ts_offset);
-			/* tsAjust should include the current error and the expected
-			 * drift for the next two cycles
-			 */
+			ts_val = (ts_offset >= (CPTS_PPS_PERIOD_NS/2)) ?
+				(ts_offset - CPTS_PPS_PERIOD_NS) :	//undershoot	- negative value
+				(ts_offset);						//overshoot		- positive value
+			/* ts_adj should include the current error and the expected
+			 * drift for the next two cycles */
 			if (first) {
-				tsAdjust = ts_val;
+				ts_adj = ts_val;
 				first = false;
 			} else
-				tsAdjust = ts_val +
-					(ts_val - ts_val_prev + ts_correct) * 2;
+				ts_adj = ts_val + (ts_val - ts_val_prev + ts_correct) * 2;
 
-			tmr_diff = (tsAdjust < 0) ? (tsAdjust - CPTS_TMR_CLK_PERIOD_NS/2) / CPTS_TMR_CLK_PERIOD_NS :
-				(tsAdjust + CPTS_TMR_CLK_PERIOD_NS/2) / CPTS_TMR_CLK_PERIOD_NS;
-
+			tmr_diff = (ts_adj < 0) ? \
+					(ts_adj - (s32)CPTS_TMR_CLK_PERIOD_NS/2) / (s32)CPTS_TMR_CLK_PERIOD_NS :
+					(ts_adj + (s32)CPTS_TMR_CLK_PERIOD_NS/2) / (s32)CPTS_TMR_CLK_PERIOD_NS;
 			/* adjust for the error in the current cycle due to the old (incorrect) reload count
 			 * we only make the adjustment if the counter change is more than 1 because the
 			 * couner will change back and forth at the frequency tick boundary
@@ -1187,65 +1255,89 @@ static void cpts_tmr_poll(struct cpts *cpts, bool cpts_poll)
 					tmr_diff -= (tmr_reload_cnt_prev -
 							 tmr_reload_cnt - 1);
 			}
-#if(DEBUG_MAX)
-			printk("cpts_tmr_poll: ts_val = %d, ts_val_prev = %d\n",
-				 ts_val, ts_val_prev);
-#endif
+		#if(0)
+			if(printk_ratelimit()) {
+				printk( CYN"ts_val = %d, ts_val_prev = %d\n"NORM,
+						ts_val, ts_val_prev);
+			}
+		#endif
 			ts_correct = tmr_diff * CPTS_TMR_CLK_PERIOD_NS;
 			ts_val_prev = ts_val;
 			tmr_diff_abs = abs(tmr_diff);
 
+			//If new counter value or diff should be made
 			if (tmr_diff_abs || (tmr_reload_cnt != tmr_reload_cnt_prev)) {
 				updated = true;
-				if (tmr_diff_abs < (1000000 / CPTS_TMR_CLK_PERIOD_NS)) {
+			#if(1)
+				if (tmr_diff_abs < CPTS_OUT_OF_SYNC_TMR_TICKS) {
 					/* adjust ldr time for one period
-					 * instead of updating the tcrr directly
-					 */
-					WRITE_TLDR(cpts->odt, tmr_reload_cnt +
-						   (u32)tmr_diff);
+					 * instead of updating the tcrr directly */
+					u32 reload = tmr_reload_cnt + (u32)tmr_diff;
+					WRITE_TLDR(cpts->odt, reload);
 					cpts->pps_state = ADJUST;
+				# if(0)
+					if(printk_ratelimit()) { printk(MAG"reload=%d\n"NORM, reload); }
+				# endif
 				} else {
-					/* The error is more than 1 ms,
-					 * declare it is out of sync
-					 */
 					cpts->pps_state = INIT;
-					printk("cpts_tmr_poll: return to INIT\n");
+				# if(0)
+					printk_ratelimited( RED"OUT OF SYNC : tmr_diff = %d, ts_val = %d, ts_val_prev=%d,\n"
+							"ts_offset = %d, ts_correct = %d, ts_adj=%d\n,"
+							"tmr_reload_cnt = %d, tmr_reload_cnt_prev = %d\n"NORM, 
+							tmr_diff, ts_val, ts_val_prev,
+							ts_offset, ts_correct, ts_adj,
+							tmr_reload_cnt, tmr_reload_cnt_prev);
+				#else
+					printk_ratelimited( RED"OUT OF SYNC\n"NORM );
+				#endif
 					break;
 				}
-			} else {
+			#else
+					u32 reload = tmr_reload_cnt + (u32)tmr_diff;
+					WRITE_TLDR(cpts->odt, reload);
+					cpts->pps_state = ADJUST;
+			#endif
+			} else { //if (tmr_diff_abs
 				cpts->pps_state = WAIT;
-			}
+			}//end if (tmr_diff_abs
 
-			cpts_ts_trans = (cpts_ts - cpts_ts_short) + CPTS_TMR_CLK_RATE;
+			cpts_ts_trans = (cpts_ts - cpts_ts_rem) + CPTS_TMR_CLK_RATE;
 			tmr_reload_cnt_prev = tmr_reload_cnt;
+		#if(DEBUG_MAX)
+			//printk_ratelimited(CYN"off=%dns\n"NORM, ts_offset);
+		#endif
 			break;
 		} /* case SYNC */
-
 	} /* switch */
 
 	spin_unlock_irqrestore(&cpts->lock, flags);
 
 	cpts->count_prev = tmr_count;
-
+#if(0)
 	if(updated)
-		printk("cpts_tmr_poll(updated = %u): tmr_diff = %d, " \
-		"tmr_reload_cnt = %u, cpts_ts = %llu\n", updated, tmr_diff, tmr_reload_cnt, cpts_ts);
+		printk( CYN"tmr_diff = %d, tmr_reload_cnt = %u\n"NORM,
+				tmr_diff, tmr_reload_cnt);
+#endif
 }
 
-static int int_cnt;
+
 static irqreturn_t cpts_1pps_tmr_interrupt(int irq, void *dev_id)
 {
 	struct cpts *cpts = (struct cpts*)dev_id;
 
 	writel_relaxed(OMAP_TIMER_INT_OVERFLOW, cpts->odt->irq_stat);
 	kthread_queue_delayed_work(cpts->pps_kworker, &cpts->pps_work,
-				msecs_to_jiffies(CPTS_DEFAULT_PPS_WIDTH_MS));
-
-	if(int_cnt <= 1000)
-		int_cnt++;
-	if ((int_cnt % 100) == 0)
-		printk("cpts_1pps_tmr_interrupt %d\n", int_cnt);
-
+		msecs_to_jiffies(CPTS_PPS_WIDTH_MS));
+#if(DEBUG_PPS_TMR_IRQ)
+	if(!pps_tmr_irq_cnt)
+		printk("PPS timer irq\n");
+	if(pps_tmr_irq_cnt <= 10)
+		printk("+\n");
+	if(pps_tmr_irq_cnt <= 1000)
+		pps_tmr_irq_cnt++;
+	if ((pps_tmr_irq_cnt % 100) == 0)
+		printk("cpts_1pps_tmr_interrupt %d\n", pps_tmr_irq_cnt);
+#endif
 	return IRQ_HANDLED;
 }
 

@@ -1,7 +1,7 @@
 killall -9 ptp4l phc2sys
 
-ptp4l -H -E -i eth0 -s --summary_interval 10 -m &
-phc2sys -s eth0 -c CLOCK_REALTIME -O 0 -L 0 -u 10 -m &
+ptp4l -H -E -i eth0 -s -m &
+phc2sys -s eth0 -c CLOCK_REALTIME -O 0 -u 10 -m &
 
 #######
 ### PPS
@@ -18,14 +18,30 @@ meld ${KRNL_PTH}/drivers/net/ethernet/ti/cpts.c \
 ${KRNL_PTH}/drivers/net/ethernet/ti/cpts.c.new &
 
 # Start
-ptp4l -H -E -i eth0 -s --summary_interval 2 &
-phc2sys -s eth0 -c CLOCK_REALTIME -O 0 -L 0 -u 5 &
 echo 1 > /sys/devices/platform/ocp/4a100000.ethernet/ptp/ptp0/pps_enable
+ptp4l -H -E -i eth0 -s &
+phc2sys -s eth0 -x -O 0 -u 10 &
+
 
 # Stop
-
 killall -9 ptp4l phc2sys
 echo 0 > /sys/devices/platform/ocp/4a100000.ethernet/ptp/ptp0/pps_enable
 
 ### Save work
 cp ${KRNL_PTH}/drivers/net/ethernet/ti/cpts.c \
+${AM335_PTH}/RESERVE/Kernel
+cp ${KRNL_PTH}/drivers/net/ethernet/ti/cpts.h \
+${AM335_PTH}/RESERVE/Kernel
+
+
+#Test
+for CNT1 in {1..10}
+do
+    echo 1 > /sys/devices/platform/ocp/4a100000.ethernet/ptp/ptp0/pps_enable
+    for CNT2 in {1..10}
+    do
+    sleep 1
+    echo "-${CNT2}-"
+    done
+    echo 0 > /sys/devices/platform/ocp/4a100000.ethernet/ptp/ptp0/pps_enable
+done
