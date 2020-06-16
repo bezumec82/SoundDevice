@@ -34,6 +34,7 @@
 #include <linux/timecounter.h>
 #include <linux/kthread.h>
 #include <../arch/arm/plat-omap/include/plat/dmtimer.h>
+#include <linux/string.h>
 
 #define NORM                "\x1B[0m"   ///normal
 #define RED                 "\x1B[31m"  ///red

@@ -27,10 +27,16 @@
 &mac {
     /* cptr pps1 generator and latch properties */
     timers = <&timer5>;
+    
+    //mode="pps";
+    mode="coh"; //possible values : "coh", "pps"
+    pps_frequency_hz= <96>; //in case of "coh"    
+
+    
     pinctrl-names = "pwm_on", "pwm_off";
     pinctrl-0 = <&pps_timer5_pwm_on>;       //timer5 == T6 -> GPMC_BEn0_CLE -> 0x89C & MODE2
     pinctrl-1 = <&pps_timer5_pwm_off>;      //driver off
-    status = "okay";
+    status = "okay";    
 };
 
 &am33xx_pinmux {
