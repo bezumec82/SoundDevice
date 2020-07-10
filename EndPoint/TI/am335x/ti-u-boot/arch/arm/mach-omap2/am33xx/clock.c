@@ -138,7 +138,7 @@ static inline void enable_clock_module(u32 *const clkctrl_addr, u32 enable_mode,
 {
 	clrsetbits_le32(clkctrl_addr, MODULE_CLKCTRL_MODULEMODE_MASK,
 			enable_mode << MODULE_CLKCTRL_MODULEMODE_SHIFT);
-	debug("Enable clock module - %p\n", clkctrl_addr);
+	printf("Enable clock module - %p\n", clkctrl_addr);
 	if (wait_for_enable)
 		wait_for_clk_enable(clkctrl_addr);
 }
@@ -174,7 +174,7 @@ static inline void enable_clock_domain(u32 *const clkctrl_reg, u32 enable_mode)
 {
 	clrsetbits_le32(clkctrl_reg, CD_CLKCTRL_CLKTRCTRL_MASK,
 			enable_mode << CD_CLKCTRL_CLKTRCTRL_SHIFT);
-	debug("Enable clock domain - %p\n", clkctrl_reg);
+	printf("Enable clock domain - %p\n", clkctrl_reg);
 }
 
 static inline void disable_clock_domain(u32 *const clkctrl_reg)

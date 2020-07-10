@@ -28,7 +28,7 @@
 #define CONFIG_MACH_TYPE        MACH_TYPE_AM335XEVM
 
 /* Clock Defines */
-#define V_OSCK                  24000000  /* Clock output from T2 */
+#define V_OSCK                  19200000  /* Clock output from T2 */
 #define V_SCLK                  (V_OSCK)
 
 /* Custom script for NOR */
@@ -124,7 +124,7 @@
     /*------------------------*/
     /* Choose ethernet to use */
     /*------------------------*/
-#if(1)
+#if(0)
     #define ETH_TO_USE          "cpsw"
 #else
     #define ETH_TO_USE          "usb_ether"
@@ -383,8 +383,9 @@
     #define CONFIG_SYS_MONITOR_BASE     CONFIG_SYS_FLASH_BASE
 #endif  /* NOR support */
 
-#if (1)
+
     #ifdef CONFIG_DRIVER_TI_CPSW
+#if (0)
     #define CONFIG_CLOCK_SYNTHESIZER
     #define CLK_SYNTHESIZER_I2C_ADDR 0x65
     #endif

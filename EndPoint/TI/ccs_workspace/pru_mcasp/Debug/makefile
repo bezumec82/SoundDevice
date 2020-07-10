@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CG_TOOL_ROOT := /home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1
-
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
 
@@ -144,14 +142,14 @@ all: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 pru_mcasp.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: PRU Linker'
-	"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/bin/clpru" -v3 -Ooff --opt_for_speed=5 --define=am5728 --define=icss1 --define=pru0 -g --diag_warning=225 --diag_wrap=off --display_error_number --endian=little --hardware_mac=on -z -m"pru_mcasp.map" --heap_size=0x200 --stack_size=0x300 -i"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/lib" -i"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/include" -i"/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/SDK/example-applications/pru-icss-5.3.0/lib" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="pru_mcasp_linkInfo.xml" --rom_model -o "pru_mcasp.out" $(ORDERED_OBJS)
+	"" -z -m"pru_mcasp.map" --heap_size=0x200 --stack_size=0x300 -i"/lib" -i"/include" -i"/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/SDK/example-applications/pru-icss-5.3.0/lib" --reread_libs --diag_wrap=off --display_error_number --warn_sections --xml_link_info="pru_mcasp_linkInfo.xml" --rom_model -o "pru_mcasp.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 pru_mcasp.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: PRU Hex Utility'
-	"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/bin/hexpru"  -o "pru_mcasp.hex" $(EXE_OUTPUTS__QUOTED)
+	""  -o "pru_mcasp.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 

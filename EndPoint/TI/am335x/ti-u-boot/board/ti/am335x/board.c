@@ -128,6 +128,8 @@ static const struct emif_regs ddr2_evm_emif_reg_data = {
     .emif_ddr_phy_ctlr_1 = MT47H128M16RT25E_EMIF_READ_LATENCY,
 };
 
+
+
 static const struct ddr_data ddr3_data = {
     .datardsratio0 = MT41J128MJT125_RD_DQS,
     .datawdsratio0 = MT41J128MJT125_WR_DQS,
@@ -155,6 +157,15 @@ static const struct ddr_data ddr3_icev2_data = {
     .datafwsratio0 = MT41J128MJT125_PHY_FIFO_WE_400MHz,
     .datawrsratio0 = MT41J128MJT125_PHY_WR_DATA_400MHz,
 };
+
+static const struct ddr_data ddr3_sndDev_data = {
+    .datardsratio0 = 0x00000040,
+    .datawdsratio0 = 0x00000081,
+    .datafwsratio0 = 0x000000F3,
+    .datawrsratio0 = 0x000000C1,
+};
+
+
 
 static const struct cmd_control ddr3_cmd_ctrl_data = {
     .cmd0csratio = MT41J128MJT125_RATIO,
@@ -200,6 +211,15 @@ static const struct cmd_control ddr3_icev2_cmd_ctrl_data = {
     .cmd2iclkout = MT41J128MJT125_INVERT_CLKOUT_400MHz,
 };
 
+static const struct cmd_control ddr3_sndDev_cmd_ctrl_data = {
+    .cmd0csratio = 0x00000100,
+    .cmd0iclkout = 0x00000001,
+    .cmd1csratio = 0x00000100,
+    .cmd1iclkout = 0x00000001,
+    .cmd2csratio = 0x00000100,
+    .cmd2iclkout = 0x00000001,
+};
+
 static struct emif_regs ddr3_emif_reg_data = {
     .sdram_config = MT41J128MJT125_EMIF_SDCFG,
     .ref_ctrl = MT41J128MJT125_EMIF_SDREF,
@@ -243,6 +263,16 @@ static struct emif_regs ddr3_icev2_emif_reg_data = {
     .zq_config = MT41J128MJT125_ZQ_CFG_400MHz,
     .emif_ddr_phy_ctlr_1 = MT41J128MJT125_EMIF_READ_LATENCY_400MHz |
                 PHY_EN_DYN_PWRDN,
+};
+
+static struct emif_regs ddr3_sndDev_emif_reg_data = {
+    .sdram_config           = 0x61A05332,
+    .ref_ctrl               = 0x0000093B,
+    .sdram_tim1             = 0x0888A39B,
+    .sdram_tim2             = 0x24517FDA,
+    .sdram_tim3             = 0x50FFE4EF,
+    .zq_config              = 0x50074BE1,
+    .emif_ddr_phy_ctlr_1    = 0x00100208,
 };
 
 #ifdef CONFIG_SPL_OS_BOOT
@@ -544,8 +574,17 @@ const struct ctrl_ioregs ioregs = {
     .dt1ioctl       = MT47H128M16RT25E_IOCTRL_VALUE,
 };
 
+const struct ctrl_ioregs ioregs_sndDev = {
+    .cm0ioctl       = 0x0000018B,
+    .cm1ioctl       = 0x0000018B,
+    .cm2ioctl       = 0x0000018B,
+    .dt0ioctl       = 0x0000018B,
+    .dt1ioctl       = 0x0000018B,
+};
+
 void sdram_init(void)
 {
+    #if(0)
     if (board_is_evm_sk()) {
         /*
          * EVM SK 1.2A and later use gpio0_7 to enable DDR3.
@@ -581,6 +620,13 @@ void sdram_init(void)
     else
         config_ddr(266, &ioregs, &ddr2_data,
                &ddr2_cmd_ctrl_data, &ddr2_emif_reg_data, 0);
+    #else
+        config_ddr(303, 
+                &ioregs_sndDev,
+                &ddr3_sndDev_data,
+                &ddr3_sndDev_cmd_ctrl_data,
+                &ddr3_sndDev_emif_reg_data, 0);
+    #endif
 }
 #endif
 

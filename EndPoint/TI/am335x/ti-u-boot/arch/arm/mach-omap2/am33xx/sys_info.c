@@ -61,7 +61,6 @@ u32 get_sys_clk_index(void)
 {
 	struct ctrl_stat *ctrl = (struct ctrl_stat *)CTRL_BASE;
 	u32 ind = readl(&ctrl->statusreg);
-
 #ifdef CONFIG_AM43XX
 	u32 src;
 	src = (ind & CTRL_CRYSTAL_FREQ_SRC_MASK) >> CTRL_CRYSTAL_FREQ_SRC_SHIFT;

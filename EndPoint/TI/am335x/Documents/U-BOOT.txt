@@ -46,6 +46,9 @@ geany ${AM335_PTH}/bootcmd &
 
 geany ${U_BOOT_PTH}/.config &
 
+geany ${U_BOOT_PTH}/board/ti/am335x/board.c &
+geany ${U_BOOT_PTH}//arch/arm/mach-omap2/am33xx/board.c &
+
 #######
 ### SPL
 #######

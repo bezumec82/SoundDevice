@@ -1,13 +1,8 @@
-export TI_PTH=/media/constantine/RAID/SoundDevice/SoundDevice_endPoint/TI
-export AM335_PTH=${TI_PTH}/am335x
-export U_BOOT_PTH=${TI_PTH}/ti-u-boot
-export SRC_PTH=${AM335_PTH}/SOURCE/ti-processor-sdk-linux-rt-am335x-evm-bin-05.02.00.10
-export PBLT_PTH=${SRC_PTH}/board-support/prebuilt-images
-export ROOT_PTH=${SRC_PTH}/filesystem
-
 ### Clean
+reset
+lsblk
 cd ${TI_PTH}
-export DRIVE=/dev/sdg
+export DRIVE=/dev/sdi
 sudo umount ${DRIVE}
 sudo umount ${DRIVE}1
 sudo umount ${DRIVE}2
@@ -22,17 +17,17 @@ sudo dd if=/dev/zero of=${DRIVE}    bs=512 count=2048
 sync
 
 ### Making 3 partitions
- sudo parted -s $DRIVE          mklabel msdos
- sudo parted -s $DRIVE unit s   mkpart primary fat32 2048 $((64*1024*1024/512))
-#sudo parted -s $DRIVE unit cyl -a optimal  mkpart primary fat32 -- 0 9 
- sudo parted -s $DRIVE          set 1 boot on
+ sudo parted -s ${DRIVE}          mklabel msdos
+ sudo parted -s ${DRIVE} unit s   mkpart primary fat32 2048 $((64*1024*1024/512))
+#sudo parted -s ${DRIVE} unit cyl -a optimal  mkpart primary fat32 -- 0 9 
+ sudo parted -s ${DRIVE}          set 1 boot on
 
- sudo parted -s $DRIVE unit s   mkpart primary ext2 $((64*1024*1024/512 + 2048)) $((512*1024*1024/512))
-#sudo parted -s $DRIVE unit cyl mkpart primary ext2 -- 9 310
+#sudo parted -s ${DRIVE} unit s   mkpart primary ext2 $((64*1024*1024/512 + 2048)) $((512*1024*1024/512))
+ sudo parted -s ${DRIVE} unit cyl mkpart primary ext2 -- 9 310
 
-#sudo parted -s $DRIVE unit cyl -a optimal  mkpart primary ext2 -- 310 -2
-#sudo parted -s $DRIVE unit s   mkpart primary ext2 $((512*1024*1024/512 + 2048)) 100%
- sudo parted -s $DRIVE print
+#sudo parted -s ${DRIVE} unit cyl -a optimal  mkpart primary ext2 -- 310 -2
+#sudo parted -s ${DRIVE} unit s   mkpart primary ext2 $((512*1024*1024/512 + 2048)) 100%
+ sudo parted -s ${DRIVE} print
  sudo fdisk $DRIVE -l
 
 ### Partitioning
@@ -43,30 +38,31 @@ sync
 sync
 
 ### Mounting
-sudo rm -rf ${AM335_PTH}/am335_boot
-sudo rm -rf ${AM335_PTH}/rootfs
+sudo rm -rf ${AM335_PTH}/SD/am335_boot
+sudo rm -rf ${AM335_PTH}/SD/rootfs
 
-mkdir ${AM335_PTH}/am335_boot
-mkdir ${AM335_PTH}/rootfs
+mkdir ${AM335_PTH}/SD
+mkdir ${AM335_PTH}/SD/am335_boot
+mkdir ${AM335_PTH}/SD/rootfs
 
-sudo mount -t vfat ${DRIVE}1 ${AM335_PTH}/am335_boot
-sudo mount -t ext3 ${DRIVE}2 ${AM335_PTH}/rootfs 
+sudo mount -t vfat ${DRIVE}1 ${AM335_PTH}/SD/am335_boot
+sudo mount -t ext3 ${DRIVE}2 ${AM335_PTH}/SD/rootfs 
 
-sudo rm -rf ${AM335_PTH}/am335_boot/*
-sudo rm -rf ${AM335_PTH}/rootfs/*
+sudo rm -rf ${AM335_PTH}/SD/am335_boot/*
+sudo rm -rf ${AM335_PTH}/SD/rootfs/*
 
 ### Filing
-#sudo cp ${PBLT_PTH}/MLO-am335x-evm               ${AM335_PTH}/am335_boot/MLO
-#sudo cp ${PBLT_PTH}/u-boot-am335x-evm.img        ${AM335_PTH}/am335_boot/u-boot.img
-#sudo cp ${AM335_PTH}/uEnv.txt                    ${AM335_PTH}/am335_boot/uEnv.txt
-#sudo cp ${AM335_PTH}/boot.scr                    ${AM335_PTH}/am335_boot/boot.scr
-#sync
-
-sudo cp ${TI_PTH}/ti-u-boot/MLO             ${AM335_PTH}/am335_boot/MLO
-sudo cp ${TI_PTH}/ti-u-boot/u-boot.img      ${AM335_PTH}/am335_boot/u-boot.img
-sudo cp ${AM335_PTH}/boot.scr               ${AM335_PTH}/am335_boot/boot.scr
-sudo cp ${AM335_PTH}/uEnv.txt               ${AM335_PTH}/am335_boot/uEnv.txt
+sudo cp ${PBLT_PTH}/MLO-am335x-evm               ${AM335_PTH}/am335_boot/MLO
+sudo cp ${PBLT_PTH}/u-boot-am335x-evm.img        ${AM335_PTH}/am335_boot/u-boot.img
+sudo cp ${AM335_PTH}/uEnv.txt                    ${AM335_PTH}/am335_boot/uEnv.txt
+sudo cp ${AM335_PTH}/boot.scr                    ${AM335_PTH}/am335_boot/boot.scr
 sync
+
+#sudo cp ${TI_PTH}/ti-u-boot/MLO             ${AM335_PTH}/am335_boot/MLO
+#sudo cp ${TI_PTH}/ti-u-boot/u-boot.img      ${AM335_PTH}/am335_boot/u-boot.img
+#sudo cp ${AM335_PTH}/boot.scr               ${AM335_PTH}/am335_boot/boot.scr
+#sudo cp ${AM335_PTH}/uEnv.txt               ${AM335_PTH}/am335_boot/uEnv.txt
+#sync
 ls -ls ${AM335_PTH}/am335_boot
 
 ls -ls ${ROOT_PTH}

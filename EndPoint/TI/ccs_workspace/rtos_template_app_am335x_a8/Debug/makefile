@@ -2,10 +2,10 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CG_TOOL_ROOT := /home/constantine/ti/ccsv8/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major
+CG_TOOL_ROOT := /home/constantine/ti/ccs1010/ccs/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major
 
-GEN_OPTS__FLAG := @"configPkg/compiler.opt"
-GEN_CMDS__FLAG := -Wl,-T"configPkg/linker.cmd"
+GEN_OPTS__FLAG := @"configPkg/compiler.opt" 
+GEN_CMDS__FLAG := -Wl,-T"configPkg/linker.cmd" 
 
 ORDERED_OBJS += \
 "./app.o" \
@@ -144,23 +144,23 @@ all: $(OBJS) $(GEN_CMDS)
 rtos_template_app_am335x_a8.out: $(OBJS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: GNU Linker'
-	"/home/constantine/ti/ccsv8/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major/bin/arm-none-eabi-gcc" -mtune=cortex-a8 -marm -Dam3358 -DevmAM335x -DSOC_AM335x -Og -g -gdwarf-3 -gstrict-dwarf -Wall -mfloat-abi=hard -Wl,-Map,"rtos_template_app_am335x_a8.map" -nostartfiles -static -Wl,--gc-sections -L"/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am335x/RTOS_SDK/pdk_am335x_1_0_13/packages/ti/board/lib/evmAM335x/a8/release/" -L"/home/constantine/ti/bios_6_75_01_05/packages/gnu/targets/arm/libs/install-native/arm-none-eabi/lib/hard" -Wl,--defsym,STACKSIZE=0x1C000 -Wl,--defsym,HEAPSIZE=0x400 --specs=nano.specs -o"rtos_template_app_am335x_a8.out" $(ORDERED_OBJS)
+	"/home/constantine/ti/ccs1010/ccs/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major/bin/arm-none-eabi-gcc-7.2.1" -mtune=cortex-a8 -marm -Dam3358 -DevmAM335x -DSOC_AM335x -Og -g -gdwarf-3 -gstrict-dwarf -Wall -mfloat-abi=hard -Wl,-Map,"rtos_template_app_am335x_a8.map" -nostartfiles -static -Wl,--gc-sections -L"/packages/ti/board/lib/evmAM335x/a8/release/" -Wl,--defsym,STACKSIZE=0x1C000 -Wl,--defsym,HEAPSIZE=0x400 --specs=nano.specs -o"rtos_template_app_am335x_a8.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 rtos_template_app_am335x_a8.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: GNU Objcopy Utility'
-	"/home/constantine/ti/ccsv8/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major/bin/arm-none-eabi-objcopy"  $(EXE_OUTPUTS__QUOTED) "rtos_template_app_am335x_a8.hex"
+	"/home/constantine/ti/ccs1010/ccs/tools/compiler/gcc-arm-none-eabi-7-2017-q4-major/bin/arm-none-eabi-objcopy"  $(EXE_OUTPUTS__QUOTED) "rtos_template_app_am335x_a8.hex"
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) $(GEN_CMDS__QUOTED)$(GEN_MISC_FILES__QUOTED)$(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)$(GEN_OPTS__QUOTED)
-	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
+	-$(RM) $(BIN_OUTPUTS__QUOTED)$(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
 	-$(RM) "app.o" "main.o" 
 	-$(RM) "app.d" "main.d" 
+	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '
 

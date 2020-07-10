@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CG_TOOL_ROOT := /home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1
-
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
 
@@ -138,14 +136,14 @@ all: PRU_RPMsg_Echo_Interrupt1_0.out
 PRU_RPMsg_Echo_Interrupt1_0.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: PRU Linker'
-	"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/bin/clpru" -v3 --define=pru0 --define=am4379 --define=icss1 --define=am5728 -g --diag_warning=225 --diag_wrap=off --display_error_number --endian=little --hardware_mac=on -z -m"PRU_RPMsg_Echo_Interrupt1_0.map" --heap_size=0x100 --stack_size=0x100 -i"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/lib" -i"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/include" -i"/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/SDK/example-applications/pru-icss-5.3.0/lib" --reread_libs --define=ICSS1_PRU_CORE=1 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="PRU_RPMsg_Echo_Interrupt1_0_linkInfo.xml" --rom_model -o "PRU_RPMsg_Echo_Interrupt1_0.out" $(ORDERED_OBJS)
+	"" -z -m"PRU_RPMsg_Echo_Interrupt1_0.map" --heap_size=0x100 --stack_size=0x100 -i"/lib" -i"/include" -i"/media/constantine/Work/SoundDevice/SoundDevice_endPoint/TI/am57x/SDK/example-applications/pru-icss-5.3.0/lib" --reread_libs --define=ICSS1_PRU_CORE=1 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="PRU_RPMsg_Echo_Interrupt1_0_linkInfo.xml" --rom_model -o "PRU_RPMsg_Echo_Interrupt1_0.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 PRU_RPMsg_Echo_Interrupt1_0.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: PRU Hex Utility'
-	"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/bin/hexpru"  -o "PRU_RPMsg_Echo_Interrupt1_0.hex" $(EXE_OUTPUTS__QUOTED)
+	""  -o "PRU_RPMsg_Echo_Interrupt1_0.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 

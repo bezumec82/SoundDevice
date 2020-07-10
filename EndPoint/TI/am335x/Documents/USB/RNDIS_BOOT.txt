@@ -1,24 +1,17 @@
-### Disable retard network-manager
-sudo gedit /etc/NetworkManager/NetworkManager.conf &
-add line :
-no-auto-default=usb0
-sudo service network-manager restart
-
 ### Add static to 'usb0'
 sudo gedit /etc/network/interfaces &
-add lines :
-
-auto usb0
+# add lines :
+allow-hotplug usb0
 iface usb0 inet static
    address   10.200.10.1
    netmask   255.255.255.0
    network   10.200.10.0
    broadcast 10.200.10.255
-   post-up /usr/local/sbin/usb0_ifupdown
+   post-up   /usr/local/sbin/usb0_ifupdown
 
 ### Configure DHCP
-sudo gedit /etc/dhcp/dhcpd.conf
-add lines :
+sudo gedit /etc/dhcp/dhcpd.conf &
+# add lines :
 subnet 10.200.10.0 netmask 255.255.255.0
 {
   interface          "usb0";
@@ -30,22 +23,22 @@ subnet 10.200.10.0 netmask 255.255.255.0
     range dynamic-bootp 10.200.10.100 10.200.10.250;
     allow unknown clients;
   }#pool
-  if substring (option vendor-class-identifier, 0, 10) = "AM335x ROM"
+  if substring (option vendor-class-identifier, 0, 10)      = "AM335x ROM"
   {
     filename "/tftpboot/BBB/u-boot-spl.bin";
   }
-  elsif substring (option vendor-class-identifier, 0, 17) = "AM335x U-Boot SPL"
+  elsif substring (option vendor-class-identifier, 0, 17)   = "AM335x U-Boot SPL"
   {
     filename "/tftpboot/BBB/u-boot.img";
   }
-  elsif substring (option vendor-class-identifier, 0, 12) = "U-boot.armv7"
+  elsif substring (option vendor-class-identifier, 0, 12)   = "U-boot.armv7"
   {
     filename "/tftpboot/BBB/zImage";
   }
 }
 
 sudo gedit /etc/default/isc-dhcp-server &
-change line :
+# change line :
 INTERFACES="eth0 usb0"
 
 ### Restart all
@@ -57,9 +50,11 @@ sudo ifup usb0
 ### Restart DHCPD script on interface restart
 sudo gedit /usr/local/sbin/usb0_ifupdown &
 
-add lines :
+# add lines :
 echo "Restarting DHCP server"
 service isc-dhcp-server restart
 
 sudo chmod 777 /usr/local/sbin/usb0_ifupdown
+
+
 

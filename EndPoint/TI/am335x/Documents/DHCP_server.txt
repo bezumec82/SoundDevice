@@ -5,7 +5,7 @@ reset
 sudo su
 echo "#
 DHCPD_CONF=/etc/dhcp/dhcpd.conf
-INTERFACES=\"eth0\"
+INTERFACES=\"eth0 usb0\"
 " > /etc/default/isc-dhcp-server
 
 echo "#

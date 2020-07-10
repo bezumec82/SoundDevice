@@ -2,8 +2,6 @@
 # Automatically-generated file. Do not edit!
 ################################################################################
 
-CG_TOOL_ROOT := /home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1
-
 GEN_OPTS__FLAG := 
 GEN_CMDS__FLAG := 
 
@@ -137,14 +135,14 @@ all: PRU_Halt.out
 PRU_Halt.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: PRU Linker'
-	"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/bin/clpru" -v3 -g --define=pru0 --define=am5728 --define=icss1 --display_error_number --diag_warning=225 --diag_wrap=off --hardware_mac=on --endian=little -z -m"PRU_Halt.map" --heap_size=0x100 --stack_size=0x100 -i"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/lib" -i"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/include" --reread_libs --define=PRU_CORE=1 --warn_sections --diag_wrap=off --display_error_number --xml_link_info="PRU_Halt_linkInfo.xml" --rom_model -o "PRU_Halt.out" $(ORDERED_OBJS)
+	"" -z -m"PRU_Halt.map" --heap_size=0x100 --stack_size=0x100 -i"/lib" -i"/include" --reread_libs --define=PRU_CORE=1 --warn_sections --diag_wrap=off --display_error_number --xml_link_info="PRU_Halt_linkInfo.xml" --rom_model -o "PRU_Halt.out" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 
 PRU_Halt.hex: $(EXE_OUTPUTS)
 	@echo 'Building files: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo 'Invoking: PRU Hex Utility'
-	"/home/constantine/ti/ccsv8/tools/compiler/ti-cgt-pru_2.3.1/bin/hexpru"  -o "PRU_Halt.hex" $(EXE_OUTPUTS__QUOTED)
+	""  -o "PRU_Halt.hex" $(EXE_OUTPUTS__QUOTED)
 	@echo 'Finished building: $(strip $(EXE_OUTPUTS__QUOTED))'
 	@echo ' '
 
