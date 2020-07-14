@@ -63,9 +63,10 @@ cd ${U_BOOT_PTH}
 make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- mrproper
 make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf- am335x_boneblack_defconfig
 make -j8    arch=ARM CROSS_COMPILE=arm-linux-gnueabihf-
-cp ${U_BOOT_PTH}/spl/u-boot-spl.bin    ${TFTPBOOT_PTH}/u-boot-spl.bin
-cp ${U_BOOT_PTH}/u-boot.img            ${TFTPBOOT_PTH}/u-boot.img
-cp ${U_BOOT_PTH}/u-boot.bin            ${TFTPBOOT_PTH}/u-boot.bin
+cp ${U_BOOT_PTH}/spl/u-boot-spl.bin     ${TFTPBOOT_PTH}/u-boot-spl.bin
+cp ${U_BOOT_PTH}/spl/u-boot-spl         ${U_BOOT_PTH}/u-boot-spl.elf
+cp ${U_BOOT_PTH}/u-boot.img             ${TFTPBOOT_PTH}/u-boot.img
+cp ${U_BOOT_PTH}/u-boot.bin             ${TFTPBOOT_PTH}/u-boot.bin
 sudo chmod -R 777 /tftpboot
 ls -ls ${TFTPBOOT_PTH}
 
@@ -196,4 +197,33 @@ dhcp  ${rd_addr_r}       ${ramdisk};
 dhcp  ${fdt_addr_r}      ${fdt_blob};
 iminfo ${rd_addr_r};
 bootz ${kernel_addr_r} ${rd_addr_r} ${fdt_addr_r};
+
+### Debug SPL in CCS
+1) Copy u-boot-spl to the root directory
+cp ${U_BOOT_PTH}/spl/u-boot-spl         ${U_BOOT_PTH}/u-boot-spl.elf
+2) Create target connection
+Basic ->
+Connection : Sauris == Texas Instruments XDS100v2 USB Debug Probe
+Board or Device : AM3358
+Advanced ->
+    CortexA8 ->
+        initialization srctipt : AM335x_forSlaveRatio
+        (setup for 19.2MHz and MT41J256M16...-125:E)
+        Address : 0x80001000
+3) Launch selected configuration
+4) Connect target CortexA8
+PC will be at 0x00024126
+Scripts->
+    menuitem "AM335x System Initialization"
+        hotmenu PrepareDebugSPL
+            set PC to 0x402F0400 and switch from Tumb to Arm instructions
+5) Tools -> Load memory -> 
+    u-boot-spl.bin
+    TI Raw Data
+    Start Data : 0x402F0400
+    Type-size : 32 bits
+6) Run -> Load -> Load Symbols -> .../root_dir/u-boot-spl.elf
+7) To set a breakpoint :
+Right mouse click to line -> Breakpoint(Code Composer Studio) ->
+ -> Hardware Breakpoint
 
